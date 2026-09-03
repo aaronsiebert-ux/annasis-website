@@ -1,11 +1,10 @@
-# AnnaSIS website (draft)
+# AnnaSIS website
 
-Static marketing site for AnnaSIS. Published via GitHub Pages.
+Static marketing site for [annasis.com](https://annasis.com).
 
-## Local preview
+## GitHub Pages
 
-Open `index.html` in a browser, or:
+Repo → Settings → Pages → Deploy from branch `main` / root.
+Live URL after Pages is on: https://aaronsiebert-ux.github.io/annasis-website/
 
-```bash
-python3 -m http.server 8080
-```
+Working software card on the site: $44 per student per year, 80-student floor.

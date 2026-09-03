@@ -8,19 +8,26 @@
 </head>
 <body>
   <header class="nav"><div class="wrap nav-inner">
-    <a class="brand" href="index.html"><img src="assets/logo-lockup.jpg" alt=""><span>AnnaSIS<small>Contact</small></span></a>
-    <nav><a href="education.html">Education</a><a href="events.html">Events</a><a href="ecommerce.html">Ecommerce</a><a href="about.html">About</a><a class="btn" href="contact.html">Request a conversation</a></nav>
+    <a class="brand" href="index.html"><img src="assets/logo-lockup.jpg" alt="AnnaSIS"><span>AnnaSIS<small>School · Events · Store</small></span></a>
+    <div class="nav-links">
+      <a href="education.html">Education</a>
+      <a href="events.html">Events</a>
+      <a href="ecommerce.html">Ecommerce</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a class="btn" href="contact.html">Request a conversation</a>
+    </div>
   </div></header>
   <main class="wrap section">
     <div class="kicker">Next step</div>
     <h1>Request a conversation</h1>
-    <p class="lead">Tell us whether you need events, store, the education suite, or all three. This form is a static draft — wire it to your mailbox when the domain is live.</p>
+    <p class="lead">Tell us whether you need events, store, the education suite, or all three. This form is a static draft until the domain mailbox is wired.</p>
     <div class="grid-2">
       <form class="card" onsubmit="event.preventDefault(); alert('Static draft — connect this form to email or Pipedrive.');">
         <input name="name" placeholder="Name" required>
         <input name="school" placeholder="School or organization" required>
         <input type="email" name="email" placeholder="Email" required>
-        <select name="interest" style="padding:12px;border-radius:12px;border:1px solid var(--line);font:inherit">
+        <select name="interest">
           <option>Education suite</option>
           <option>Events only</option>
           <option>Store only</option>
@@ -33,11 +40,12 @@
       <div class="card">
         <h3>Direct</h3>
         <p>Aaron Siebert<br>aaron@annasis.com<br>303-956-5245</p>
-        <p>annasis.com</p>
-        <p>Working software card: $44 per student per year, 80-student floor. Processor extra. Convenience fee on events and store only.</p>
+        <p>Working card: $44 per student per year, 80-student floor.</p>
       </div>
     </div>
   </main>
-  <footer><div class="wrap footer-grid"><div>© AnnaSIS</div><div><a href="index.html">Home</a></div></div></footer>
-</body>
-</html>
+  <footer><div class="wrap footer-grid">
+    <div>© AnnaSIS · Built with a Christian school</div>
+    <div><a href="pricing.html">Pricing</a> · <a href="about.html">Story</a> · <a href="contact.html">Contact</a></div>
+  </div></footer>
+</body></html>
