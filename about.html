@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About — AnnaSIS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="nav"><div class="wrap nav-inner">
-    <a class="brand" href="index.html"><span class="mark" role="img" aria-label="AnnaSIS"></span><span>AnnaSIS<small>School · Events · Store</small></span></a>
+    <a class="brand" href="index.html"><img src="assets/nav-logo.jpg" alt="AnnaSIS"><span>AnnaSIS<small>School · Events · Store</small></span></a>
     <div class="nav-links">
       <a href="education.html">Education</a>
       <a href="events.html">Events</a>
@@ -26,11 +27,39 @@
         <p class="lead">AnnaSIS started when our founder was asked by a Christian school, where his children attended, to build the system they actually needed: households, tuition, events, a store, and the office’s QuickBooks.</p>
         <p>Our mission is to be a trusted partner whose software helps education and ministry institutions run well so they can spend the hours on students and the Gospel — not on five logins.</p>
       </div>
-      <div class="hero-art"><img src="assets/brand-overview.jpg" alt="About AnnaSIS"></div>
+      <div class="hero-art"><img src="assets/lockup.jpg" alt="AnnaSIS lockup"></div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card"><img src="assets/mascot-blazer.jpg" alt=""><h3>Built beside the office</h3><p>The first school still runs on it. Feature work still starts with how a registrar, athletic director, or business manager actually spends Tuesday.</p></article>
+        <article class="card"><img src="assets/brand-overview.jpg" alt=""><h3>Three markets, one record</h3><p>Education, events, and the store can sell apart. They were designed to grow together.</p></article>
+      </div>
     </section>
   </main>
   <footer><div class="wrap footer-grid">
     <div>© AnnaSIS · Built with a Christian school</div>
     <div><a href="https://www.linkedin.com/company/annasis-software" target="_blank" rel="noopener">LinkedIn</a> · <a href="pricing.html">Pricing</a> · <a href="about.html">Story</a> · <a href="contact.html">Contact</a></div>
   </div></footer>
+
+<script>
+window.pipedriveLeadboosterConfig = {
+  base: 'leadbooster-chat.pipedrive.com',
+  companyId: 13851722,
+  playbookUuid: 'fe7940be-2952-44fb-aa6c-ea33b7fa01df',
+  version: 2
+};
+(function () {
+  var w = window;
+  if (w.LeadBooster) {
+    console.warn('LeadBooster already exists');
+  } else {
+    w.LeadBooster = {
+      q: [],
+      on: function (n, h) { this.q.push({ t: 'o', n: n, h: h }); },
+      trigger: function (n) { this.q.push({ t: 't', n: n }); }
+    };
+  }
+})();
+</script>
+<script src="https://leadbooster-chat.pipedrive.com/assets/loader.js" async></script>
 </body></html>
