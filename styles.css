@@ -34,7 +34,13 @@ img { max-width: 100%; display: block; }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 0; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--navy); font-weight: 800; letter-spacing: -.03em; font-size: 22px; }
 .brand small { display: block; font-weight: 600; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.brand img { height: 48px; width: auto; }
+.brand img, .brand .mark { height: 48px; width: 48px; object-fit: cover; border-radius: 50%; }
+.brand .mark {
+  display: inline-block;
+  flex: 0 0 48px;
+  overflow: hidden;
+  background: url("assets/logo-lockup.jpg") 88% 48% / 280% auto no-repeat;
+}
 .nav-links a { color: var(--navy); font-weight: 600; font-size: 14px; margin-left: 14px; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
