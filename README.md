@@ -1,12 +1,14 @@
 # ANNASIS website
 
-Static marketing site for [annasis.com](https://annasis.com).
+Static marketing site for ANNASIS.
 
-## Production domain
+## Current preview
 
-Canonical URLs, Open Graph, JSON-LD, `robots.txt`, and `sitemap.xml` target **https://annasis.com**. The `CNAME` file is set to `annasis.com` for GitHub Pages custom-domain hosting.
+Live on GitHub Pages while the product is in progress:
 
-While DNS is pointed, the repo may still preview on GitHub Pages, but search engines should treat annasis.com as the source of truth.
+https://aaronsiebert-ux.github.io/annasis-website/
+
+Canonical / Open Graph / sitemap URLs currently use that preview host. At rollout, switch them (and add a `CNAME`) to **https://annasis.com**.
 
 ## Local preview
 

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://annasis.com/sitemap.xml
+Sitemap: https://aaronsiebert-ux.github.io/annasis-website/sitemap.xml
