@@ -1,10 +1,17 @@
 # ANNASIS website
 
-Static marketing site for [ANNASIS.com](https://annasis.com).
+Static marketing site for [annasis.com](https://annasis.com).
 
-## GitHub Pages
+## Production domain
 
-Repo → Settings → Pages → Deploy from branch `main` / root.
-Live URL after Pages is on: https://aaronsiebert-ux.github.io/annasis-website/
+Canonical URLs, Open Graph, JSON-LD, `robots.txt`, and `sitemap.xml` target **https://annasis.com**. The `CNAME` file is set to `annasis.com` for GitHub Pages custom-domain hosting.
 
-Working software card on the site: $44 per student per year, 80-student floor.
+While DNS is pointed, the repo may still preview on GitHub Pages, but search engines should treat annasis.com as the source of truth.
+
+## Local preview
+
+Open `index.html` in a browser, or:
+
+```bash
+python3 -m http.server 8080
+```
