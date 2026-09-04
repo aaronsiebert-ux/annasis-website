@@ -1,6 +1,6 @@
-# AnnaSIS website
+# ANNASIS website
 
-Static marketing site for [annasis.com](https://annasis.com).
+Static marketing site for [ANNASIS.com](https://annasis.com).
 
 ## GitHub Pages
 
