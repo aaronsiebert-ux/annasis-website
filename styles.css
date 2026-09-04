@@ -35,7 +35,17 @@ img { max-width: 100%; display: block; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--navy); font-weight: 800; letter-spacing: -.03em; font-size: 22px; }
 .brand small { display: block; font-weight: 600; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .brand img { height: 48px; width: auto; }
+.nav-links { display: flex; align-items: center; flex-wrap: wrap; }
 .nav-links a { color: var(--navy); font-weight: 600; font-size: 14px; margin-left: 14px; }
+.social-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; margin-left: 10px;
+  border-radius: 999px; color: var(--navy) !important;
+  border: 1px solid var(--line); background: #fff;
+}
+.social-link:hover { color: #0a66c2 !important; border-color: #0a66c2; }
+.footer-links { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.footer-links .social-link { margin-left: 4px; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   background: var(--orange); color: #fff !important; font-weight: 700;
@@ -94,7 +104,7 @@ input, textarea, select {
 }
 @media (max-width: 860px) {
   .hero, .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  .nav-links a:not(.btn) { display: none; }
+  .nav-links a:not(.btn):not(.social-link) { display: none; }
   .hero-art img { max-height: 280px; }
 }
 
