@@ -103,7 +103,7 @@ input, textarea, select {
 .brand small { letter-spacing: .08em; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .pillar-row {
-  display: grid; grid-template-columns: 72px 1fr; gap: 22px;
+  display: grid; grid-template-columns: 88px 1fr; gap: 22px;
   align-items: center; background: #fff; border: 1px solid var(--line);
   border-radius: var(--radius); padding: 20px; margin: 0 0 16px; box-shadow: var(--shadow);
 }
