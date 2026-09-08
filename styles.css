@@ -144,3 +144,14 @@ input, textarea, select {
 .form-embed { padding: 8px; overflow: hidden; }
 .form-embed .pipedriveWebForms,
 .form-embed iframe { width: 100%; min-height: 720px; border: 0; }
+
+
+.fit-list { display: grid; gap: 14px; margin-top: 18px; }
+.fit-item {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px 22px; box-shadow: var(--shadow);
+}
+.fit-item h3 { margin: 0 0 8px; font-size: 20px; }
+.fit-item .pain { color: var(--muted); margin: 0 0 10px; }
+.fit-item .answer { margin: 0; color: var(--ink); }
+.band .btn.ghost { border-color: #fff; color: #fff !important; }
