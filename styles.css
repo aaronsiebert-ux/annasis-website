@@ -94,7 +94,7 @@ input, textarea, select {
 }
 @media (max-width: 860px) {
   .hero, .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  .nav-links a:not(.btn) { display: none; }
+  .nav-links a:not(.btn):not(.social-link) { display: none; }
   .hero-art img { max-height: 280px; }
 }
 
@@ -130,3 +130,17 @@ input, textarea, select {
   .nav-links a:not(.btn) { display: inline; font-size: 13px; margin-left: 10px; }
   .paper { padding: 22px; }
 }
+
+
+.nav-links { display: flex; align-items: center; flex-wrap: wrap; }
+.social-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; margin-left: 10px;
+  border-radius: 999px; color: var(--navy) !important;
+  border: 1px solid var(--line); background: #fff;
+}
+.social-link:hover { color: #0a66c2 !important; border-color: #0a66c2; }
+.footer-grid .social-link { margin-left: 6px; vertical-align: middle; }
+.form-embed { padding: 8px; overflow: hidden; }
+.form-embed .pipedriveWebForms,
+.form-embed iframe { width: 100%; min-height: 720px; border: 0; }
