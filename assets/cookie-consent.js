@@ -18,47 +18,53 @@
     document.head.appendChild(o);
   }
 
-  function hideBanner(el) {
-    if (el && el.parentNode) el.parentNode.removeChild(el);
-  }
-
   function setConsent(value) {
-    try {
-      localStorage.setItem(STORAGE_KEY, value);
-    } catch (e) {}
+    try { localStorage.setItem(STORAGE_KEY, value); } catch (e) {}
   }
 
   function getConsent() {
-    try {
-      return localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      return null;
-    }
+    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
   }
 
-  function showBanner() {
-    var bar = document.createElement('div');
-    bar.className = 'cookie-banner';
-    bar.setAttribute('role', 'dialog');
-    bar.setAttribute('aria-live', 'polite');
-    bar.setAttribute('aria-label', 'Cookie consent');
-    bar.innerHTML =
-      '<div class="cookie-banner-inner">' +
-      '<p>We use cookies for analytics to understand site visits and improve ANNASIS. You can accept or decline non-essential cookies.</p>' +
-      '<div class="cookie-banner-actions">' +
+  function unlockPage() {
+    document.documentElement.classList.remove('cookie-consent-open');
+    document.body.classList.remove('cookie-consent-open');
+  }
+
+  function showModal() {
+    document.documentElement.classList.add('cookie-consent-open');
+    document.body.classList.add('cookie-consent-open');
+
+    var root = document.createElement('div');
+    root.className = 'cookie-modal';
+    root.setAttribute('role', 'dialog');
+    root.setAttribute('aria-modal', 'true');
+    root.setAttribute('aria-labelledby', 'cookie-modal-title');
+    root.innerHTML =
+      '<div class="cookie-modal-backdrop" aria-hidden="true"></div>' +
+      '<div class="cookie-modal-panel">' +
+      '<h2 id="cookie-modal-title">Cookie preferences</h2>' +
+      '<p>We use cookies for analytics to understand site visits and improve ANNASIS. Please accept or decline non-essential cookies to continue.</p>' +
+      '<div class="cookie-modal-actions">' +
       '<button type="button" class="btn ghost cookie-decline">Decline</button>' +
       '<button type="button" class="btn cookie-accept">Accept</button>' +
       '</div></div>';
-    document.body.appendChild(bar);
+    document.body.appendChild(root);
 
-    bar.querySelector('.cookie-accept').addEventListener('click', function () {
+    var accept = root.querySelector('.cookie-accept');
+    var decline = root.querySelector('.cookie-decline');
+    if (accept) accept.focus();
+
+    root.querySelector('.cookie-accept').addEventListener('click', function () {
       setConsent('accepted');
-      hideBanner(bar);
+      root.parentNode.removeChild(root);
+      unlockPage();
       loadApollo();
     });
-    bar.querySelector('.cookie-decline').addEventListener('click', function () {
+    root.querySelector('.cookie-decline').addEventListener('click', function () {
       setConsent('declined');
-      hideBanner(bar);
+      root.parentNode.removeChild(root);
+      unlockPage();
     });
   }
 
@@ -69,7 +75,7 @@
       return;
     }
     if (consent === 'declined') return;
-    showBanner();
+    showModal();
   }
 
   if (document.readyState === 'loading') {
