@@ -1,6 +1,16 @@
 (function () {
   var STORAGE_KEY = 'annasis_cookie_consent';
-  var APOLLO_APP_ID = '6a74e7186eb280001427515e';
+  // Local Apollo snippet (loads Apollo CDN tracker after consent)
+  var APOLLO_TRACKER_SRC = (function () {
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i++) {
+      var src = scripts[i].src || '';
+      if (src.indexOf('cookie-consent.js') !== -1) {
+        return src.replace('cookie-consent.js', 'apollo-tracker.js');
+      }
+    }
+    return 'assets/apollo-tracker.js';
+  })();
 
   function isHomePage() {
     var path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
@@ -14,18 +24,17 @@
 
   function loadApollo() {
     if (window.__annasisApolloLoaded) return;
-    window.__annasisApolloLoaded = true;
-    var n = Math.random().toString(36).substring(7);
-    var o = document.createElement('script');
-    o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n;
-    o.async = true;
-    o.defer = true;
-    o.onload = function () {
-      if (window.trackingFunctions && window.trackingFunctions.onLoad) {
-        window.trackingFunctions.onLoad({ appId: APOLLO_APP_ID });
-      }
+    if (typeof window.annasisLoadApollo === 'function') {
+      window.annasisLoadApollo();
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = APOLLO_TRACKER_SRC;
+    s.defer = true;
+    s.onload = function () {
+      if (typeof window.annasisLoadApollo === 'function') window.annasisLoadApollo();
     };
-    document.head.appendChild(o);
+    document.head.appendChild(s);
   }
 
   function setConsent(value) {
