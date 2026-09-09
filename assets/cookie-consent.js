@@ -110,7 +110,10 @@
       return;
     }
     if (consent === 'declined') return;
-    if (isHomePage()) showModal();
+    if (isHomePage()) {
+      // Let visitors land first, then require a choice
+      setTimeout(showModal, 5000);
+    }
   }
 
   if (document.readyState === 'loading') {
