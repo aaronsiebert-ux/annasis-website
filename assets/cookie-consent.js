@@ -2,6 +2,11 @@
   var STORAGE_KEY = 'annasis_cookie_consent';
   var APOLLO_APP_ID = '6a74e7186eb280001427515e';
 
+  function isHomePage() {
+    var path = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+    return path === '/annasis-website' || path === '/annasis-website/index.html' || path === '/' || path === '/index.html';
+  }
+
   function loadApollo() {
     if (window.__annasisApolloLoaded) return;
     window.__annasisApolloLoaded = true;
@@ -52,7 +57,6 @@
     document.body.appendChild(root);
 
     var accept = root.querySelector('.cookie-accept');
-    var decline = root.querySelector('.cookie-decline');
     if (accept) accept.focus();
 
     root.querySelector('.cookie-accept').addEventListener('click', function () {
@@ -75,7 +79,8 @@
       return;
     }
     if (consent === 'declined') return;
-    showModal();
+    // Ask only once, on the home page
+    if (isHomePage()) showModal();
   }
 
   if (document.readyState === 'loading') {
