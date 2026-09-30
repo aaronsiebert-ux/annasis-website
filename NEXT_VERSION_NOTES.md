@@ -52,3 +52,15 @@
 - Do not claim worship planning or deep pastoral CRM.
 - Notes: `CHURCHES_COMPETITIVE_NOTES.md` updated with People vs Worship ChMS summary + new direction.
 - CSS cache on churches page: `?v=20260930v`. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Cross-segment partner page (2026-09-30)
+
+- Added shared secondary page `partner.html` — **Why partner with ANNASIS** / How we partner.
+- Themes: partner trust, customer-first, features & roadmap transparency, automation vision, reduced operations complexity. Voice works for Churches, Camps, Store, Events, and Schools (school OS as one context among programs/communities). Soft CTA → `contact.html`.
+- Segment body CTAs rewired off school Fit/Different:
+  - `churches.html`: hero + mid-page + bottom ghost CTAs → `partner.html` (primary still Request a conversation → contact).
+  - `camps.html`, `ecommerce.html`, `events.html`: added primary conversation + ghost How we partner.
+- Main nav **What makes us different** / **Are we a fit?** unchanged (school-focused).
+- Quiet footer link **How we partner** on segment landers + standard school pages (index, about, contact, different, fit, stories, education). Not in main nav.
+- Sitemap: added `partner.html`, `camps.html`, `churches.html`. CSS cache `?v=20260930w` on touched pages.
+- Preview: GitHub Pages only — not IIS/`www.annasis.com`.
