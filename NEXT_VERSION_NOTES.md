@@ -64,3 +64,10 @@
 - Quiet footer link **How we partner** on segment landers + standard school pages (index, about, contact, different, fit, stories, education). Not in main nav.
 - Sitemap: added `partner.html`, `camps.html`, `churches.html`. CSS cache `?v=20260930w` on touched pages.
 - Preview: GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Churches lander — event management + Church Planning hero (2026-09-30)
+
+- Aaron feedback: messaging must make **event management** explicit (conferences, large events, multi-session programs — not only life groups/camps/VBS).
+- New hero visual: `Images/church-planning-hero.jpg` (Church Planning artwork; subtitle Planning, Check-in, Giving, Fundraising, Store & Events). Replaces `Images/hero-events.jpg` on `churches.html` hero + og/twitter. Nav logo (`Images/nav-logo.jpg`) unchanged.
+- Copy: hero H1/lead, events pillar, ministry calendar, conferences card, fit signals, and bottom CTA name event management / conferences clearly. `partner.html` Churches & camps blurb adds a brief event-management/conferences mention.
+- CSS cache on touched pages: `?v=20260930x`. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
