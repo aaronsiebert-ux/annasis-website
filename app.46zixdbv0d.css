@@ -1010,7 +1010,8 @@ footer {
 .segment-strip a,
 .footer-serve a,
 .segment-back a {
-    color: inherit;
+    color: var(--navy);
+    font-weight: 600;
     text-decoration: none;
 }
 
@@ -1034,8 +1035,7 @@ footer {
 .segment-strip a:hover,
 .footer-serve a:hover,
 .segment-back a:hover {
-    color: var(--navy);
-    text-decoration: underline;
+    color: var(--orange);
 }
 
 .footer-serve {

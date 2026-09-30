@@ -35,3 +35,6 @@
 - Camps/churches stubs verified: standard header/footer + `.segment-back` + stacked footer-serve; no layout break on mobile rules.
 - **Nomenclature (Aaron):** Who we serve / strip links = **Schools**, **Events**, **Store**, **Camps**, **Churches** (URLs unchanged: index, events, ecommerce, camps, churches). Stub back-links say “ANNASIS for Schools”.
 
+## 2026-09-30 follow-up
+- Removed home segment strip (second band); segment links live in footer only.
+- Footer Who we serve links use navy + orange hover to match main nav.
