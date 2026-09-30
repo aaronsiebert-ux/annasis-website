@@ -1,79 +1,83 @@
-# Churches competitive notes — ANNASIS lander draft
+# Churches competitive notes — ANNASIS lander
 
 **Date:** 2026-09-30 (PT)  
-**Scope:** Research for `churches.html` next-version draft only (not production).  
-**Sources:** planning.center ChMS use-case + product pages; Breeze/Tithely ChMS; Tithely Events; Pushpay events/ChMS public pages; local GTM (`ANNASIS_GTM.md` ICP C3, ECOM attach, Awana adjacency).
+**Updated:** 2026-09-30 (PT) — Aaron direction: one-stop church shop (giving + check-in + events + store); sit-beside ChMS is afterthought only.  
+**Scope:** Research + messaging for `churches.html` next-version draft only (not production).  
+**Sources:** planning.center ChMS use-case + product pages; Breeze/Tithely ChMS; Tithely Events; Pushpay events/ChMS public pages; local GTM (`ANNASIS_GTM.md` ICP C3, ECOM attach, Awana adjacency); Aaron verbal direction 2026-09-30.
 
 ---
 
-## Competitor themes
+## Aaron’s current positioning (MUST follow on-page)
 
-### Planning Center (primary reference)
+1. **Lead:** ANNASIS as a **one-stop shop for churches** — people/community programs + events + **giving** + **check-in** + store. Church language first.
+2. **Own giving** — online giving, donations, fundraising/campaigns as a core pillar. Honest institutional giving language; do not invent weekly-tithe feature depth not evidenced in product, but **do claim giving**.
+3. **Claim check-in** — kids / families / volunteers for programs and Sunday-adjacent ministry.
+4. **Name church events explicitly** — life groups, camps, VBS, conferences, classes, sports, midweek, etc.
+5. **Store / e-commerce** remains a strength (merch, resources).
+6. **Existing ChMS is an afterthought** — one quiet line max near the end (or FAQ-ish). Not a hero claim. No “Honest fit / what we are not” section centered on Planning Center. Soft-pedal “not a Planning Center replacement” and “sit beside your ChMS” headlines. Prefer category-generic: “if you already have church software.” Do not name Planning Center on-page unless a single soft afterthought truly needs a category example.
+7. **School + church overlap** stays a supporting section (still valuable).
+8. **Do not claim** (unless evidenced elsewhere on site): full worship planning / service run-of-show / chord charts / Music Stand; deep pastoral care CRM / counseling case management. Light household/people records for programs is OK.
+
+### Exact afterthought wording on `churches.html` (2026-09-30)
+
+> If you already have church software, ANNASIS can still cover the programs, giving, check-in, and store your office runs alongside it.
+
+---
+
+## ChMS People vs Worship (education for messaging)
+
+Aaron was educated that **People + Worship** are the ChMS core for tools like Planning Center–class suites:
+
+| ChMS core | Typical scope | ANNASIS on-page stance |
+|-----------|---------------|------------------------|
+| **People** | Profiles, households, lists, workflows, attendance history, groups membership | Light mention only — household/people records for programs; **not** full pastoral CRM / counseling case management |
+| **Worship / Services** | Service plans, order of service, media, music/chord charts, volunteer service scheduling depth | **Do not claim** |
+
+Other ChMS modules competitors own strongly (Giving, Check-Ins, Groups, Registrations, Calendar) are exactly where Aaron now wants ANNASIS to **lead** for churches: own giving + check-in + events/programs + store as one-stop — not “we sit beside your ChMS for ECOM only.”
+
+Internal competitive awareness of Planning Center / Tithely / Pushpay remains useful for sales; **on-page** we no longer frame the lander as an ECOM wedge beside ChMS.
+
+---
+
+## Competitor themes (research retained)
+
+### Planning Center (reference — not named on lander)
 - **Shape:** Modular complete ChMS — People (hub), Services (worship planning), Giving, Check-Ins, Groups, Registrations, Calendar, Publishing / Church Center.
-- **Tone:** Equip staff & volunteers; connect the congregation; one database; autonomy with permissions; “don’t drop people through the cracks.”
-- **People:** Profiles, lists, workflows, activity (attendance, groups, giving).
-- **Events:** Registrations for signups + payments; Calendar for rooms/resources; Check-Ins for kids/volunteers/labels.
-- **Giving:** Online/ACH/card/text/cash/check; statements; fund reporting.
-- **Groups:** Small groups, classes, chat, attendance.
-- **Check-in:** Fast stations, security labels, attendance reports; ties to People + Registrations.
-- **Implication for ANNASIS:** Do **not** claim worship planning, media/sermon publishing, volunteer service scheduling depth, or pastoral care CRM parity. PC owns “run Sunday.” ANNASIS owns commerce-heavy programs that often sit beside ChMS.
+- **Tone:** Equip staff & volunteers; connect the congregation; one database; autonomy with permissions.
+- **Implication:** Competitive bar for People + Worship is high. ANNASIS page claims programs, giving, check-in, store — without worship planning or pastoral CRM parity claims.
 
 ### Breeze → Tithely Church Management (peer)
-- **Shape:** “Easiest ChMS” — people DB, giving, events/calendar, kids check-in, groups, messaging, forms; flat ~$72/mo positioning; Tithely bundle (apps, sites, worship tools).
-- **Tone:** Simple, low IT burden, free data move, phone support.
-- **Events:** Calendar + rooms/resources + forms; registration exists but messaging is admin simplicity more than multi-program commerce depth.
-- **Implication:** Compete on **registration + store + fundraising depth** and school/church shared community — not on “easiest Sunday ChMS.”
+- “Easiest ChMS” — people DB, giving, events/calendar, kids check-in, groups, messaging, forms.
+- Compete on **one-stop depth** for programs + commerce + giving + check-in and school/church shared community — not on “easiest Sunday ChMS.”
 
 ### Tithely Events / Pushpay (peer angle)
-- **Tithely Events:** Ticket types, custom fields, payments; giving-account adjacent; fee-on-transaction framing.
-- **Pushpay / CCB lane:** Enterprise giving, branded apps, donor analytics, facility/event calendar, forms + payments inside ChMS — strong for large multi-site generosity + engagement.
-- **Implication:** Category buyers already have giving + basic event signup. Gap language = **commerce depth** (ticket matrices, merch/resource store, multi-program clarity) and **school-affiliated shared community**, not rip-and-replace Giving.
-
-### Shared ChMS messaging patterns (avoid copying as primary claim)
-1. One people database / “know your people”
-2. Kids check-in + security labels
-3. Online + recurring giving + statements
-4. Groups + volunteer scheduling
-5. Worship / service planning
-6. Mobile congregant app hub
-
-ANNASIS page should acknowledge these as ChMS jobs, then lead with what we uniquely bring.
+- Strong giving + basic event signup for many buyers.
+- ANNASIS still differentiates on multi-program registration clarity, institutional store, and school-affiliated shared community — now as part of a one-stop church story, not only an attach wedge.
 
 ---
 
-## ANNASIS differentiation (GTM-aligned)
+## Prior GTM note (superseded as lead)
 
-From GTM ICP **C3 — Multi-campus churches & church networks (events, not full ChMS)**:
-- Need: unified registration + payments **without** forcing a full ChMS replace.
-- Fit: **ECOM wedge beside** Planning Center, CCB/Pushpay, etc.
-- Watch-out: ChMS already has events — win on **commerce depth** or **multi-program clarity**.
+GTM ICP **C3** previously framed: unified registration + payments **without** forcing a full ChMS replace; **ECOM wedge beside** Planning Center / CCB / Pushpay.
 
-**Lead claims (honest):**
-1. **Event registration & ticketing** — VBS, camps, conferences, classes, sports/leagues, galas; paid + free; forms/waivers where product supports.
-2. **Store / e-commerce** — merch, resources, books/tables, program materials (not “replace Awana HQ curriculum store”).
-3. **Fundraising / donations** — campaigns and donation ticket types on the same commerce footing as events/store (module language; validate depth with Aaron).
-4. **School + church overlap** — many private/Christian schools are church-affiliated; shared community path (families, camps, athletics, ministry events).
-
-**Honesty / sit-beside voice (site patterns):**
-- “When you are ready” / modules / sit beside current system (from `different.html` / `fit.html`).
-- Not a Planning Center replacement for worship planning, media, music, or deep pastoral CRM unless Ownership confirms product evidence.
+**Aaron 2026-09-30:** that sit-beside / ECOM-wedge lead is **retired on-page**. Keep wedge language for internal sales if useful; public churches lander sells one-stop.
 
 ---
 
-## Draft messaging outline (used on churches.html)
+## Draft messaging outline (current `churches.html`)
 
-1. **Hero** — Churches: event registration, store, and fundraising that sit beside the ChMS you already trust — especially when a school and church share a community.
-2. **Three pillars** — Events · Store · Fundraising (cards).
-3. **Honest frame** — What we are / are not vs full ChMS.
-4. **School overlap** — Link to Schools home + Events + Store modules.
-5. **Fit cues** — Multi-program churches, church-affiliated schools, offices tired of Eventbrite + forms + separate shop.
-6. **CTA** — Request a conversation · Are we a fit? · ANNASIS for Schools.
+1. **Hero** — One-stop for churches: programs, giving, check-in, and store.
+2. **What you get** — Giving · Events & programs (life groups, camps, VBS, …) · Check-in · Store.
+3. **Ministry calendar** — Named event types (life groups, camps/VBS/sports, conferences/midweek).
+4. **School + church overlap** — Supporting; link Schools + Events.
+5. **Fit cues** — Fragmented giving/signup/check-in/store stacks; shared school community.
+6. **Next step + quiet afterthought** — Existing church software one-liner · CTAs.
 
 ---
 
 ## Open validation (Aaron / Ownership)
 
-- Exact church-facing donation depth (recurring, statements, funds) vs school “donations & fundraising” module.
-- Whether check-in is a claimed church feature or only school/camp adjacency.
+- Exact church-facing **giving depth** (recurring, statements, funds, ACH/text) vs school “donations & fundraising” module — claim giving as pillar; validate feature copy before production.
+- **Check-in** depth (security labels, multi-station, volunteer vs kids) — claimed per Aaron; validate product screens before production.
 - Preferred hero imagery (no dedicated church photo in Images/ yet).
-- Whether “sit beside Planning Center” may be named on-page or stay category-generic (“your ChMS”).
+- Whether sales collateral may still name Planning Center while public page stays category-generic.

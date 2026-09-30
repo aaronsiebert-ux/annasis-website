@@ -43,3 +43,12 @@
 - Meta title/description updated for church discovery SEO; CSS query on churches page `?v=20260930u` (shared CSS unchanged).
 - `camps.html` left as stub (out of scope).
 - Preview target: push draft assets to `aaronsiebert-ux/annasis-website` GitHub Pages only — not production IIS/`www.annasis.com`.
+
+## Churches lander — one-stop reposition (2026-09-30)
+
+- Aaron direction: lead as **one-stop shop for churches** (programs/events + **own giving** + **check-in** + store). Sit-beside / “not a Planning Center replacement” framing removed from hero and mid-page; one quiet afterthought only (“If you already have church software…”).
+- Explicit church event names: life groups, camps, VBS, conferences, classes, sports, midweek.
+- School + church overlap retained as supporting section.
+- Do not claim worship planning or deep pastoral CRM.
+- Notes: `CHURCHES_COMPETITIVE_NOTES.md` updated with People vs Worship ChMS summary + new direction.
+- CSS cache on churches page: `?v=20260930v`. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
