@@ -103,3 +103,14 @@ These are **above** what CampBrain/UltraCamp/CampMinder typically publish as *di
 - Whether any **medical** beyond forms/health fields is shippable for camp GTM.
 - Whether **staff** means applications/forms only or scheduling/cabins.
 - Preferred hero art subtitle line vs product truth (Registration, Staff, Medical, Camp Store, Attendance & Fundraising).
+
+---
+
+## Fundraising copy update (2026-09-30) — Aaron confirmed
+
+On-page fundraising claims now explicitly name (and only these two additions):
+
+1. **Sponsor invites** — families, staff, and others invite sponsors for campers / similar attendees.
+2. **Round-up** — round-up on camp store purchases at checkout drives additional giving.
+
+Do not invent other fundraising features beyond existing campaign/scholarship language + these two. Validated for camps lander fundraising pillar + camp store card.

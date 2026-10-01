@@ -81,3 +81,14 @@ GTM ICP **C3** previously framed: unified registration + payments **without** fo
 - **Check-in** depth (security labels, multi-station, volunteer vs kids) — claimed per Aaron; validate product screens before production.
 - Preferred hero imagery (no dedicated church photo in Images/ yet).
 - Whether sales collateral may still name Planning Center while public page stays category-generic.
+
+---
+
+## Fundraising copy update (2026-09-30) — Aaron confirmed
+
+Giving / fundraising pillar now explicitly names (and only these two additions):
+
+1. **Sponsor invites** — families, staff, and others invite sponsors for events, participants, and similar attendees.
+2. **Round-up** — round-up on church store purchases at checkout drives additional giving.
+
+Do not invent other giving features beyond existing online donations / campaign / fundraising language + these two. Applied on churches lander giving pillar + store card; related events/store/school pages updated in parallel.

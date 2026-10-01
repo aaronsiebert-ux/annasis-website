@@ -89,3 +89,19 @@
 - Added `<script src="js/cookie-consent.js?v=20260930y" defer></script>` before `</body>` on: `index.html`, `about.html`, `camps.html`, `churches.html`, `contact.html`, `different.html`, `ecommerce.html`, `education.html`, `events.html`, `fit.html`, `partner.html`, `pricing.html`, `stories.html`.
 - Behavior matches packaged install notes: modal home-only; other pages include script so tracking runs after home Accept without showing the modal again.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Fundraising capabilities — sponsor invites + round-up (2026-09-30)
+
+- Aaron-confirmed capabilities woven into next-version marketing copy (no other fundraising features invented):
+  1. **Sponsor invites** — families, staff, etc. invite sponsors for events, students, campers (and similar).
+  2. **Round-up** — round-up on purchases drives additional giving (store/checkout).
+- Pages updated:
+  - `camps.html` — fundraising pillar names sponsor invites for campers + round-up; camp store card notes round-up at checkout.
+  - `churches.html` — giving pillar names sponsor invites for events/participants + round-up; store card notes round-up.
+  - `events.html` — new “Fundraising beside registration” section (sponsor invites for attendees + round-up when payments/store run).
+  - `education.html` — donations module expands sponsor invites + round-up on school store; store module mentions round-up.
+  - `index.html` — light parenthetical in foundation modules lead.
+  - `ecommerce.html` — lead mentions round-up + sponsor invites adjacency; link to donations module.
+  - `partner.html` — light Churches & camps blurb mention.
+- CSS cache on touched pages: `?v=20260930z`. Competitive notes appended on camps/churches.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
