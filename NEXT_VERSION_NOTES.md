@@ -114,3 +114,11 @@
 - Kept existing sponsor-invite and round-up copy unchanged; hero copy remains limited to the event-registration claims already present.
 - CSS cache on `events.html`: `?v=20261001a`.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Partner page customer partnership hero (2026-10-01)
+
+- Added Aaron’s Customer Partnership artwork as `Images/customer-partnership-hero.jpg`.
+- `partner.html` now uses the artwork in the hero, Open Graph, and Twitter image metadata; the nav logo remains `Images/nav-logo.jpg`.
+- Lightly aligned the hero kicker/H1 to “Customer partnership” and a trusted, future-oriented partner while retaining the existing events/conferences messaging.
+- CSS cache on `partner.html`: `?v=20261001b`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
