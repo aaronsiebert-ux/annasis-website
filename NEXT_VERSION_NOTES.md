@@ -5,6 +5,17 @@
 **OneDrive:** `AnnaSIS/Website/next-version/`  
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
+## Named competitor-alternative SEO keywords (2026-10-01)
+
+- Added light, page-specific competitor-alternative phrases to `meta name="keywords"` without changing titles or H1s:
+  - `camps.html` — CampBrain alternative, UltraCamp alternative, CampMinder alternative.
+  - `churches.html` — Planning Center alternative, Breeze alternative, Tithely alternative (for events, giving, check-in, and church-program workflows).
+  - `events.html` — Planning Center Registrations alternative; retained existing Eventbrite alternative and Configio alternative.
+  - `ecommerce.html` — reviewed existing Shopify for schools alternative and Configio alternative; no thin-gap addition was natural.
+- Kept meta descriptions unchanged; existing copy was already natural and avoided keyword stuffing.
+- Bumped the shared stylesheet cache on these four pages to `?v=20261001h`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
 ## What changed (Aaron-approved cross-segment links)
 
 1. **Main nav unchanged** — school-only links remain (Twelve modules, What makes us different, Stories, Are we a fit?, About). Events / Camps / Churches were **not** added to main nav.
