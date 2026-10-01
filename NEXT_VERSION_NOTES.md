@@ -164,3 +164,13 @@
 - Did not add a delayed home-only modal or any replacement consent UI.
 - Bumped the shared stylesheet cache on all marketing HTML pages to `app.46zixdbv0d.css?v=20261001f`.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## SEO optimization — customer discovery (2026-10-01)
+
+- **Canonical / OG host choice:** absolute intended-production URLs `https://www.annasis.com/{path}` (clean paths: `/`, `/education`, `/events`, `/ecommerce`, `/camps`, `/churches`, `/partner`, etc.). GitHub Pages remains preview only; crawlers of the draft should not treat Pages as the canonical host. Live today often uses apex `https://annasis.com` — align www vs apex + 301s on prod deploy.
+- **Fixed:** relative canonicals/og:url/og:image/twitter:image → absolute www; `sitemap.xml` absolute locs + priorities including camps/churches/partner; `robots.txt` Sitemap → `https://www.annasis.com/sitemap.xml`.
+- **JSON-LD:** Organization + WebSite on `index.html`; lightweight WebPage on key landers.
+- **Discovery:** footer Who we serve + mobile nav already linked segments; home Events/Store CTA row also links Camps/Churches. Home segment strip remains removed.
+- **Other:** unique H1 on `pricing.html`; trimmed education description; slightly shorter events title; CSS `?v=20261001g`.
+- **Audit checklist for Aaron:** `SEO_AUDIT_2026-10-01.md` (what fixed vs Search Console / prod-only steps).
+- Preview push to `aaronsiebert-ux/annasis-website` only — **not** IIS / `www.annasis.com`.
