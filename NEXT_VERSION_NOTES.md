@@ -142,3 +142,17 @@
 - Did not claim waitlists or other unconfirmed event-specific depth; exact fit remains a sales conversation.
 - CSS cache on `events.html`: `?v=20261001d`.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Education intro gap fix (2026-10-01)
+
+- Merged the two stacked `.section` blocks under “Success broken down.” so the foundation-module paragraphs sit in the same section as the H2 (removes the double section padding that created a large vertical gap).
+- Kept `.education-lead-spaced` for paragraph spacing inside that section.
+- CSS cache on `education.html` was bumped with that fix (`?v=20261001d`); superseded by the mobile-nav cache bump below.
+
+## Mobile hamburger nav parity + Who we serve (2026-10-01)
+
+- Audited every marketing HTML page: `desktop-nav` main items already matched `#mobileNav` (Twelve modules, What makes us different, Stories, Are we a fit?, About) plus Contact CTA / LinkedIn in `mobile-nav-actions`. `pricing.html` intentionally has no standard header/footer/nav.
+- Desktop main nav remains school-focused (no Events/Camps/Churches in main nav).
+- Added a clean mobile-only subsection `.mobile-nav-serve` on all standard pages (not pricing): **Who we serve** → Schools, Events, Store, Camps, Churches, plus **How we partner** — mirrors footer discoverability inside the hamburger without changing desktop-nav.
+- CSS: label + stacked ≥44px taps; sits between main links and Contact CTA. Cache bust `app.46zixdbv0d.css?v=20261001e` sitewide.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
