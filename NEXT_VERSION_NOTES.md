@@ -106,3 +106,11 @@
 - CSS cache on touched pages: `?v=20260930z`. Competitive notes appended on camps/churches.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
 - `partner.html` — promoted **event management**, **conferences**, and ministry/program events into the hero, customer-first, roadmap, and Simpler operations messaging; CSS cache bumped to `?v=20260930aa`.
+
+## Events page hero artwork (2026-10-01)
+
+- Added Aaron’s Event Management artwork as `Images/event-management-hero.jpg`.
+- `events.html` now uses the artwork in the hero, Open Graph, and Twitter image metadata; the nav logo remains `Images/nav-logo.jpg`.
+- Kept existing sponsor-invite and round-up copy unchanged; hero copy remains limited to the event-registration claims already present.
+- CSS cache on `events.html`: `?v=20261001a`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
