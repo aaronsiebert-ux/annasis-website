@@ -122,3 +122,15 @@
 - Lightly aligned the hero kicker/H1 to “Customer partnership” and a trusted, future-oriented partner while retaining the existing events/conferences messaging.
 - CSS cache on `partner.html`: `?v=20261001b`.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Events + Store multi-market broaden + school deep links (2026-10-01)
+
+- **School-page deep links** (main nav unchanged; footer Who we serve unchanged):
+  - `education.html` — Event registration module → `events.html` (“See Events →”); School store module → `ecommerce.html` (“See Store →”).
+  - `index.html` — foundation lead links Events/Store; home Events card CTAs to Events and Store.
+  - `fit.html` — Events and Store pain answers link to the segment landers.
+- **`events.html` rewritten** for multi-market readers (schools, camps, church programs, convention/event managers) — not school-only. Sections: hero, what you get (registration/ticketing, check-in & scheduling, exhibitors where honest, fundraising with sponsor invites + round-up), who runs events, overlap, fit signals, next step. Kept `Images/event-management-hero.jpg`, contact primary / partner secondary, header/footer/cookie pattern.
+- **`ecommerce.html` rewritten** to matching quality — institutional store for schools, camps, churches, event programs. Hero uses existing `Images/hero-ecommerce.jpg`. Round-up + sponsor adjacency retained; Event add-ons cross-link to Events.
+- Meta titles/descriptions updated for multi-market discovery SEO.
+- CSS cache on touched pages: `?v=20261001c`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
