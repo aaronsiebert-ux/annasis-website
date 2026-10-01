@@ -105,3 +105,4 @@
   - `partner.html` — light Churches & camps blurb mention.
 - CSS cache on touched pages: `?v=20260930z`. Competitive notes appended on camps/churches.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+- `partner.html` — promoted **event management**, **conferences**, and ministry/program events into the hero, customer-first, roadmap, and Simpler operations messaging; CSS cache bumped to `?v=20260930aa`.
