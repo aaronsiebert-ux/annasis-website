@@ -134,3 +134,11 @@
 - Meta titles/descriptions updated for multi-market discovery SEO.
 - CSS cache on touched pages: `?v=20261001c`.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Events custom workflows + complex scenarios (2026-10-01)
+
+- Strengthened `events.html` hero and metadata to lead with **configurable event registration** for complex programs, conferences, and calendars.
+- Added a dedicated **Custom workflows** section covering multi-session programs, paid/free ticket types, forms and waivers, check-in details, and exhibitor/add-on paths; approval language is tied to the configurable forms/clearances workflows already described elsewhere on the site.
+- Did not claim waitlists or other unconfirmed event-specific depth; exact fit remains a sales conversation.
+- CSS cache on `events.html`: `?v=20261001d`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
