@@ -156,3 +156,11 @@
 - Added a clean mobile-only subsection `.mobile-nav-serve` on all standard pages (not pricing): **Who we serve** → Schools, Events, Store, Camps, Churches, plus **How we partner** — mirrors footer discoverability inside the hamburger without changing desktop-nav.
 - CSS: label + stacked ≥44px taps; sits between main links and Contact CTA. Cache bust `app.46zixdbv0d.css?v=20261001e` sitewide.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Remove cookie-consent gate; restore automatic Apollo tracking (2026-10-01)
+
+- Removed `js/cookie-consent.js` and its sitewide inclusion; no cookie Accept/Decline modal, modal HTML, or consent-gated modal CSS remains.
+- Restored the automatic Apollo tracker on every marketing HTML page via `js/apollo-tracker.xg91sm7mp7.js`; it loads without an acknowledgment gate and reinitializes on Blazor enhanced navigation.
+- Did not add a delayed home-only modal or any replacement consent UI.
+- Bumped the shared stylesheet cache on all marketing HTML pages to `app.46zixdbv0d.css?v=20261001f`.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.

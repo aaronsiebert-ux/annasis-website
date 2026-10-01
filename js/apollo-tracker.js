@@ -1,48 +1,50 @@
 /**
- * ANNASIS Apollo website visit tracker
- * Loaded only after cookie consent is accepted.
- * Apollo's tracker library itself is fetched from Apollo's CDN.
+ * ANNASIS Apollo website visitor tracker.
+ * Loads immediately on every site visit.
  * Also reinitializes after Blazor enhanced navigation.
  */
+
 (function () {
-  var APOLLO_APP_ID = '6a74e7186eb280001427515e';
+    const APOLLO_APP_ID = '6a74e7186eb280001427515e';
 
-  function runApolloTracking() {
-    if (window.trackingFunctions && window.trackingFunctions.onLoad) {
-      window.trackingFunctions.onLoad({ appId: APOLLO_APP_ID });
+    function runApolloTracking() {
+        if (window.trackingFunctions && window.trackingFunctions.onLoad) {
+            window.trackingFunctions.onLoad({
+                appId: APOLLO_APP_ID
+            });
+        }
     }
-  }
 
-  function initApollo() {
-    if (window.__annasisApolloLoaded) {
-      runApolloTracking();
-      return;
+    function loadApollo() {
+        if (window.__annasisApolloLoaded) {
+            runApolloTracking();
+            return;
+        }
+
+        window.__annasisApolloLoaded = true;
+
+        const nocache = Math.random().toString(36).substring(7);
+        const script = document.createElement('script');
+
+        script.src =
+            'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' +
+            nocache;
+
+        script.async = true;
+        script.defer = true;
+
+        script.onload = function () {
+            runApolloTracking();
+        };
+
+        document.head.appendChild(script);
     }
-    window.__annasisApolloLoaded = true;
 
-    var n = Math.random().toString(36).substring(7);
-    var o = document.createElement('script');
-    o.src = 'https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache=' + n;
-    o.async = true;
-    o.defer = true;
-    o.onload = function () {
-      runApolloTracking();
-    };
-    document.head.appendChild(o);
-  }
+    // Initial page load
+    loadApollo();
 
-  // Expose for cookie-consent.js
-  window.annasisLoadApollo = initApollo;
-
-  // If this file is included alone after consent was already granted, start tracking
-  try {
-    if (localStorage.getItem('annasis_cookie_consent') === 'accepted') {
-      initApollo();
-    }
-  } catch (e) {}
-
-  // Blazor enhanced navigation
-  document.addEventListener('enhancedload', function () {
-    if (window.__annasisApolloLoaded) runApolloTracking();
-  });
+    // Blazor enhanced navigation
+    document.addEventListener('enhancedload', function () {
+        runApolloTracking();
+    });
 })();
