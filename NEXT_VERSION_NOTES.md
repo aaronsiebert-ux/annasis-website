@@ -71,3 +71,21 @@
 - New hero visual: `Images/church-planning-hero.jpg` (Church Planning artwork; subtitle Planning, Check-in, Giving, Fundraising, Store & Events). Replaces `Images/hero-events.jpg` on `churches.html` hero + og/twitter. Nav logo (`Images/nav-logo.jpg`) unchanged.
 - Copy: hero H1/lead, events pillar, ministry calendar, conferences card, fit signals, and bottom CTA name event management / conferences clearly. `partner.html` Churches & camps blurb adds a brief event-management/conferences mention.
 - CSS cache on touched pages: `?v=20260930x`. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Camps lander + cookie consent (2026-09-30)
+
+- Expanded `camps.html` from “coming soon” stub to full segment lander mirroring `churches.html` quality/structure (hero, what you get, camp season, school+church+camp overlap, fit cues, CTAs).
+- Research notes: `CAMPS_COMPETITIVE_NOTES.md` (CampBrain, UltraCamp, CampMinder themes + ANNASIS unique VPs + Aaron feature-gap validation table).
+- Positioning: **one-stop camp management** — lead Registration, **Camp Store**, Attendance, Fundraising; Staff/Medical phrased as forms / health-info collection / program ops (no CampMinder EHR / Cabinizer claims). Quiet afterthought only if camp already has specialty software. Primary CTA `contact.html`; secondary `partner.html` (not Fit/Different).
+- Hero: `Images/camp-management-hero.jpg` (attached Camp Management artwork) for hero + og/twitter. Nav logo unchanged.
+- CSS cache `?v=20260930y` on marketing HTML.
+
+### Cookie consent restore (sitewide)
+
+- Restored pre-live pattern from `/workspace/cookie-consent.js` + consent-gated Apollo into next-version `js/`:
+  - `js/cookie-consent.js` — home-only modal (5s), Accept/Decline → `localStorage` `annasis_cookie_consent`; Accept loads Apollo; popup styles inlined. Fallback path updated to `js/apollo-tracker.js` (was `assets/`).
+  - `js/apollo-tracker.js` (+ hashed twin) — **no longer auto-loads on every visit**; exposes `annasisLoadApollo` and starts only after Accept (or prior accepted consent). Keeps Blazor `enhancedload` re-init when already loaded.
+- Removed unconditional `<script src="js/apollo-tracker…">` from `<head>` on all public HTML pages.
+- Added `<script src="js/cookie-consent.js?v=20260930y" defer></script>` before `</body>` on: `index.html`, `about.html`, `camps.html`, `churches.html`, `contact.html`, `different.html`, `ecommerce.html`, `education.html`, `events.html`, `fit.html`, `partner.html`, `pricing.html`, `stories.html`.
+- Behavior matches packaged install notes: modal home-only; other pages include script so tracking runs after home Accept without showing the modal again.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
