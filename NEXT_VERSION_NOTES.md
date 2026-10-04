@@ -185,3 +185,9 @@
 - **Other:** unique H1 on `pricing.html`; trimmed education description; slightly shorter events title; CSS `?v=20261001g`.
 - **Audit checklist for Aaron:** `SEO_AUDIT_2026-10-01.md` (what fixed vs Search Console / prod-only steps).
 - Preview push to `aaronsiebert-ux/annasis-website` only — **not** IIS / `www.annasis.com`.
+
+## Fundraising progress use cases — Twelve modules (2026-10-04)
+
+- On `education.html` module 9 (Donations & fundraising), kept sponsor invites and store round-up and added short school use cases: a scale of dollars raised vs goal, class/team/campaign rankings (school drive, not a pressure pitch), and percent to goal on a campaign, student, team, or event page.
+- Did not change camps, churches, events, or store landers. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
