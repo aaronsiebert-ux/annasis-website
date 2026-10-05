@@ -191,3 +191,11 @@
 - On `education.html` module 9 (Donations & fundraising), kept sponsor invites and store round-up and added short school use cases: a scale of dollars raised vs goal, class/team/campaign rankings (school drive, not a pressure pitch), and percent to goal on a campaign, student, team, or event page.
 - Did not change camps, churches, events, or store landers. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
 
+
+## School operating system messaging — retire “school in a box” (2026-10-05)
+
+- Aaron approved Bobby’s messaging lines (primary framing: **school operating system**). Removed all visible “school in a box” / “school-in-a-box” HTML copy; image file `Images/school-in-a-box.jpg` kept (filename only).
+- `about.html`: lead now reads “The solution was to create a school operating system — one platform from admissions to events, the school store, and athletics.” (replaces the long module list; Parents/Students/Faculty customer sentence kept). H3 “School in a box” → “One operating system”; card opens “Run the school on one platform.”; image alt → “One operating system — everything you need on one platform”.
+- `different.html`: compare cell → “School operating system — twelve foundation modules”; hero lead adds “— run the school on one platform”; “When you are ready” card H3 → “Sit beside what you have — or replace it when you are ready” (body and “Jog before you run” unchanged).
+- `index.html`: “The system” section H2 → “Twelve modules. One family record.”
+- No CSS change, so no `?v=` cache bump. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
