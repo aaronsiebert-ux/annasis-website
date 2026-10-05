@@ -226,3 +226,12 @@
 - Logos: Clever PNG + ClassLink SVG/PNG under `Images/integrations/`; other vendors use text cards (official brand assets not cleanly obtainable).
 - Wired: footer Integrations link on school pages; CTA on education.html; link on fit.html; sitemap entry `https://www.annasis.com/integrations`.
 - CSS: `.integration-logo-grid` responsive; cache `?v=20261005b`.
+
+## Integrations page revision — "works with your stack" (2026-10-05, later)
+
+- Aaron feedback: original page was too migration-oriented and OneRoster-heavy. Rewritten as **complementary / coexist**: ANNASIS runs alongside the existing SIS, LMS, rostering hubs, and QuickBooks; "pick your favorite LMS"; grow into fuller suite when the office is ready.
+- Product-truth correction: Capability Catalog lists OneRoster / public API as **ROADMAP** (and the OneRoster requirements doc says ANNASIS does not yet import OneRoster). The old "ANNASIS can ingest OneRoster" claim was removed; OneRoster now appears only in a light "For the data-minded" note as roadmap + onboarding-scoped handoff.
+- Bands: Connected today (QuickBooks, Google Workspace, Microsoft 365 — LIVE per catalog INT-01..04) → Pick your favorite LMS (Google Classroom, Canvas, Schoology, Microsoft Teams) → Sign-on/rostering (Clever, ClassLink, Planbook w/ ClassLink caveat; Seesaw/Nearpod/Edpuzzle/Kahoot compact tiles) → Already have an SIS? (FACTS/RenWeb, Alma, Veracross, Sycamore, Blackbaud EM, Rediker, Gradelink, Jupiter, ClassReach — compact logo tiles, secondary).
+- Logos for every vendor shown, under `Images/integrations/` (vendor sites or Wikimedia Commons; see commit/report). Removed unused `classlink.png`. Directory-style "works with" marks with non-endorsement footnote; no partnership claims.
+- education.html + fit.html teasers reframed from "Coming from another SIS / OneRoster" to "works with your school stack".
+- CSS: integrations block rewritten (larger white logo wells, 4-up LMS grid, compact tile grid); cache `?v=20261005c` on all pages.
