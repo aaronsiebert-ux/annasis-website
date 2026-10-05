@@ -5,6 +5,17 @@
 **OneDrive:** `AnnaSIS/Website/next-version/`  
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
+
+## Logo caption → micro Who-we-serve (2026-10-05)
+
+- Replaced static header caption **SCHOOL OPERATING SYSTEM** under the logo with compact vertical quick links (all five): **Schools · Events · Store · Camps · Churches**.
+- Link targets match footer / mobile “Who we serve”: Schools → `index.html`, Events → `events.html`, Store → `ecommerce.html` (label **Store**), Camps → `camps.html`, Churches → `churches.html`.
+- Logo image (and brand name) still link home. Main school nav unchanged. Footer Who we serve unchanged.
+- Markup: `.brand` is now a flex container (not a single `<a>`) so nested links are valid; logo uses `.brand-home`; caption is `<nav class="brand-tagline" aria-label="Who we serve">` with `·` separators (`.brand-serve-sep`).
+- CSS: muted navy caption size (10px / 9px / 8px breakpoints), orange hover, `flex-wrap` so five links wrap to two lines under the logo on narrow widths instead of dropping Camps/Churches or colliding with the hamburger. Does not look like a second full header.
+- Updated all 12 standard-header HTML pages; `pricing.html` has no shared header and was left without this block (CSS cache bumped only).
+- CSS cache: `app.46zixdbv0d.css?v=20261005a`. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
 ## Named competitor-alternative SEO keywords (2026-10-01)
 
 - Added light, page-specific competitor-alternative phrases to `meta name="keywords"` without changing titles or H1s:
