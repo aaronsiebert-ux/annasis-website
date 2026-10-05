@@ -199,3 +199,11 @@
 - `different.html`: compare cell → “School operating system — twelve foundation modules”; hero lead adds “— run the school on one platform”; “When you are ready” card H3 → “Sit beside what you have — or replace it when you are ready” (body and “Jog before you run” unchanged).
 - `index.html`: “The system” section H2 → “Twelve modules. One family record.”
 - No CSS change, so no `?v=` cache bump. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## School SEO — add LMS for discovery (2026-10-05)
+
+- Aaron: include Learning Management System (LMS) in school-page SEO where it was missing (previously LMS only appeared in Different body comparison: “SIS or LMS that later adds finance”).
+- Framing: SOS-first; keep SIS for market search; LMS as **alternative / not-just-another** category SEO — not claiming ANNASIS is “an LMS product” as the headline (glossary: do not lead with LMS parity).
+- Updated school pages only: `index.html`, `education.html`, `different.html`, `fit.html`, `about.html`, `stories.html` (meta description; titles on home/education/different; keywords; OG/twitter; JSON-LD description/name where they duplicated the same strings).
+- Did not touch camps/churches/events/store segment landers. No CSS/`?v=` bump. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
