@@ -218,3 +218,11 @@
 - Updated school pages only: `index.html`, `education.html`, `different.html`, `fit.html`, `about.html`, `stories.html` (meta description; titles on home/education/different; keywords; OG/twitter; JSON-LD description/name where they duplicated the same strings).
 - Did not touch camps/churches/events/store segment landers. No CSS/`?v=` bump. Preview via GitHub Pages only — not IIS/`www.annasis.com`.
 
+## School Integrations / OneRoster page (2026-10-05)
+
+- New `integrations.html` — OneRoster-first migration story for private schools (preview + next-version trees only; **not** production www).
+- Honest framing: ANNASIS ingests OneRoster direct or via Clever/ClassLink; aggregators optional/paid; no partnership badges.
+- Vendor captions from Apollo + public research (FACTS native API; Alma school-enabled; Veracross API Plus; Sycamore confirm; Blackbaud EM 1.1; Rediker TeacherPlus path; Gradelink via Clever only; Jupiter Clever/SFTP; ClassReach proprietary CSV).
+- Logos: Clever PNG + ClassLink SVG/PNG under `Images/integrations/`; other vendors use text cards (official brand assets not cleanly obtainable).
+- Wired: footer Integrations link on school pages; CTA on education.html; link on fit.html; sitemap entry `https://www.annasis.com/integrations`.
+- CSS: `.integration-logo-grid` responsive; cache `?v=20261005b`.

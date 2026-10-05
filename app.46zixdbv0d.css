@@ -1240,3 +1240,85 @@ footer {
         margin-bottom: 16px;
     }
 }
+
+
+/* =========================================================
+   Integrations logo grid
+   ========================================================= */
+
+.integration-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.integration-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 18px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 100%;
+}
+
+.integration-card-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    margin-bottom: 4px;
+    padding: 8px 10px;
+    background: #fbfaf7;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+
+.integration-card-mark img {
+    max-width: 100%;
+    max-height: 44px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.integration-card-text {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--navy);
+    letter-spacing: .02em;
+}
+
+.integration-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--navy);
+}
+
+.integration-caption {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .integration-logo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .integration-logo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .integration-card-mark {
+        min-height: 56px;
+    }
+}
