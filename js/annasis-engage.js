@@ -1471,7 +1471,7 @@
     var CHAT_QUAL_KEY = 'annasis_chat_qual';
 
     var SUPPORT_CUSTOMER = [
-        { v: 'customer', l: 'Yes — my school or organization uses ANNASIS' },
+        { v: 'customer', l: 'Yes — we use ANNASIS software' },
         { v: 'parent', l: 'I’m a Parent or family member' },
         { v: 'prospect', l: 'Not yet / not sure' }
     ];
