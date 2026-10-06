@@ -292,7 +292,8 @@
 }
 
 .ae-field input,
-.ae-field select {
+.ae-field select,
+.ae-field textarea {
     width: 100%;
     min-height: 46px;
     padding: 10px 12px;
@@ -303,6 +304,22 @@
     color: var(--ink, #1c2430);
 }
 
+.ae-field textarea {
+    min-height: 84px;
+    resize: vertical;
+    line-height: 1.4;
+}
+
+.ae-field--wide {
+    grid-column: 1 / -1;
+}
+
+.ae-field-hint {
+    font-size: 13px;
+    color: var(--muted, #5b6775);
+}
+
+.ae-field textarea[aria-invalid="true"],
 .ae-field input[aria-invalid="true"] {
     border-color: #b42318;
     box-shadow: 0 0 0 1px #b42318;
@@ -706,6 +723,36 @@
 .ae-chat-chip--primary:hover {
     background: var(--orange, #ef7a2a);
     opacity: .9;
+}
+
+/* Guided chat steps (pricing + support) and the "Start the quiz" button */
+.ae-choice {
+    padding-left: 36px; /* line up with Anna's bubbles (avatar + gap) */
+}
+
+.ae-choice-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.ae-choice-chip[aria-pressed="true"] {
+    background: var(--ae-anna);
+    color: #fff;
+}
+
+.ae-choice-actions {
+    margin-top: 8px;
+}
+
+.ae-msg-cta-row {
+    display: block;
+    margin-top: 10px;
+}
+
+.ae-msg-cta {
+    min-height: 40px;
+    font-weight: 700;
 }
 
 .ae-chat-form {

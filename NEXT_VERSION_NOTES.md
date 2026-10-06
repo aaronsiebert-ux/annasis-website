@@ -245,3 +245,53 @@
 - **Config at top of the JS** (or `window.ANNASIS_ENGAGE_CONFIG` override): `chatEnabled` (default true), `leadboosterMode` (default false; true = hide our chat and show LeadBooster Anna; values `companyId 13851722`, `playbookUuid fe7940be-…` already in `js/annasis.js`), `anna.*`, `nudgeDelayMs` (20000, once per session), `urls.*` (relative `.html` for preview — set `/fit`, `/contact`, … for Blazor), `lead.endpoint` (empty = fallback to contact.html; set to a Zapier/Make/server webhook to create Pipedrive Person + Organization + Lead + Note — never put a Pipedrive token in client JS).
 - While our chat is on, the LeadBooster bubble is hidden with CSS (`.ae-hide-leadbooster #LeadboosterContainer`), so the two never show together. `js/annasis.js` was not modified.
 - Preview via GitHub Pages only — not IIS/`www.annasis.com`.
+
+## Anna chat fixes + guided Pricing / Support + lead webhook (2026-10-06)
+
+### Bug: "Take the fit quiz" link in Anna's chat did nothing — root cause + fix
+- **Root cause:** the chat widget is appended to `<body>`, *outside* the site's `<div class="site-shell" data-enhance-nav="false">`, so Blazor's enhanced navigation (`_framework/blazor.web.*.js`) intercepted the chat's `fit.html#fit-quiz` link. The static preview doesn't answer with `blazor-enhanced-nav: allow` (IIS does), so Blazor "falls back" with `history.replaceState(url + "?")` + `location.replace(url)` — and with a `#hash` that is only a same-document fragment change, which re-triggers enhanced nav: an endless loop. The address bar showed `fit.html#fit-quiz` but the page never loaded and the chat stayed open. On IIS/Blazor the enhanced nav would succeed but swap `<body>`, so the chat re-opened from sessionStorage over the quiz. Also the fit.html hero button used `href="#fit-quiz"`, which with `<base href="./">` resolves to the home page.
+- **Fix (js/annasis-engage.js):** `#ae-chat` carries `data-enhance-nav="false"` (same convention as the site shell); every quiz link/button inside the chat — new replies, restored history, typed "quiz" — is handled by one click handler: close the chat (saved as closed), then scroll on fit.html or do a full page load to `fit.html#fit-quiz`. Arriving at fit.html with `#fit-quiz` (or sent by Anna) keeps the chat closed, starts at question 1 (or shows this session's result with *Retake the quiz*), and focuses the first question — re-applied after the browser's own scroll-to-anchor (which otherwise moves focus to the page). Off fit.html Anna shows a clear **Start the quiz →** button. fit.html hero button now `href="fit.html#fit-quiz"`.
+- On the Blazor site use `/fit#fit-quiz` (set `urls.quiz`). Page links inside `.site-shell` were not affected.
+
+### Chat changes
+- Quick replies: What is ANNASIS? · Does it work with my current SIS? · **Events** · **Camps** · School store · Pricing · Take the fit quiz · Book a demo · **Get support** (Events & camps split; Events answer no longer carries the camps sentence).
+- **Pricing** (chip or typed): Anna asks what they use today (multi-select: the quiz tool list incl. FACTS / RenWeb, ClassReach, Sycamore, Gradelink, Alma, Veracross … + "Something else / not sure"), what they are (Private school / Event or conference organizer / Camp / Church / Store or program shop), and rough size (quiz size bands), then gives the existing pricing answer (no prices) and opens the sales form. Payload adds `currentTools`, `orgType`, `size`, `intent: "pricing"`.
+- **Get support** (chip + keywords support, help, login, password, can't log in, broken, error, bug, refund, charge, billing issue, account, ticket, not working …): "Are you an ANNASIS customer?" (Yes — my school or organization uses ANNASIS / I'm a Parent or family member / Not yet / not sure) → category (Login / account access, Billing or payment, Registration or event, Store / order, Gradebook / SIS, Something else) → form: what's going on + name, email, school/org, optional phone → `ANNASIS_LEAD.submit` with `type: "support"`. Parents are told their school office is usually the fastest help for grades, balances, and schedules (reminded again for Billing / Gradebook). Single-word ties go to product answers ("ticket" alone → Events ticketing, "logins" → family portal); "open a ticket", "support ticket", "can't log in" go to support.
+- **Support contact:** none published on www.annasis.com or in the site files (only sales@annasis.com). `support.email` / `support.url` in the config are empty with a TODO; Anna says "The ANNASIS team will follow up by email." Fill them in to have Anna mention them.
+
+### Lead webhook payload (flat JSON, `ANNASIS_LEAD.submit`)
+POSTed to `lead.endpoint` as `Content-Type: text/plain;charset=UTF-8` (a "simple" CORS request — no preflight); body is JSON. Default `fetchMode: 'cors'` reads the status (the Worker sends CORS headers, so a Pipedrive failure → contact-page fallback); `fetchMode: 'no-cors'` for hooks without CORS headers (opaque response = success). Network failure, timeout (10 s), or non-2xx → contact.html with a copy-ready summary. No endpoint → contact.html (current behaviour).
+
+| Field | Type | Notes |
+|---|---|---|
+| `type` | string | `sales` or `support` |
+| `source` | string | `fit-quiz` or `chat` |
+| `name`, `firstName`, `lastName` | string | first/last split from name |
+| `email`, `phone` | string | phone optional |
+| `role` | string | sales form role; `Parent` for Parent support requests |
+| `organization` | string | school / organization |
+| `orgType` | string | e.g. `Private school`, `Camp` |
+| `size` | string | e.g. `150–400 Students`, `Under 250 families or participants` |
+| `currentTools` | string[] | labels, e.g. `["FACTS / RenWeb","QuickBooks"]` |
+| `pains` | string[] | quiz "What hurts most" labels |
+| `plan`, `timeline` | string | quiz answers (labels) |
+| `recommendation` | string | quiz result title |
+| `modules` | string[] | suggested modules |
+| `topics` | string[] | chat topics visited |
+| `supportCategory` | string | support only |
+| `message` | string | support description |
+| `leadTitle` | string | e.g. `Website fit quiz – <org>`, `Website pricing (Anna) – <org>`, `Website chat (Anna) – <org>`, `[Support] <category> – <org>` |
+| `noteText` | string | pre-formatted, human-readable note with everything above + page/UTM |
+| `pageUrl`, `landingPage`, `referrer` | string | |
+| `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gclid` | string | first page of the session |
+| `submittedAt` | string | ISO 8601 (UTC) |
+| extras | | `intent` (`pricing` / `support` / ''), `customerStatus` (support), `questions` (typed chat questions, last 5), `website` (honeypot — always '' from real visitors) |
+
+All keys are always present (empty string / empty array when unknown).
+
+- **Testing override:** `?ae_endpoint=<https url>` sets the endpoint for that tab (sessionStorage) **only on `aaronsiebert-ux.github.io`**; ignored everywhere else (incl. www.annasis.com); removed from the address bar; `?ae_endpoint=off` clears it.
+- `tools/test-lead-webhook.sh <url>` posts one sample sales + one support payload (text/plain, `Origin` = preview; override with `ORIGIN=`).
+
+### Pipedrive receiver: `tools/pipedrive-lead-worker/`
+Cloudflare Worker (`worker.js`, `wrangler.toml`, `README.md` with non-developer deploy steps, `test.mjs` unit tests with mocked Pipedrive). Sales → find-or-create Organization (name) + Person (email; org, phone, job title) → Lead (`leadTitle`) + Note (`noteText`). Support → Org + Person → `[Support]` Note on person/org + Task activity `[Support] <category> – <org>` (no Lead). Validates honeypot, required fields, Origin allowlist (annasis.com, www.annasis.com, aaronsiebert-ux.github.io), CORS. Token = Worker secret `PIPEDRIVE_API_TOKEN` (never committed); optional `PIPEDRIVE_DOMAIN`. **Not deployed**; `lead.endpoint` is still empty.
+- Cache-bust: `annasis-engage.(js|css)?v=20261006a` on all 14 pages.

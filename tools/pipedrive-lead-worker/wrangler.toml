@@ -1,0 +1,13 @@
+# Cloudflare Worker: ANNASIS website leads → Pipedrive.
+# Deploy:  npx wrangler deploy
+# Secret:  npx wrangler secret put PIPEDRIVE_API_TOKEN   (never put the token in this file)
+name = "annasis-lead"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Optional: your Pipedrive company domain (the part before .pipedrive.com).
+# Leave empty to use https://api.pipedrive.com.
+PIPEDRIVE_DOMAIN = ""
+# Sites allowed to send leads (comma-separated, exact origins).
+ALLOWED_ORIGINS = "https://annasis.com,https://www.annasis.com,https://aaronsiebert-ux.github.io"
