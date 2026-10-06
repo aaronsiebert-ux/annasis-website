@@ -89,22 +89,39 @@
             stories: 'stories.html'
         },
 
-        // Lead submission — see ANNASIS_LEAD below.
+        // Support contact shown by Anna's "Get support" path.
+        // TODO: no public support email or help-center URL exists on www.annasis.com or in
+        // the site files today (only sales@annasis.com). Add them here when Aaron confirms;
+        // while both are empty, Anna says the ANNASIS team will follow up by email.
+        support: {
+            email: '',
+            url: ''
+        },
+
+        // Lead submission — see ANNASIS_LEAD below and NEXT_VERSION_NOTES.md (payload schema).
         lead: {
             // endpoint: '' (default) -> no network call; people go to contact.html,
-            //   which embeds the Pipedrive web form, with the answers in the URL and
-            //   a copy-ready summary above the form. (Pipedrive Web Forms cannot be
-            //   prefilled or posted to from another page, so this is the safe default.)
-            // endpoint: 'https://hooks.zapier.com/...' or a Make / own-server URL ->
-            //   POST JSON payload; that webhook creates Person + Organization + Lead
-            //   (+ Note) in Pipedrive using a token kept server-side.
+            //   which embeds the Pipedrive web form, with a copy-ready summary above the form.
+            //   (Pipedrive Web Forms cannot be prefilled or posted to from another page.)
+            // endpoint: 'https://annasis-lead.<you>.workers.dev' (tools/pipedrive-lead-worker)
+            //   or a Zapier / Make URL -> POST the flat JSON payload; the server creates
+            //   Person + Organization + Lead + Note in Pipedrive with a token kept server-side.
             endpoint: '',
-            // Sent as text/plain so the browser makes a "simple" request (no CORS
-            // preflight). Zapier/Make parse the JSON body. Use 'application/json'
-            // if your own server handles preflight.
+            // Sent as text/plain so the browser makes a "simple" request (no CORS preflight).
+            // The body is still JSON; the Worker / Zapier / Make parse it.
             contentType: 'text/plain;charset=UTF-8',
+            // 'cors' (default): the response status is readable. The ANNASIS lead Worker sends
+            //   CORS headers, so if Pipedrive rejects a lead the visitor is sent to the contact
+            //   page instead of the lead being lost.
+            // 'no-cors': for a webhook that sends no CORS headers. The response is opaque and
+            //   counted as success; only a network failure falls back to the contact page.
+            fetchMode: 'cors',
             timeoutMs: 10000,
-            fallbackUrl: 'contact.html'
+            fallbackUrl: 'contact.html',
+            // Testing only: ?ae_endpoint=<url> overrides `endpoint` for this browser tab
+            // (sessionStorage) — honored ONLY on these hosts, never on www.annasis.com.
+            // ?ae_endpoint=off clears the override.
+            endpointOverrideHosts: ['aaronsiebert-ux.github.io']
         }
     };
 
@@ -189,6 +206,42 @@
     function readJSON(k, d) { try { return JSON.parse(store.get(k)) || d; } catch (e) { return d; } }
 
     /* ---------------------------------------------------------
+       Test-only endpoint override: ?ae_endpoint=<url>
+       Honored only on CONFIG.lead.endpointOverrideHosts (the GitHub Pages
+       preview). Stored in sessionStorage for this tab, then removed from the
+       address bar so it never lands in pageUrl / landingPage.
+       --------------------------------------------------------- */
+    var ENDPOINT_OVERRIDE_KEY = 'annasis_ae_endpoint';
+    function overrideAllowed() {
+        return (CONFIG.lead.endpointOverrideHosts || []).indexOf(window.location.hostname) >= 0;
+    }
+    (function captureEndpointOverride() {
+        var p = readParams();
+        if (!Object.prototype.hasOwnProperty.call(p, 'ae_endpoint')) { return; }
+        if (overrideAllowed()) {
+            var v = String(p.ae_endpoint || '').trim();
+            if (!v || v === 'off' || v === 'clear') {
+                store.del(ENDPOINT_OVERRIDE_KEY);
+            } else if (/^https:\/\/[^\s"'<>]+$/i.test(v) || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/[^\s"'<>]*)?$/i.test(v)) {
+                store.set(ENDPOINT_OVERRIDE_KEY, v);
+            }
+        }
+        if (window.history && window.history.replaceState) {
+            var rest = window.location.search.replace(/^\?/, '').split('&').filter(function (pair) {
+                return pair && pair.split('=')[0] !== 'ae_endpoint';
+            }).join('&');
+            window.history.replaceState(window.history.state, '', window.location.pathname + (rest ? '?' + rest : '') + window.location.hash);
+        }
+    })();
+    function leadEndpoint() {
+        if (overrideAllowed()) {
+            var o = store.get(ENDPOINT_OVERRIDE_KEY);
+            if (o) { return o; }
+        }
+        return CONFIG.lead.endpoint || '';
+    }
+
+    /* ---------------------------------------------------------
        UTM / landing capture (first page of the session)
        --------------------------------------------------------- */
     (function captureLanding() {
@@ -208,96 +261,139 @@
     /* =========================================================
        ANNASIS_LEAD — one place every quiz and chat lead goes.
 
-       Payload → Pipedrive mapping (done by the webhook/server, never in
-       the browser; keep the Pipedrive API token server-side):
-         Person        name  = payload.person.name
-                       email = payload.person.email
-                       phone = payload.person.phone (optional)
-                       (job title / custom field = payload.person.role)
-         Organization  name  = payload.organization.name   (school / org)
-         Lead          title = payload.lead.title
-                       e.g. "Website fit quiz – <org>" or "Website chat (Anna) – <org>"
-                       linked to the Person + Organization above
-         Note          content = payload.note  (attach to the Lead) — plain text with
-                       quiz answers + recommendation (or chat topics/questions),
-                       page URL, landing page, referrer, and UTM params.
-         Raw fields    payload.quiz / payload.chat / payload.context for custom
-                       fields or labels if wanted (source = payload.source).
-       Zapier example: Catch Hook → Pipedrive "Create Person" → "Create
-       Organization" → "Create Lead" → "Create Note" (lead id from previous step).
+       The browser builds ONE flat JSON payload (schema in NEXT_VERSION_NOTES.md):
+         type ('sales' | 'support'), source, name, firstName, lastName, email, phone,
+         role, organization, orgType, size, currentTools[], pains[], plan, timeline,
+         recommendation, modules[], topics[], supportCategory, message, leadTitle,
+         noteText, pageUrl, landingPage, referrer, utm_source, utm_medium,
+         utm_campaign, utm_term, utm_content, gclid, submittedAt
+         (+ intent, questions[], customerStatus, website = honeypot, always '').
+       It is POSTed as text/plain (no CORS preflight) to CONFIG.lead.endpoint —
+       e.g. tools/pipedrive-lead-worker (Cloudflare Worker), which creates the
+       Pipedrive Organization + Person + Lead + Note (sales) or Note + Activity
+       (support) with a token kept server-side. Never put a Pipedrive token here.
+       No endpoint (or the POST fails) → contact.html with a copy-ready summary.
        ========================================================= */
     var LEAD_STORAGE_KEY = 'annasis_lead_summary';
 
-    function buildNote(payload) {
+    var PAYLOAD_STRINGS = ['type', 'source', 'intent', 'name', 'firstName', 'lastName', 'email', 'phone', 'role',
+        'organization', 'orgType', 'size', 'plan', 'timeline', 'recommendation', 'customerStatus', 'supportCategory',
+        'message', 'leadTitle', 'noteText', 'pageUrl', 'landingPage', 'referrer', 'utm_source', 'utm_medium',
+        'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'submittedAt', 'website'];
+    var PAYLOAD_LISTS = ['currentTools', 'pains', 'modules', 'topics', 'questions'];
+    var PAYLOAD_ORDER = ['type', 'source', 'name', 'firstName', 'lastName', 'email', 'phone', 'role', 'organization',
+        'orgType', 'size', 'currentTools', 'pains', 'plan', 'timeline', 'recommendation', 'modules', 'topics',
+        'supportCategory', 'message', 'leadTitle', 'noteText', 'pageUrl', 'landingPage', 'referrer', 'utm_source',
+        'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'submittedAt',
+        // extras
+        'intent', 'customerStatus', 'questions', 'website'];
+
+    function sourceLabel(p) {
+        if (p.source === 'fit-quiz') { return 'ANNASIS website fit quiz'; }
+        return 'ANNASIS website chat (Anna)' + (p.intent === 'pricing' ? ' — pricing request' : '');
+    }
+
+    function buildNote(p) {
         var lines = [];
-        lines.push('Source: ' + (payload.source === 'chat' ? 'ANNASIS website chat (Anna)' : 'ANNASIS website fit quiz'));
-        if (payload.person && payload.person.name) {
-            lines.push('Name: ' + payload.person.name);
-            lines.push('Email: ' + payload.person.email);
-            if (payload.person.phone) { lines.push('Phone: ' + payload.person.phone); }
-            if (payload.person.role) { lines.push('Role: ' + payload.person.role); }
+        function line(label, v) {
+            if (Array.isArray(v)) { v = v.join(', '); }
+            if (v) { lines.push(label + ': ' + v); }
         }
-        if (payload.organization && payload.organization.name) { lines.push('School / organization: ' + payload.organization.name); }
-        if (payload.quiz) {
-            if (payload.quiz.recommendation) {
-                lines.push('');
-                lines.push('Recommendation: ' + payload.quiz.recommendation.title);
-                if (payload.quiz.recommendation.modules && payload.quiz.recommendation.modules.length) {
-                    lines.push('Suggested modules: ' + payload.quiz.recommendation.modules.join(', '));
-                }
-            }
-            lines.push('');
-            lines.push('Quiz answers:');
-            (payload.quiz.answerList || []).forEach(function (a) {
-                lines.push('- ' + a.question + ' ' + a.answer);
-            });
+        lines.push(p.type === 'support' ? '[Support] Support request from the ANNASIS website' : 'Sales lead from the ANNASIS website');
+        line('Source', sourceLabel(p));
+        if (p.type === 'support') {
+            line('Category', p.supportCategory);
+            line('Customer', p.customerStatus);
         }
-        if (payload.chat) {
-            lines.push('');
-            if (payload.chat.topics && payload.chat.topics.length) { lines.push('Chat topics: ' + payload.chat.topics.join(', ')); }
-            if (payload.chat.questions && payload.chat.questions.length) {
-                lines.push('Questions typed:');
-                payload.chat.questions.forEach(function (q) { lines.push('- ' + q); });
-            }
-        }
-        var c = payload.context || {};
         lines.push('');
-        if (c.pageUrl) { lines.push('Page: ' + c.pageUrl); }
-        if (c.landingPage && c.landingPage !== c.pageUrl) { lines.push('Landing page: ' + c.landingPage); }
-        if (c.referrer) { lines.push('Referrer: ' + c.referrer); }
-        var utmKeys = Object.keys(c.utm || {});
-        if (utmKeys.length) { lines.push('UTM: ' + utmKeys.map(function (k) { return k + '=' + c.utm[k]; }).join(', ')); }
-        return lines.join('\n');
-    }
-
-    function buildContext() {
-        var l = readJSON('annasis_landing', {});
-        return {
-            pageUrl: window.location.href.split('#')[0],
-            pageTitle: document.title,
-            landingPage: l.landingPage || '',
-            referrer: l.referrer || document.referrer || '',
-            utm: l.utm || {},
-            submittedAt: new Date().toISOString()
-        };
-    }
-
-    // Completes a payload: context, lead title, note.
-    function finalizePayload(payload) {
-        payload.context = payload.context || buildContext();
-        var org = (payload.organization && payload.organization.name) || (payload.person && payload.person.name) || 'Website visitor';
-        payload.lead = payload.lead || {};
-        if (!payload.lead.title) {
-            payload.lead.title = (payload.source === 'chat' ? 'Website chat (Anna) – ' : 'Website fit quiz – ') + org;
+        line('Name', p.name);
+        line('Email', p.email);
+        line('Phone', p.phone);
+        line('Role', p.role);
+        line('School / organization', p.organization);
+        line('Organization type', p.orgType);
+        line('Size', p.size);
+        line('Uses today', p.currentTools);
+        line('What hurts most', p.pains);
+        line('How they want to start', p.plan);
+        line('Timeline', p.timeline);
+        if (p.recommendation) {
+            lines.push('');
+            line('Recommendation', p.recommendation);
+            line('Suggested modules', p.modules);
         }
-        payload.note = buildNote(payload);
-        return payload;
+        if ((p.topics && p.topics.length) || (p.questions && p.questions.length)) {
+            lines.push('');
+            line('Chat topics', p.topics);
+            if (p.questions && p.questions.length) {
+                lines.push('Questions typed:');
+                p.questions.forEach(function (q) { lines.push('- ' + q); });
+            }
+        }
+        if (p.message) {
+            lines.push('');
+            lines.push(p.type === 'support' ? 'What’s going on:' : 'Message:');
+            lines.push(p.message);
+        }
+        lines.push('');
+        line('Page', p.pageUrl);
+        if (p.landingPage && p.landingPage !== p.pageUrl) { line('Landing page', p.landingPage); }
+        line('Referrer', p.referrer);
+        var utm = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid'].filter(function (k) { return p[k]; });
+        if (utm.length) { lines.push('UTM: ' + utm.map(function (k) { return k + '=' + p[k]; }).join(', ')); }
+        line('Submitted', p.submittedAt);
+        return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
     }
 
-    function fallbackToContact(payload, params) {
+    function defaultLeadTitle(p) {
+        var org = p.organization || p.name || 'Website visitor';
+        if (p.type === 'support') { return '[Support] ' + (p.supportCategory || 'Website request') + ' – ' + org; }
+        if (p.source === 'fit-quiz') { return 'Website fit quiz – ' + org; }
+        if (p.intent === 'pricing') { return 'Website pricing (Anna) – ' + org; }
+        return 'Website chat (Anna) – ' + org;
+    }
+
+    // Builds the flat payload from partial input: fills defaults, name parts,
+    // page context, UTM, leadTitle, and noteText.
+    function finalizePayload(input) {
+        input = input || {};
+        var l = readJSON('annasis_landing', {});
+        var utm = l.utm || {};
+        var p = {};
+        PAYLOAD_STRINGS.forEach(function (k) {
+            var v = input[k];
+            p[k] = (v === undefined || v === null) ? '' : String(v).trim();
+        });
+        PAYLOAD_LISTS.forEach(function (k) {
+            var v = input[k];
+            p[k] = Array.isArray(v) ? v.filter(Boolean).map(String) : (v ? [String(v)] : []);
+        });
+        p.type = p.type === 'support' ? 'support' : 'sales';
+        p.source = p.source || 'chat';
+        if (p.name && !p.firstName && !p.lastName) {
+            var parts = p.name.split(/\s+/);
+            p.firstName = parts[0];
+            p.lastName = parts.slice(1).join(' ');
+        }
+        p.pageUrl = p.pageUrl || window.location.href.split('#')[0];
+        p.landingPage = p.landingPage || l.landingPage || '';
+        p.referrer = p.referrer || l.referrer || document.referrer || '';
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid'].forEach(function (k) {
+            p[k] = p[k] || utm[k] || '';
+        });
+        p.submittedAt = p.submittedAt || new Date().toISOString();
+        p.leadTitle = p.leadTitle || defaultLeadTitle(p);
+        p.noteText = buildNote(p);
+        // Same key order as the schema in NEXT_VERSION_NOTES.md.
+        var ordered = {};
+        PAYLOAD_ORDER.forEach(function (k) { ordered[k] = p[k]; });
+        return ordered;
+    }
+
+    function fallbackToContact(p, params) {
         // Contact details stay in sessionStorage (same site, this tab only) — not in the URL,
         // so names and emails never land in analytics or referrer logs.
-        store.set(LEAD_STORAGE_KEY, JSON.stringify({ source: payload.source, note: payload.note, at: Date.now() }));
+        store.set(LEAD_STORAGE_KEY, JSON.stringify({ type: p.type, source: p.source, note: p.noteText, at: Date.now() }));
         var url = CONFIG.lead.fallbackUrl || CONFIG.urls.contact;
         var query = qs(params || {});
         window.location.href = url + (query ? (url.indexOf('?') < 0 ? '?' : '&') + query : '');
@@ -305,45 +401,51 @@
 
     var ANNASIS_LEAD = {
         buildNote: buildNote,
+        buildPayload: finalizePayload,
+        endpoint: leadEndpoint,
+        fields: PAYLOAD_ORDER.slice(),
         /**
-         * submit(payload, options)
-         *   payload: { source: 'fit-quiz'|'chat', person:{name,email,phone,role},
-         *              organization:{name}, quiz?:{...}, chat?:{...} }
+         * submit(input, options)
+         *   input: partial flat payload, e.g. { type:'sales'|'support', source:'fit-quiz'|'chat',
+         *          name, email, organization, ... } — see the schema above.
          *   options.params: non-personal query params for the contact.html fallback
-         * Resolves { ok, mode: 'endpoint' } after a successful POST; otherwise
-         * (no endpoint, or the POST fails) it sends the visitor to contact.html.
+         *   options.navigate: false → never leave the page (used by tests)
+         * Resolves { ok, mode: 'endpoint' | 'fallback', payload }.
          */
-        submit: function (payload, options) {
+        submit: function (input, options) {
             options = options || {};
-            finalizePayload(payload);
-            var endpoint = CONFIG.lead.endpoint;
-            if (!endpoint || !window.fetch) {
-                fallbackToContact(payload, options.params);
-                return Promise.resolve({ ok: true, mode: 'fallback' });
+            var p = finalizePayload(input);
+            var endpoint = leadEndpoint();
+            function fallback() {
+                if (options.navigate !== false) { fallbackToContact(p, options.params); }
+                return { ok: true, mode: 'fallback', payload: p };
             }
+            if (!endpoint || !window.fetch) { return Promise.resolve(fallback()); }
             var controller = window.AbortController ? new window.AbortController() : null;
             var timer = controller ? setTimeout(function () { controller.abort(); }, CONFIG.lead.timeoutMs) : null;
             return window.fetch(endpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': CONFIG.lead.contentType },
-                body: JSON.stringify(payload),
+                mode: CONFIG.lead.fetchMode === 'no-cors' ? 'no-cors' : 'cors',
+                credentials: 'omit',
+                headers: { 'Content-Type': CONFIG.lead.contentType || 'text/plain;charset=UTF-8' },
+                body: JSON.stringify(p),
                 signal: controller ? controller.signal : undefined
             }).then(function (res) {
                 if (timer) { clearTimeout(timer); }
-                if (!res.ok) { throw new Error('HTTP ' + res.status); }
-                store.set(LEAD_STORAGE_KEY, JSON.stringify({ source: payload.source, note: payload.note, at: Date.now(), sent: true }));
-                return { ok: true, mode: 'endpoint' };
+                // Opaque (no-cors) responses cannot be read: the request reached the server, count it.
+                if (res.type !== 'opaque' && !res.ok) { throw new Error('HTTP ' + res.status); }
+                store.set(LEAD_STORAGE_KEY, JSON.stringify({ type: p.type, source: p.source, note: p.noteText, at: Date.now(), sent: true }));
+                return { ok: true, mode: 'endpoint', payload: p };
             }).catch(function () {
                 if (timer) { clearTimeout(timer); }
-                fallbackToContact(payload, options.params);
-                return { ok: true, mode: 'fallback' };
+                return fallback();
             });
         }
     };
     window.ANNASIS_LEAD = ANNASIS_LEAD;
 
     /* ---------------------------------------------------------
-       Shared lead-capture form (quiz result + chat)
+       Shared lead-capture form (quiz result + chat sales + chat support)
        --------------------------------------------------------- */
     var ROLES = [
         'Head of school / leadership',
@@ -359,7 +461,9 @@
     ];
 
     function buildLeadForm(opts) {
-        // opts: { source, intro, compact, getExtra(): {quiz|chat}, getParams(): {} }
+        // opts: { kind: 'sales'|'support', source, intro, compact, orgLabel,
+        //         getExtra(): partial flat payload, getParams(): {} }
+        var support = opts.kind === 'support';
         var fid = nextId('ae-lead');
         var status = el('p', { className: 'ae-lead-status', role: 'status', 'aria-live': 'polite' });
 
@@ -371,22 +475,32 @@
             ]);
         }
 
-        var roleId = fid + '-role';
-        var roleSelect = el('select', { id: roleId, name: 'role' }, [el('option', { value: '', text: 'Choose one' })].concat(ROLES.map(function (r) {
-            return el('option', { value: r, text: r });
-        })));
+        var grid = [];
+        if (support) {
+            var msgId = fid + '-message';
+            grid.push(el('div', { className: 'ae-field ae-field--wide' }, [
+                el('label', { 'for': msgId, text: 'What’s going on?' }),
+                el('textarea', { id: msgId, name: 'message', rows: '3', maxlength: '1500', required: true, 'aria-required': 'true', 'aria-describedby': msgId + '-hint' }),
+                el('span', { id: msgId + '-hint', className: 'ae-field-hint', text: 'A sentence or two is plenty. Please don’t include passwords or card numbers.' })
+            ]));
+        }
+        grid.push(field('name', 'Your name', 'text', true, 'name'));
+        grid.push(field('email', support ? 'Email' : 'Work email', 'email', true, 'email'));
+        grid.push(field('org', opts.orgLabel || 'School or organization', 'text', true, 'organization'));
+        if (!support) {
+            var roleId = fid + '-role';
+            var roleSelect = el('select', { id: roleId, name: 'role' }, [el('option', { value: '', text: 'Choose one' })].concat(ROLES.map(function (r) {
+                return el('option', { value: r, text: r });
+            })));
+            grid.push(el('div', { className: 'ae-field' }, [el('label', { 'for': roleId, text: 'Your role' }), roleSelect]));
+        }
+        grid.push(field('phone', 'Phone', 'tel', false, 'tel'));
 
-        var submitBtn = el('button', { type: 'submit', className: 'btn ae-lead-submit', text: 'Send to ANNASIS sales' });
+        var submitBtn = el('button', { type: 'submit', className: 'btn ae-lead-submit', text: support ? 'Send to ANNASIS support' : 'Send to ANNASIS sales' });
 
-        var form = el('form', { className: 'ae-lead-form' + (opts.compact ? ' ae-lead-form--compact' : ''), novalidate: true, 'aria-describedby': fid + '-intro' }, [
+        var form = el('form', { className: 'ae-lead-form' + (opts.compact ? ' ae-lead-form--compact' : '') + (support ? ' ae-lead-form--support' : ''), novalidate: true, 'aria-describedby': fid + '-intro' }, [
             el('p', { id: fid + '-intro', className: 'ae-lead-intro', text: opts.intro }),
-            el('div', { className: 'ae-lead-grid' }, [
-                field('name', 'Your name', 'text', true, 'name'),
-                field('email', 'Work email', 'email', true, 'email'),
-                field('org', 'School or organization', 'text', true, 'organization'),
-                el('div', { className: 'ae-field' }, [el('label', { 'for': roleId, text: 'Your role' }), roleSelect]),
-                field('phone', 'Phone', 'tel', false, 'tel')
-            ]),
+            el('div', { className: 'ae-lead-grid' }, grid),
             // Honeypot — hidden from people; bots tend to fill it.
             el('div', { className: 'ae-hp', 'aria-hidden': 'true' }, [
                 el('label', { 'for': fid + '-website', text: 'Website' }),
@@ -403,11 +517,14 @@
                 name: form.elements.name.value.trim(),
                 email: form.elements.email.value.trim(),
                 org: form.elements.org.value.trim(),
-                role: form.elements.role.value,
-                phone: form.elements.phone.value.trim()
+                role: form.elements.role ? form.elements.role.value : '',
+                phone: form.elements.phone.value.trim(),
+                message: form.elements.message ? form.elements.message.value.trim() : ''
             };
+            var checks = [['name', 'your name'], ['email', support ? 'a valid email' : 'a valid work email'], ['org', 'your school or organization']];
+            if (support) { checks.unshift(['message', 'a short description']); }
             var problems = [];
-            [['name', 'your name'], ['email', 'a valid work email'], ['org', 'your school or organization']].forEach(function (f) {
+            checks.forEach(function (f) {
                 var input = form.elements[f[0]];
                 var bad = !data[f[0]] || (f[0] === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email));
                 input.setAttribute('aria-invalid', bad ? 'true' : 'false');
@@ -422,21 +539,32 @@
             }
             submitBtn.disabled = true;
             status.className = 'ae-lead-status';
-            status.textContent = CONFIG.lead.endpoint ? 'Sending…' : 'Taking you to the contact page…';
+            status.textContent = leadEndpoint() ? 'Sending…' : 'Taking you to the contact page…';
             var payload = {
+                type: support ? 'support' : 'sales',
                 source: opts.source,
-                person: { name: data.name, email: data.email, phone: data.phone, role: data.role },
-                organization: { name: data.org }
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                role: data.role,
+                organization: data.org,
+                message: data.message,
+                website: form.elements.website.value
             };
             var extra = opts.getExtra ? opts.getExtra() : {};
-            Object.keys(extra).forEach(function (k) { payload[k] = extra[k]; });
+            Object.keys(extra).forEach(function (k) {
+                if (extra[k] !== undefined && extra[k] !== null && extra[k] !== '') { payload[k] = extra[k]; }
+            });
             ANNASIS_LEAD.submit(payload, { params: opts.getParams ? opts.getParams() : {} }).then(function (r) {
                 if (r.mode !== 'endpoint') { return; }
                 var first = data.name.split(' ')[0];
-                var done = el('div', { className: 'ae-lead-done', tabindex: '-1' }, [
-                    el('p', { className: 'ae-lead-done-title', text: 'Thanks, ' + first + '.' }),
-                    el('p', { text: 'ANNASIS sales will follow up from sales@annasis.com.' })
-                ]);
+                var lines = support
+                    ? ['Your request is with the ANNASIS team — we’ll follow up by email.']
+                    : ['ANNASIS sales will follow up from sales@annasis.com.'];
+                if (support && CONFIG.support.email) { lines.push('You can also reach us at ' + CONFIG.support.email + '.'); }
+                var done = el('div', { className: 'ae-lead-done', tabindex: '-1' }, [el('p', { className: 'ae-lead-done-title', text: 'Thanks, ' + first + '.' })].concat(lines.map(function (t) {
+                    return el('p', { text: t });
+                })));
                 form.parentNode.replaceChild(done, form);
                 done.focus();
             });
@@ -547,13 +675,33 @@
         }).join(', ');
     }
 
-    function answerList(answers) {
-        return QUIZ.filter(function (s) {
-            var v = answers[s.id];
-            return v && (!Array.isArray(v) || v.length);
-        }).map(function (s) {
-            return { id: s.id, question: s.q(answers), answer: labelFor(s.id, answers[s.id], answers) };
+    function labelsFor(stepId, values, answers) {
+        var step = QUIZ.filter(function (s) { return s.id === stepId; })[0];
+        var opts = step ? optionsFor(step, answers) : [];
+        return (values || []).map(function (v) {
+            var o = opts.filter(function (x) { return x.v === v; })[0];
+            return o ? o.l : v;
         });
+    }
+
+    // "150–400 Students" / "Under 250 families or participants"
+    function sizeText(a) {
+        if (!a.size) { return ''; }
+        return labelFor('size', a.size, a) + (a.type === 'school' ? ' Students' : ' families or participants');
+    }
+
+    // Quiz answers as flat, human-readable payload fields.
+    function quizFlat(a, rec) {
+        return {
+            orgType: a.type ? labelFor('type', a.type, a) : '',
+            size: sizeText(a),
+            currentTools: labelsFor('tools', a.tools, a),
+            pains: labelsFor('pain', a.pain, a),
+            plan: a.plan ? labelFor('plan', a.plan, a) : '',
+            timeline: a.when ? labelFor('when', a.when, a) : '',
+            recommendation: rec ? rec.title : '',
+            modules: rec ? rec.modules.map(function (m) { return m.name; }) : []
+        };
     }
 
     // Module cards used by results (names and copy from the site).
@@ -711,10 +859,6 @@
         };
     }
 
-    function recSummary(rec) {
-        return { id: rec.id, title: rec.title, modules: rec.modules.map(function (m) { return m.name; }) };
-    }
-
     function initQuiz(root) {
         if (!root || root.getAttribute('data-ae-ready')) { return; }
         root.setAttribute('data-ae-ready', '1');
@@ -809,7 +953,7 @@
             if (focus) { heading.focus({ preventScroll: true }); }
         }
 
-        function showResult() {
+        function showResult(quiet) {
             var rec = recommend(answers);
             var params = quizParams(answers, rec);
             var contactHref = CONFIG.urls.contact + '?' + qs(params);
@@ -842,16 +986,15 @@
                 }
             });
             leadWrap.appendChild(buildLeadForm({
+                kind: 'sales',
                 source: 'fit-quiz',
                 intro: 'Send your answers and this recommendation to ANNASIS sales. We will follow up from sales@annasis.com.',
-                getExtra: function () {
-                    return { quiz: { answers: answers, answerList: answerList(answers), recommendation: recSummary(rec) } };
-                },
+                getExtra: function () { return quizFlat(answers, rec); },
                 getParams: function () { return params; }
             }));
 
             var retake = el('button', { type: 'button', className: 'ae-linklike', text: 'Retake the quiz', onclick: function () {
-                answers = {}; index = 0; render(true);
+                answers = {}; index = 0; store.del('annasis_quiz_result'); render(true);
             } });
 
             body.innerHTML = '';
@@ -870,8 +1013,27 @@
             ]));
             live.textContent = 'Your result: ' + rec.title;
             title.focus({ preventScroll: true });
-            if (root.getBoundingClientRect().top < 0) { root.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            if (!quiet && root.getBoundingClientRect().top < 0) { root.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         }
+
+        // Used by the chat and by arrivals at fit.html#fit-quiz.
+        root.__aeQuiz = {
+            focus: function (opts) {
+                opts = opts || {};
+                var resultTitle = body.querySelector('.ae-quiz-result-title');
+                if (resultTitle) { resultTitle.focus({ preventScroll: true }); return; }
+                var saved = readJSON('annasis_quiz_result', null);
+                if (opts.restore && index === 0 && !Object.keys(answers).length && saved && saved.answers && saved.answers.type) {
+                    answers = saved.answers;
+                    index = QUIZ.length;
+                    showResult(true);
+                    return;
+                }
+                if (opts.fromChat || opts.restore) { index = 0; render(true); return; }
+                var q = body.querySelector('.ae-quiz-q');
+                if (q) { q.focus({ preventScroll: true }); }
+            }
+        };
 
         render(false);
     }
@@ -886,25 +1048,30 @@
         var p = readParams();
         var stored = readJSON(LEAD_STORAGE_KEY, null);
         var source = '';
+        var type = 'sales';
         var note = '';
-        if (stored && stored.note && (!p.src || p.src === stored.source)) {
+        if (stored && stored.note && (!p.src || p.src === stored.source || (p.src === 'support' && stored.type === 'support'))) {
             note = stored.note;
             source = stored.source;
+            type = stored.type || 'sales';
         } else if (p.src === 'fit-quiz' && p.fit) {
             var a = {
                 type: p.fit, size: p.size, plan: p.plan, when: p.when,
                 tools: p.tools ? p.tools.split(',') : [], pain: p.pain ? p.pain.split(',') : []
             };
-            note = finalizePayload({ source: 'fit-quiz', quiz: { answers: a, answerList: answerList(a), recommendation: recSummary(recommend(a)) } }).note;
+            var flat = quizFlat(a, recommend(a));
+            flat.source = 'fit-quiz';
+            note = finalizePayload(flat).noteText;
             source = 'fit-quiz';
         } else if (p.src === 'chat') {
-            note = finalizePayload({ source: 'chat', chat: { topics: p.topics ? p.topics.split(',') : [] } }).note;
+            note = finalizePayload({ source: 'chat', intent: p.intent, topics: p.topics ? p.topics.split(',') : [] }).noteText;
             source = 'chat';
         }
         if (!note) { return; }
 
         var anchor = document.querySelector('.form-embed');
         if (!anchor) { return; }
+        var isSupport = type === 'support';
         var taId = nextId('ae-summary');
         var ta = el('textarea', { id: taId, className: 'ae-contact-text', readonly: true, rows: '9' });
         ta.value = note;
@@ -916,9 +1083,11 @@
             if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(note).then(done, legacy); } else { legacy(); }
         });
         var card = el('section', { className: 'card ae-contact-summary', 'aria-labelledby': taId + '-h' }, [
-            el('div', { className: 'kicker', text: source === 'chat' ? 'From your chat with Anna' : 'From your fit quiz' }),
-            el('h2', { id: taId + '-h', className: 'ae-contact-title', text: 'Your answers, ready to send' }),
-            el('p', { text: 'Copy this summary and paste it into the message box in the form below so ANNASIS sales sees your answers.' }),
+            el('div', { className: 'kicker', text: isSupport ? 'Your support request' : (source === 'chat' ? 'From your chat with Anna' : 'From your fit quiz') }),
+            el('h2', { id: taId + '-h', className: 'ae-contact-title', text: isSupport ? 'Your request, ready to send' : 'Your answers, ready to send' }),
+            el('p', { text: isSupport
+                ? 'Copy this summary and paste it into the message box in the form below so the ANNASIS team sees your request and can follow up.'
+                : 'Copy this summary and paste it into the message box in the form below so ANNASIS sales sees your answers.' }),
             el('label', { className: 'ae-sr', 'for': taId, text: 'Summary' }),
             ta,
             el('p', { className: 'ae-contact-actions' }, [copyBtn, status])
@@ -934,18 +1103,21 @@
        It is a plain object so it can later be swapped for a real AI
        backend: replace ANNASIS_CHAT.answer(text) with a call to your
        service and keep the same { intent, topic, text, links, action } shape.
-       action: 'lead' shows the lead-capture form; 'quiz' jumps to the quiz.
+       action: 'lead' shows the lead-capture form; 'quiz' jumps to the quiz;
+       'pricing' / 'support' start the short guided flows in initChat().
        ========================================================= */
     var U = CONFIG.urls;
     var ANNASIS_CHAT_KB = {
         chips: [
             { label: 'What is ANNASIS?', intent: 'what' },
             { label: 'Does it work with my current SIS?', intent: 'sis' },
-            { label: 'Events & camps', intent: 'events' },
+            { label: 'Events', intent: 'events' },
+            { label: 'Camps', intent: 'camps' },
             { label: 'School store', intent: 'store' },
             { label: 'Pricing', intent: 'pricing' },
             { label: 'Take the fit quiz', intent: 'quiz' },
-            { label: 'Book a demo', intent: 'demo' }
+            { label: 'Book a demo', intent: 'demo' },
+            { label: 'Get support', intent: 'support' }
         ],
         // Keyword order inside an intent does not matter; intent order breaks ties (earlier wins).
         intents: {
@@ -960,8 +1132,8 @@
                 topic: 'Fit quiz',
                 keywords: ['quiz', 'are we a fit', 'good fit', 'right for us', 'fit for', 'assessment', 'fit'],
                 text: 'The “Are we a fit?” quiz is six quick questions — what you run today, what hurts, and how you would like to start. You get a tailored recommendation of ANNASIS modules at the end.',
-                links: [{ label: 'Take the fit quiz', href: U.quiz }],
-                action: 'quiz'
+                links: [],
+                action: 'quiz' // off fit.html: "Start the quiz" button; on fit.html: closes chat and jumps to the quiz
             },
             sis: {
                 topic: 'Current SIS',
@@ -1000,10 +1172,10 @@
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             events: {
-                topic: 'Events & camps',
+                topic: 'Events',
                 keywords: ['event', 'registration', 'register', 'ticket', 'ticketing', 'eventbrite', 'conference', 'convention', 'check-in', 'checkin', 'exhibitor', 'fundraiser', 'plays', 'enrichment'],
-                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraisers, church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Camps get a one-stop path too: registration, camp store, attendance & check-in, and fundraising.',
-                links: [{ label: 'See Events', href: U.events }, { label: 'See Camps', href: U.camps }]
+                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraisers, church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage.',
+                links: [{ label: 'See Events', href: U.events }]
             },
             camps: {
                 topic: 'Camps',
@@ -1034,7 +1206,7 @@
                 keywords: ['price', 'pricing', 'cost', 'how much', 'expensive', 'cheap', 'budget', 'add-on', 'addon', 'per student'],
                 text: 'Pricing is discussed in conversation, so it fits the modules your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system — in the annual student price, not a hidden or add-on cost later. Talk with Sales for specifics.',
                 links: [{ label: 'Talk with Sales', href: U.contact }, { label: 'Take the fit quiz', href: U.quiz }],
-                action: 'lead'
+                action: 'pricing' // asks tools → org type → size first, then this text + lead form
             },
             admissions: {
                 topic: 'Admissions',
@@ -1068,7 +1240,7 @@
             },
             communication: {
                 topic: 'Communication & portal',
-                keywords: ['email', 'sms', 'text message', 'texting', 'notification', 'notice', 'app', 'mobile', 'portal', 'parent portal', 'family portal', 'login', 'logins'],
+                keywords: ['email', 'sms', 'text message', 'texting', 'notification', 'notice', 'app', 'mobile', 'portal', 'parent portal', 'family portal', 'logins', 'separate logins'],
                 text: 'Email and SMS messaging go to groups, teams, and lists, and Parents get one family portal — apply, register, pay, and stay informed on the school’s own site. Phone-friendly portal and SMS — no required app.',
                 links: [{ label: 'The Difference', href: U.different }]
             },
@@ -1079,8 +1251,8 @@
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             partnership: {
-                topic: 'Partnership & support',
-                keywords: ['support', 'implementation', 'onboarding', 'training', 'partner', 'partnership', 'roadmap', 'go-live', 'go live'],
+                topic: 'Partnership & onboarding',
+                keywords: ['implementation support', 'implementation', 'onboarding', 'training', 'partner', 'partnership', 'roadmap', 'go-live', 'go live'],
                 text: 'Implementation and support are part of how ANNASIS works — mapping your real programs, registration flows, and store needs, then staying available as seasons change. We share where the product is going, listen to what offices need next, and ship in the open. Jog before you run — modules when you are ready.',
                 links: [{ label: 'Partnership', href: U.partner }]
             },
@@ -1095,6 +1267,16 @@
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
                 text: 'ANNASIS is a school operating system for private education — not just a student information system. Twelve foundation modules share one student and family record: Admissions, SIS, Learning Management & Gradebook, tuition & billing, health & medical records, the school store, communication, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore Schools', href: U.education }, { label: 'The Difference', href: U.different }]
+            },
+            // Support path: customer? → category → description + contact (type: 'support').
+            // Listed late so ties go to product topics ("ticket" alone → Events ticketing;
+            // "logins" → family portal); phrases like "can't log in" score higher.
+            support: {
+                topic: 'Support',
+                keywords: ['support', 'get support', 'help', 'need help', 'login', 'log in', 'password', 'cant log in', 'cannot log in', 'cant login', 'cant sign in', 'broken', 'error', 'bug', 'refund', 'charge', 'charged', 'billing issue', 'billing problem', 'account', 'my account', 'ticket', 'support ticket', 'open a ticket', 'submit a ticket', 'file a ticket', 'not working', 'doesnt work', 'locked out', 'reset'],
+                text: '',
+                links: [],
+                action: 'support'
             },
             hello: {
                 topic: 'Hello',
@@ -1199,6 +1381,54 @@
     }
 
     /* ---------------------------------------------------------
+       Quiz navigation shared by the chat and the page
+       ---------------------------------------------------------
+       Root cause of "Take the fit quiz doesn't work" (2026-10-06):
+       the chat is appended to <body>, outside the site's
+       <div class="site-shell" data-enhance-nav="false">, so Blazor's
+       enhanced navigation (blazor.web.js) intercepted the chat's
+       "fit.html#fit-quiz" link. On the static preview the fetched page has
+       no `blazor-enhanced-nav: allow` header, so Blazor "falls back" with
+       history.replaceState(url + "?") + location.replace(url); with a #hash
+       that is only a same-document fragment change, which re-triggers
+       enhanced nav — an endless loop: the URL flips to fit.html#fit-quiz but
+       the page never loads and the chat stays open. (On IIS/Blazor the
+       enhanced nav succeeds but replaces <body>, so the chat re-opened from
+       sessionStorage on top of the quiz.)
+       Fix: #ae-chat opts out of enhanced nav like the site shell does, every
+       quiz link/button in the chat is handled here (close + persist closed,
+       then scroll on fit.html or full navigation elsewhere), and arriving at
+       fit.html#fit-quiz keeps the chat closed and focuses the quiz.
+       --------------------------------------------------------- */
+    var QUIZ_GO_KEY = 'annasis_quiz_go';
+
+    function quizRoot() { return document.querySelector('#fit-quiz [data-annasis-quiz]'); }
+
+    function isQuizHref(href) {
+        if (!href) { return false; }
+        if (href === CONFIG.urls.quiz) { return true; }
+        return /(^|\/)fit(\.html)?\/?#fit-quiz$/i.test(href.split('?')[0]) || /(^|\/)fit(\.html)?\?[^#]*#fit-quiz$/i.test(href);
+    }
+
+    function reducedMotion() {
+        return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    }
+
+    // opts: { fromChat: start at question 1 (or keep a showing result),
+    //         restore: show this session's saved result (arrival from another page),
+    //         smooth: smooth scroll }
+    function focusQuiz(opts) {
+        opts = opts || {};
+        var root = quizRoot();
+        if (!root) { return false; }
+        if (!root.__aeQuiz) { initQuiz(root); }
+        if (root.__aeQuiz) { root.__aeQuiz.focus(opts); }
+        var section = document.getElementById('fit-quiz');
+        section.scrollIntoView({ behavior: opts.smooth && !reducedMotion() ? 'smooth' : 'auto', block: 'start' });
+        return true;
+    }
+
+    /* ---------------------------------------------------------
        Anna chat widget UI
        --------------------------------------------------------- */
     var CHAT_OPEN_KEY = 'annasis_chat_open';
@@ -1206,11 +1436,29 @@
     var CHAT_TOPICS_KEY = 'annasis_chat_topics';
     var CHAT_QUESTIONS_KEY = 'annasis_chat_questions';
     var CHAT_NUDGE_KEY = 'annasis_chat_nudged';
+    var CHAT_QUAL_KEY = 'annasis_chat_qual';
+
+    var SUPPORT_CUSTOMER = [
+        { v: 'customer', l: 'Yes — my school or organization uses ANNASIS' },
+        { v: 'parent', l: 'I’m a Parent or family member' },
+        { v: 'prospect', l: 'Not yet / not sure' }
+    ];
+    var SUPPORT_CUSTOMER_STATUS = { customer: 'ANNASIS customer (staff)', parent: 'Parent / family member', prospect: 'Not a customer yet / not sure' };
+    var SUPPORT_CATEGORIES = [
+        { v: 'login', l: 'Login / account access' },
+        { v: 'billing', l: 'Billing or payment' },
+        { v: 'registration', l: 'Registration or event' },
+        { v: 'store', l: 'Store / order' },
+        { v: 'gradebook', l: 'Gradebook / SIS' },
+        { v: 'other', l: 'Something else' }
+    ];
 
     function initChat() {
         if (document.getElementById('ae-chat')) { return; }
         var anna = CONFIG.anna;
-        var root = el('div', { id: 'ae-chat', className: 'ae-chat' });
+        // data-enhance-nav="false": same opt-out the site shell uses, so Blazor never
+        // intercepts links inside the chat (see root cause above).
+        var root = el('div', { id: 'ae-chat', className: 'ae-chat', 'data-enhance-nav': 'false' });
         root.style.setProperty('--ae-anna', anna.color);
 
         function avatar(cls, alt) {
@@ -1266,6 +1514,10 @@
 
         function scrollLog() { log.scrollTop = log.scrollHeight; }
 
+        function quizButton() {
+            return el('button', { type: 'button', className: 'ae-chat-chip ae-chat-chip--primary ae-msg-cta', 'data-ae-action': 'quiz', text: 'Start the quiz →' });
+        }
+
         function renderMessage(m) {
             var row = el('div', { className: 'ae-msg ae-msg--' + (m.from === 'anna' ? 'anna' : 'user') });
             if (m.from === 'anna') { row.appendChild(avatar('ae-msg-avatar')); }
@@ -1275,8 +1527,13 @@
             ]);
             if (m.links && m.links.length) {
                 var links = el('span', { className: 'ae-msg-links' });
-                m.links.forEach(function (l) { links.appendChild(el('a', { href: l.href, text: l.label + ' →' })); });
+                m.links.forEach(function (l) {
+                    links.appendChild(el('a', { href: l.href, text: l.label + ' →', 'data-ae-action': isQuizHref(l.href) ? 'quiz' : null }));
+                });
                 bubble.appendChild(links);
+            }
+            if (m.cta === 'quiz') {
+                bubble.appendChild(el('span', { className: 'ae-msg-cta-row' }, [quizButton()]));
             }
             row.appendChild(bubble);
             log.appendChild(row);
@@ -1290,6 +1547,12 @@
             scrollLog();
         }
 
+        function say(text, links, extra) {
+            var m = { from: 'anna', text: text, links: links || [] };
+            if (extra) { Object.keys(extra).forEach(function (k) { m[k] = extra[k]; }); }
+            pushMessage(m);
+        }
+
         function addTopic(topic, question) {
             var topics = readJSON(CHAT_TOPICS_KEY, []);
             if (topic && topics.indexOf(topic) < 0) { topics.push(topic); store.set(CHAT_TOPICS_KEY, JSON.stringify(topics)); }
@@ -1300,22 +1563,190 @@
             }
         }
 
+        // Any quiz link or button inside the chat (new replies, restored history,
+        // "Start the quiz") closes the chat first, then goes to the quiz.
+        function goToQuiz() {
+            closeChat(false);
+            if (focusQuiz({ fromChat: true, smooth: true })) { return; }
+            store.set(QUIZ_GO_KEY, '1');
+            window.location.assign(CONFIG.urls.quiz);
+        }
+        log.addEventListener('click', function (e) {
+            if (e.button || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) { return; }
+            var t = e.target.closest ? e.target.closest('[data-ae-action="quiz"], a[href]') : null;
+            if (!t || !log.contains(t)) { return; }
+            if (t.getAttribute('data-ae-action') === 'quiz' || isQuizHref(t.getAttribute('href'))) {
+                e.preventDefault();
+                goToQuiz();
+            }
+        });
+
+        /* ---- Choice chips inside the conversation (pricing + support steps) ---- */
+        function askChoice(opts) {
+            // opts: { options:[{v,l}], multi, label, onDone(values, labels) }
+            var row = el('div', { className: 'ae-msg ae-msg--action ae-choice' });
+            var group = el('div', { className: 'ae-choice-options', role: 'group', 'aria-label': opts.label || 'Choose an answer' });
+            var picked = [];
+            var nextBtn = null;
+            function finish(values) {
+                var labels = values.map(function (v) {
+                    var o = opts.options.filter(function (x) { return x.v === v; })[0];
+                    return o ? o.l : v;
+                });
+                row.parentNode.removeChild(row);
+                pushMessage({ from: 'user', text: labels.length ? labels.join(', ') : 'Skip' });
+                opts.onDone(values, labels);
+            }
+            opts.options.forEach(function (o) {
+                var b = el('button', { type: 'button', className: 'ae-chat-chip ae-choice-chip', 'aria-pressed': opts.multi ? 'false' : null, text: o.l });
+                b.addEventListener('click', function () {
+                    if (!opts.multi) { finish([o.v]); return; }
+                    var i = picked.indexOf(o.v);
+                    if (i >= 0) { picked.splice(i, 1); } else { picked.push(o.v); }
+                    b.setAttribute('aria-pressed', i >= 0 ? 'false' : 'true');
+                    nextBtn.textContent = picked.length ? 'Next' : 'Skip';
+                });
+                group.appendChild(b);
+            });
+            row.appendChild(group);
+            if (opts.multi) {
+                nextBtn = el('button', { type: 'button', className: 'ae-chat-chip ae-chat-chip--primary ae-choice-next', text: 'Skip', onclick: function () { finish(picked.slice()); } });
+                row.appendChild(el('div', { className: 'ae-choice-actions' }, [nextBtn]));
+            }
+            log.appendChild(row);
+            scrollLog();
+            var first = group.querySelector('button');
+            if (first && !panel.hidden) { first.focus({ preventScroll: true }); }
+        }
+
+        /* ---- Sales lead form in the chat ---- */
         function showLeadForm() {
-            var existing = log.querySelector('.ae-lead-form');
-            if (existing) { existing.querySelector('input').focus(); return; }
+            var existing = log.querySelector('.ae-lead-form:not(.ae-lead-form--support)');
+            if (existing) { log.appendChild(existing.parentNode); scrollLog(); existing.querySelector('input').focus(); return; }
             var wrap = el('div', { className: 'ae-msg ae-msg--form' });
             wrap.appendChild(buildLeadForm({
+                kind: 'sales',
                 source: 'chat',
                 compact: true,
-                intro: 'Share a few details and ANNASIS sales will follow up from sales@annasis.com. Your chat topics come along so you don’t have to repeat yourself.',
+                intro: 'Share a few details and ANNASIS sales will follow up from sales@annasis.com. Your chat answers come along so you don’t have to repeat yourself.',
                 getExtra: function () {
-                    return { chat: { topics: readJSON(CHAT_TOPICS_KEY, []), questions: readJSON(CHAT_QUESTIONS_KEY, []) } };
+                    var q = readJSON(CHAT_QUAL_KEY, {});
+                    return {
+                        intent: q.intent || '',
+                        currentTools: q.currentTools || [],
+                        orgType: q.orgType || '',
+                        size: q.size || '',
+                        topics: readJSON(CHAT_TOPICS_KEY, []),
+                        questions: readJSON(CHAT_QUESTIONS_KEY, [])
+                    };
                 },
-                getParams: function () { return { src: 'chat', topics: readJSON(CHAT_TOPICS_KEY, []).join(',') }; }
+                getParams: function () {
+                    var q = readJSON(CHAT_QUAL_KEY, {});
+                    return { src: 'chat', intent: q.intent || '', topics: readJSON(CHAT_TOPICS_KEY, []).join(',') };
+                }
             }));
             log.appendChild(wrap);
             scrollLog();
             var first = wrap.querySelector('input');
+            if (first) { first.focus(); }
+        }
+
+        /* ---- Pricing: qualify first (tools → type → size), then answer + lead form ---- */
+        function startPricingFlow() {
+            var toolStep = QUIZ.filter(function (s) { return s.id === 'tools'; })[0];
+            var typeStep = QUIZ.filter(function (s) { return s.id === 'type'; })[0];
+            var sizeStep = QUIZ.filter(function (s) { return s.id === 'size'; })[0];
+            say('Happy to help with pricing. It’s tailored to the modules you’ll actually run, so three quick questions first. What do you use today? Pick all that apply.');
+            askChoice({
+                multi: true,
+                label: 'What do you use today?',
+                options: optionsFor(toolStep, { type: 'school' }),
+                onDone: function (toolVals, toolLabels) {
+                    say('What best describes you?');
+                    askChoice({
+                        label: 'What best describes you?',
+                        options: optionsFor(typeStep, {}),
+                        onDone: function (typeVals, typeLabels) {
+                            var a = { type: typeVals[0] };
+                            say(sizeStep.q(a) + ' A rough number is fine.');
+                            askChoice({
+                                label: sizeStep.q(a),
+                                options: optionsFor(sizeStep, a),
+                                onDone: function (sizeVals) {
+                                    a.size = sizeVals[0];
+                                    store.set(CHAT_QUAL_KEY, JSON.stringify({
+                                        intent: 'pricing',
+                                        currentTools: toolLabels,
+                                        orgType: typeLabels[0],
+                                        size: sizeText(a)
+                                    }));
+                                    var hit = ANNASIS_CHAT_KB.intents.pricing;
+                                    say('Thanks! ' + hit.text, hit.links);
+                                    showLeadForm();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        /* ---- Support: customer? → category → description + contact ---- */
+        function startSupportFlow() {
+            say('Sorry you’re running into trouble — let’s get this to the right people. Are you an ANNASIS customer?');
+            askChoice({
+                label: 'Are you an ANNASIS customer?',
+                options: SUPPORT_CUSTOMER,
+                onDone: function (custVals) {
+                    var cust = custVals[0];
+                    if (cust === 'parent') {
+                        say('Thanks! For questions about your Student or family account — like grades, balances, or schedules — your school office is usually the fastest help, since they manage those records. If something in ANNASIS itself isn’t working, like signing in, I can pass it to our team.');
+                    }
+                    say('What is it about?');
+                    askChoice({
+                        label: 'What is it about?',
+                        options: SUPPORT_CATEGORIES,
+                        onDone: function (catVals, catLabels) {
+                            var cat = catVals[0];
+                            var followUp = 'The ANNASIS team will follow up by email.';
+                            if (CONFIG.support.email) { followUp += ' You can also write to ' + CONFIG.support.email + '.'; }
+                            if (cust === 'parent' && (cat === 'billing' || cat === 'gradebook')) {
+                                say('Quick reminder: your school office can see your family’s balance and grades and can usually sort this out fastest. If you’d still like our team to take a look, add the details below. ' + followUp,
+                                    CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []);
+                            } else {
+                                say('Got it. Tell me briefly what’s happening and how to reach you. ' + followUp,
+                                    CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []);
+                            }
+                            showSupportForm(cust, catLabels[0]);
+                        }
+                    });
+                }
+            });
+        }
+
+        function showSupportForm(cust, category) {
+            var wrap = el('div', { className: 'ae-msg ae-msg--form' });
+            wrap.appendChild(buildLeadForm({
+                kind: 'support',
+                source: 'chat',
+                compact: true,
+                orgLabel: cust === 'parent' ? 'Your Student’s school or organization' : 'School or organization',
+                intro: 'Support request: ' + category + '.',
+                getExtra: function () {
+                    return {
+                        intent: 'support',
+                        supportCategory: category,
+                        customerStatus: SUPPORT_CUSTOMER_STATUS[cust] || '',
+                        role: cust === 'parent' ? 'Parent' : '',
+                        topics: readJSON(CHAT_TOPICS_KEY, []),
+                        questions: readJSON(CHAT_QUESTIONS_KEY, [])
+                    };
+                },
+                getParams: function () { return { src: 'support' }; }
+            }));
+            log.appendChild(wrap);
+            scrollLog();
+            var first = wrap.querySelector('textarea, input');
             if (first) { first.focus(); }
         }
 
@@ -1330,16 +1761,20 @@
             pushMessage({ from: 'user', text: text });
             addTopic(res.topic, intentId ? null : text);
 
-            var quizHere = document.getElementById('fit-quiz');
-            if (res.action === 'quiz' && quizHere) {
-                pushMessage({ from: 'anna', text: 'The quiz is right on this page — taking you there.', links: [] });
-                closeChat(false);
-                quizHere.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                var target = quizHere.querySelector('.ae-quiz-q, .ae-quiz-result-title');
-                if (target) { setTimeout(function () { target.focus({ preventScroll: true }); }, 450); }
+            if (res.action === 'quiz') {
+                if (quizRoot()) {
+                    say('The quiz is right on this page — taking you there.');
+                    goToQuiz();
+                } else {
+                    say(res.text, res.links, { cta: 'quiz' });
+                    var cta = log.querySelector('.ae-msg:last-child .ae-msg-cta');
+                    if (cta) { cta.focus({ preventScroll: true }); }
+                }
                 return;
             }
-            pushMessage({ from: 'anna', text: res.text, links: res.links });
+            if (res.action === 'pricing') { startPricingFlow(); return; }
+            if (res.action === 'support') { startSupportFlow(); return; }
+            say(res.text, res.links);
             if (res.action === 'lead') {
                 if (res.intent === 'demo') { showLeadForm(); return; }
                 var row = el('div', { className: 'ae-msg ae-msg--action' });
@@ -1388,6 +1823,7 @@
             root.classList.remove('is-open');
             launcher.setAttribute('aria-expanded', 'false');
             store.set(CHAT_OPEN_KEY, '0');
+            hideNudge();
             if (focusLauncher) { launcher.focus(); }
         }
 
@@ -1403,12 +1839,14 @@
 
         ANNASIS_CHAT.open = function () { openChat(true); };
         ANNASIS_CHAT.close = function () { closeChat(false); };
+        ANNASIS_CHAT.ask = function (text, intentId) { if (panel.hidden) { openChat(false); } ask(text, intentId || null); };
+        ANNASIS_CHAT.goToQuiz = goToQuiz;
 
         if (store.get(CHAT_OPEN_KEY) === '1') {
             openChat(false); // remember state across pages, but never steal focus on load
         } else if (CONFIG.nudgeDelayMs > 0 && !store.get(CHAT_NUDGE_KEY) && !isPage('contact')) {
             setTimeout(function () {
-                if (!panel.hidden || store.get(CHAT_NUDGE_KEY)) { return; }
+                if (!panel.hidden || store.get(CHAT_NUDGE_KEY) || store.get(CHAT_OPEN_KEY) === '0') { return; }
                 nudge.hidden = false;
                 store.set(CHAT_NUDGE_KEY, '1'); // once per session
                 setTimeout(hideNudge, 12000);
@@ -1420,10 +1858,44 @@
        Boot (and re-boot after Blazor enhanced navigation)
        --------------------------------------------------------- */
     function boot() {
+        // Arriving at the quiz (fit.html#fit-quiz, or sent here by Anna): keep the chat
+        // closed so it never covers the quiz, then focus the quiz.
+        var arriving = !!quizRoot() && (window.location.hash.toLowerCase() === '#fit-quiz' || store.get(QUIZ_GO_KEY) === '1');
+        if (!quizRoot() || arriving) { store.del(QUIZ_GO_KEY); }
+        if (arriving) {
+            store.set(CHAT_OPEN_KEY, '0');
+            if (ANNASIS_CHAT.close) { ANNASIS_CHAT.close(); }
+        }
         if (applyChatMode()) { initChat(); }
         Array.prototype.forEach.call(document.querySelectorAll('[data-annasis-quiz]'), initQuiz);
         initContactSummary();
+        if (arriving) {
+            focusQuiz({ restore: true });
+            // The browser's own scroll-to-#fit-quiz runs after this and moves focus to the
+            // page (the section itself is not focusable), and late images can shift the
+            // layout — so re-apply focus/alignment shortly after and on load, unless the
+            // visitor has already scrolled, clicked, or typed.
+            var userMoved = false;
+            var moved = function () { userMoved = true; };
+            ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { window.addEventListener(t, moved, { once: true, passive: true }); });
+            var refocus = function () {
+                // Until the visitor interacts, any other focus change was programmatic
+                // (anchor scroll, Blazor's focus-on-navigate h1), so put focus back.
+                if (userMoved || !quizRoot()) { return; }
+                focusQuiz({});
+            };
+            setTimeout(refocus, 60);
+            setTimeout(refocus, 600);
+            window.addEventListener('load', refocus, { once: true });
+        }
     }
+
+    // Same-page "#fit-quiz" links (e.g. the fit.html hero button) close the chat too.
+    window.addEventListener('hashchange', function () {
+        if (window.location.hash.toLowerCase() !== '#fit-quiz' || !quizRoot()) { return; }
+        if (ANNASIS_CHAT.close) { ANNASIS_CHAT.close(); }
+        focusQuiz({ smooth: true });
+    });
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot, { once: true });
