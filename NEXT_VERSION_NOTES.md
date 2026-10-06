@@ -235,3 +235,13 @@
 - Logos for every vendor shown, under `Images/integrations/` (vendor sites or Wikimedia Commons; see commit/report). Removed unused `classlink.png`. Directory-style "works with" marks with non-endorsement footnote; no partnership claims.
 - education.html + fit.html teasers reframed from "Coming from another SIS / OneRoster" to "works with your school stack".
 - CSS: integrations block rewritten (larger white logo wells, 4-up LMS grid, compact tile grid); cache `?v=20261005c` on all pages.
+
+## Fit quiz + Anna chat assistant + lead capture (2026-10-05)
+
+- **New, self-contained (portable to IIS/Blazor):** `js/annasis-engage.js` + `css/annasis-engage.css` (all classes `.ae-*`), `Images/anna-bot-avatar.png` (Anna avatar copied from the existing Pipedrive LeadBooster playbook — botName "Anna", mainColor `#1855AA`, greeting "Welcome to our website!").
+- Included on all 14 pages: `<link rel="stylesheet" href="css/annasis-engage.css?v=20261005e" />` in head and `<script src="js/annasis-engage.js?v=20261005e" defer></script>` after `js/annasis.p3i6rixraw.js`. Re-inits on Blazor `enhancedload`.
+- `fit.html`: hero button "Take the 2-minute fit quiz" + new `#fit-quiz` section (six questions, progress bar, tailored result, Talk with Sales lead form). Existing pain checklist unchanged. `index.html` Are we a fit?: added ghost "Take the fit quiz" button.
+- `contact.html` (no markup change): when arriving from the quiz/chat, JS shows a copy-ready summary above the Pipedrive web form (cross-origin iframe cannot be prefilled).
+- **Config at top of the JS** (or `window.ANNASIS_ENGAGE_CONFIG` override): `chatEnabled` (default true), `leadboosterMode` (default false; true = hide our chat and show LeadBooster Anna; values `companyId 13851722`, `playbookUuid fe7940be-…` already in `js/annasis.js`), `anna.*`, `nudgeDelayMs` (20000, once per session), `urls.*` (relative `.html` for preview — set `/fit`, `/contact`, … for Blazor), `lead.endpoint` (empty = fallback to contact.html; set to a Zapier/Make/server webhook to create Pipedrive Person + Organization + Lead + Note — never put a Pipedrive token in client JS).
+- While our chat is on, the LeadBooster bubble is hidden with CSS (`.ae-hide-leadbooster #LeadboosterContainer`), so the two never show together. `js/annasis.js` was not modified.
+- Preview via GitHub Pages only — not IIS/`www.annasis.com`.
