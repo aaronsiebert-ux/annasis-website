@@ -6,6 +6,14 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Support page + Ecosystem naming (2026-10-06)
+
+- Added `support.html` (preview only): three paths for Parents / families, schools & organizations using ANNASIS, and people evaluating ANNASIS. School/org path includes a short support form (`[data-annasis-support-form]`) that posts through `ANNASIS_LEAD.submit` with `type: "support"` (same Pipedrive/webhook path as chat). No dedicated support inbox yet — copy says the team follows up by email. **TODO:** add `support@annasis.com` in `CONFIG.support.email` (and page copy) when Aaron confirms that inbox.
+- School footers only: insert **Support** before Stories · About (Stories and About stay last). Not in top header. Segment footers (events / camps / churches / ecommerce) unchanged. `pricing.html` still has no standard footer.
+- Anna chat (`js/annasis-engage.js`): `urls.support = 'support.html'`; Support FAQ / Get support / fallback can link `{ label: 'Support', href: U.support }`.
+- Naming: visible **"Education Ecosystem"** → **"Ecosystem"** sitewide (kickers, in-page links, meta on `integrations.html`). Top nav stays **Integrations**; footer stays **Ecosystem**. No new naming invented.
+- Cache: `annasis-engage.css` / `annasis-engage.js` `?v=20261006b`. Preview GitHub Pages only — not IIS / `www.annasis.com`. Do not deploy the Pipedrive lead Worker in this pass.
+
 ## Logo caption → micro Who-we-serve (2026-10-05)
 
 - Replaced static header caption **SCHOOL OPERATING SYSTEM** under the logo with compact vertical quick links (all five): **Schools · Events · Store · Camps · Churches**.

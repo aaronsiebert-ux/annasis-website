@@ -7,6 +7,7 @@
      <link rel="stylesheet" href="css/annasis-engage.css" />
      <script src="js/annasis-engage.js" defer></script>
    Quiz renders into any element with [data-annasis-quiz] (fit.html).
+   Support form renders into [data-annasis-support-form] (support.html).
    Contact summary renders on contact.html above the Pipedrive form.
 
    To change settings without editing this file, define
@@ -77,6 +78,7 @@
         urls: {
             quiz: 'fit.html#fit-quiz',
             contact: 'contact.html',
+            support: 'support.html',
             education: 'education.html',
             events: 'events.html',
             ecommerce: 'ecommerce.html',
@@ -90,9 +92,10 @@
         },
 
         // Support contact shown by Anna's "Get support" path.
-        // TODO: no public support email or help-center URL exists on www.annasis.com or in
-        // the site files today (only sales@annasis.com). Add them here when Aaron confirms;
-        // while both are empty, Anna says the ANNASIS team will follow up by email.
+        // Support page: urls.support (support.html). No dedicated support inbox yet
+        // (only sales@annasis.com is public). TODO: set support.email to support@annasis.com
+        // when Aaron confirms that inbox; leave url empty (the Support page is urls.support).
+        // While email is empty, Anna says the ANNASIS team will follow up by email.
         support: {
             email: '',
             url: ''
@@ -475,26 +478,52 @@
             ]);
         }
 
-        var grid = [];
-        if (support) {
+        function categoryField() {
+            var catId = fid + '-category';
+            var cats = (typeof SUPPORT_CATEGORIES !== 'undefined' && SUPPORT_CATEGORIES) ? SUPPORT_CATEGORIES : [
+                { v: 'login', l: 'Login / account access' },
+                { v: 'billing', l: 'Billing or payment' },
+                { v: 'registration', l: 'Registration or event' },
+                { v: 'store', l: 'Store / order' },
+                { v: 'gradebook', l: 'Gradebook / SIS' },
+                { v: 'other', l: 'Something else' }
+            ];
+            var sel = el('select', { id: catId, name: 'category', required: true, 'aria-required': 'true' }, [el('option', { value: '', text: 'Choose one' })].concat(cats.map(function (c) {
+                return el('option', { value: c.l, text: c.l });
+            })));
+            return el('div', { className: 'ae-field' }, [el('label', { 'for': catId, text: 'Category' }), sel]);
+        }
+        function messageField() {
             var msgId = fid + '-message';
-            grid.push(el('div', { className: 'ae-field ae-field--wide' }, [
+            return el('div', { className: 'ae-field ae-field--wide' }, [
                 el('label', { 'for': msgId, text: 'What’s going on?' }),
                 el('textarea', { id: msgId, name: 'message', rows: '3', maxlength: '1500', required: true, 'aria-required': 'true', 'aria-describedby': msgId + '-hint' }),
                 el('span', { id: msgId + '-hint', className: 'ae-field-hint', text: 'A sentence or two is plenty. Please don’t include passwords or card numbers.' })
-            ]));
+            ]);
         }
-        grid.push(field('name', 'Your name', 'text', true, 'name'));
-        grid.push(field('email', support ? 'Email' : 'Work email', 'email', true, 'email'));
-        grid.push(field('org', opts.orgLabel || 'School or organization', 'text', true, 'organization'));
-        if (!support) {
-            var roleId = fid + '-role';
-            var roleSelect = el('select', { id: roleId, name: 'role' }, [el('option', { value: '', text: 'Choose one' })].concat(ROLES.map(function (r) {
-                return el('option', { value: r, text: r });
-            })));
-            grid.push(el('div', { className: 'ae-field' }, [el('label', { 'for': roleId, text: 'Your role' }), roleSelect]));
+        var grid = [];
+        if (support && opts.includeCategory) {
+            // Page form order: name, email, school/org, category, message, phone
+            grid.push(field('name', 'Your name', 'text', true, 'name'));
+            grid.push(field('email', 'Email', 'email', true, 'email'));
+            grid.push(field('org', opts.orgLabel || 'School or organization', 'text', true, 'organization'));
+            grid.push(categoryField());
+            grid.push(messageField());
+            grid.push(field('phone', 'Phone', 'tel', false, 'tel'));
+        } else {
+            if (support) { grid.push(messageField()); }
+            grid.push(field('name', 'Your name', 'text', true, 'name'));
+            grid.push(field('email', support ? 'Email' : 'Work email', 'email', true, 'email'));
+            grid.push(field('org', opts.orgLabel || 'School or organization', 'text', true, 'organization'));
+            if (!support) {
+                var roleId = fid + '-role';
+                var roleSelect = el('select', { id: roleId, name: 'role' }, [el('option', { value: '', text: 'Choose one' })].concat(ROLES.map(function (r) {
+                    return el('option', { value: r, text: r });
+                })));
+                grid.push(el('div', { className: 'ae-field' }, [el('label', { 'for': roleId, text: 'Your role' }), roleSelect]));
+            }
+            grid.push(field('phone', 'Phone', 'tel', false, 'tel'));
         }
-        grid.push(field('phone', 'Phone', 'tel', false, 'tel'));
 
         var submitBtn = el('button', { type: 'submit', className: 'btn ae-lead-submit', text: support ? 'Send to ANNASIS support' : 'Send to ANNASIS sales' });
 
@@ -519,10 +548,12 @@
                 org: form.elements.org.value.trim(),
                 role: form.elements.role ? form.elements.role.value : '',
                 phone: form.elements.phone.value.trim(),
-                message: form.elements.message ? form.elements.message.value.trim() : ''
+                message: form.elements.message ? form.elements.message.value.trim() : '',
+                category: form.elements.category ? form.elements.category.value.trim() : ''
             };
             var checks = [['name', 'your name'], ['email', support ? 'a valid email' : 'a valid work email'], ['org', 'your school or organization']];
             if (support) { checks.unshift(['message', 'a short description']); }
+            if (support && opts.includeCategory) { checks.push(['category', 'a category']); }
             var problems = [];
             checks.forEach(function (f) {
                 var input = form.elements[f[0]];
@@ -551,6 +582,7 @@
                 message: data.message,
                 website: form.elements.website.value
             };
+            if (support && data.category) { payload.supportCategory = data.category; }
             var extra = opts.getExtra ? opts.getExtra() : {};
             Object.keys(extra).forEach(function (k) {
                 if (extra[k] !== undefined && extra[k] !== null && extra[k] !== '') { payload[k] = extra[k]; }
@@ -1275,7 +1307,7 @@
                 topic: 'Support',
                 keywords: ['support', 'get support', 'help', 'need help', 'login', 'log in', 'password', 'cant log in', 'cannot log in', 'cant login', 'cant sign in', 'broken', 'error', 'bug', 'refund', 'charge', 'charged', 'billing issue', 'billing problem', 'account', 'my account', 'ticket', 'support ticket', 'open a ticket', 'submit a ticket', 'file a ticket', 'not working', 'doesnt work', 'locked out', 'reset'],
                 text: '',
-                links: [],
+                links: [{ label: 'Support', href: U.support }],
                 action: 'support'
             },
             hello: {
@@ -1293,8 +1325,8 @@
         },
         fallback: {
             topic: 'Other question',
-            text: 'I don’t have a scripted answer for that yet. The two-minute fit quiz can point you to the right modules, or Talk with Sales and a person will answer.',
-            links: [{ label: 'Take the fit quiz', href: U.quiz }, { label: 'Talk with Sales', href: U.contact }],
+            text: 'I don’t have a scripted answer for that yet. The two-minute fit quiz can point you to the right modules, Talk with Sales, or visit the Support page.',
+            links: [{ label: 'Take the fit quiz', href: U.quiz }, { label: 'Talk with Sales', href: U.contact }, { label: 'Support', href: U.support }],
             action: 'lead'
         }
     };
@@ -1700,7 +1732,8 @@
                 onDone: function (custVals) {
                     var cust = custVals[0];
                     if (cust === 'parent') {
-                        say('Thanks! For questions about your Student or family account — like grades, balances, or schedules — your school office is usually the fastest help, since they manage those records. If something in ANNASIS itself isn’t working, like signing in, I can pass it to our team.');
+                        say('Thanks! For questions about your Student or family account — like grades, balances, or schedules — your school office is usually the fastest help, since they manage those records. If something in ANNASIS itself isn’t working, like signing in, I can pass it to our team.',
+                            [{ label: 'Support', href: CONFIG.urls.support }]);
                     }
                     say('What is it about?');
                     askChoice({
@@ -1710,12 +1743,15 @@
                             var cat = catVals[0];
                             var followUp = 'The ANNASIS team will follow up by email.';
                             if (CONFIG.support.email) { followUp += ' You can also write to ' + CONFIG.support.email + '.'; }
+                            var supportLinks = [{ label: 'Support', href: CONFIG.urls.support }].concat(
+                                CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []
+                            );
                             if (cust === 'parent' && (cat === 'billing' || cat === 'gradebook')) {
                                 say('Quick reminder: your school office can see your family’s balance and grades and can usually sort this out fastest. If you’d still like our team to take a look, add the details below. ' + followUp,
-                                    CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []);
+                                    supportLinks);
                             } else {
                                 say('Got it. Tell me briefly what’s happening and how to reach you. ' + followUp,
-                                    CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []);
+                                    supportLinks);
                             }
                             showSupportForm(cust, catLabels[0]);
                         }
@@ -1854,6 +1890,28 @@
         }
     }
 
+
+    /* ---------------------------------------------------------
+       Support page form ([data-annasis-support-form])
+       --------------------------------------------------------- */
+    function initSupportForm(root) {
+        if (!root || root.getAttribute('data-ae-ready') === '1') { return; }
+        root.setAttribute('data-ae-ready', '1');
+        // Keep noscript for non-JS; clear for the live mount
+        Array.prototype.forEach.call(root.querySelectorAll('noscript'), function (n) { n.parentNode.removeChild(n); });
+        root.appendChild(buildLeadForm({
+            kind: 'support',
+            source: 'support-page',
+            includeCategory: true,
+            orgLabel: 'School or organization',
+            intro: 'The ANNASIS team will follow up by email.',
+            getExtra: function () {
+                return { intent: 'support', customerStatus: 'ANNASIS customer (staff)' };
+            },
+            getParams: function () { return { src: 'support' }; }
+        }));
+    }
+
     /* ---------------------------------------------------------
        Boot (and re-boot after Blazor enhanced navigation)
        --------------------------------------------------------- */
@@ -1868,6 +1926,7 @@
         }
         if (applyChatMode()) { initChat(); }
         Array.prototype.forEach.call(document.querySelectorAll('[data-annasis-quiz]'), initQuiz);
+        Array.prototype.forEach.call(document.querySelectorAll('[data-annasis-support-form]'), initSupportForm);
         initContactSummary();
         if (arriving) {
             focusQuiz({ restore: true });
