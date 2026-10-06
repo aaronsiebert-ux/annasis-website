@@ -6,6 +6,12 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Anna support chip wording (2026-10-06)
+
+- Customer-status **Yes** chip: changed from “Yes — my school or organization uses ANNASIS” to **“Yes — we use ANNASIS software”** (ANNASIS all caps). School/organization remains the required form field label — only the Yes chip (and related Support page path headings) were softened.
+- Support page: path card “We use ANNASIS software”; form section “For ANNASIS customers”; Parents card points to “the support form below.”
+- Cache: `annasis-engage.js` / `.css` `?v=20261006c`. Preview only.
+
 ## Support page + Ecosystem naming (2026-10-06)
 
 - Added `support.html` (preview only): three paths for Parents / families, schools & organizations using ANNASIS, and people evaluating ANNASIS. School/org path includes a short support form (`[data-annasis-support-form]`) that posts through `ANNASIS_LEAD.submit` with `type: "support"` (same Pipedrive/webhook path as chat). No dedicated support inbox yet — copy says the team follows up by email. **TODO:** add `support@annasis.com` in `CONFIG.support.email` (and page copy) when Aaron confirms that inbox.
@@ -264,7 +270,7 @@
 ### Chat changes
 - Quick replies: What is ANNASIS? · Does it work with my current SIS? · **Events** · **Camps** · School store · Pricing · Take the fit quiz · Book a demo · **Get support** (Events & camps split; Events answer no longer carries the camps sentence).
 - **Pricing** (chip or typed): Anna asks what they use today (multi-select: the quiz tool list incl. FACTS / RenWeb, ClassReach, Sycamore, Gradelink, Alma, Veracross … + "Something else / not sure"), what they are (Private school / Event or conference organizer / Camp / Church / Store or program shop), and rough size (quiz size bands), then gives the existing pricing answer (no prices) and opens the sales form. Payload adds `currentTools`, `orgType`, `size`, `intent: "pricing"`.
-- **Get support** (chip + keywords support, help, login, password, can't log in, broken, error, bug, refund, charge, billing issue, account, ticket, not working …): "Are you an ANNASIS customer?" (Yes — my school or organization uses ANNASIS / I'm a Parent or family member / Not yet / not sure) → category (Login / account access, Billing or payment, Registration or event, Store / order, Gradebook / SIS, Something else) → form: what's going on + name, email, school/org, optional phone → `ANNASIS_LEAD.submit` with `type: "support"`. Parents are told their school office is usually the fastest help for grades, balances, and schedules (reminded again for Billing / Gradebook). Single-word ties go to product answers ("ticket" alone → Events ticketing, "logins" → family portal); "open a ticket", "support ticket", "can't log in" go to support.
+- **Get support** (chip + keywords support, help, login, password, can't log in, broken, error, bug, refund, charge, billing issue, account, ticket, not working …): "Are you an ANNASIS customer?" (Yes — we use ANNASIS software / I'm a Parent or family member / Not yet / not sure) → category (Login / account access, Billing or payment, Registration or event, Store / order, Gradebook / SIS, Something else) → form: what's going on + name, email, school/org, optional phone → `ANNASIS_LEAD.submit` with `type: "support"`. Parents are told their school office is usually the fastest help for grades, balances, and schedules (reminded again for Billing / Gradebook). Single-word ties go to product answers ("ticket" alone → Events ticketing, "logins" → family portal); "open a ticket", "support ticket", "can't log in" go to support.
 - **Support contact:** none published on www.annasis.com or in the site files (only sales@annasis.com). `support.email` / `support.url` in the config are empty with a TODO; Anna says "The ANNASIS team will follow up by email." Fill them in to have Anna mention them.
 
 ### Lead webhook payload (flat JSON, `ANNASIS_LEAD.submit`)
