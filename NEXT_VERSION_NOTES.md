@@ -6,6 +6,13 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Module thumbnails matched to one visible tile size (2026-10-07)
+
+- Donations, Core SIS "SIS" and "Grades", School Store, Events, Workflow, Uniform Swap had visible tiles smaller than the 224–226/256 Tuition tile (measured at the tile edge, excluding soft shadows). Adjusted copies in `Images/pillar/matched/` (originals untouched); Accounting (no visible tile) content scaled to match.
+- Used on `education.html` modules list and the home modules grid (`index.html`); other pages' small card icons unchanged.
+- Same matched images swapped into the proposal Features & Benefits table.
+- Cache bump `?v=20261007f`.
+
 ## Giving features broken down — Tuition, Billing & Fundraising (2026-10-07)
 
 - Aaron's giving language ("giving features shown to improve giving for our customers"; one-time and recurring options offered during every transaction; round-up campaigns to one or multiple funds; giving leaderboards; goal meters) broken into short skimmable points, not pasted verbatim.
