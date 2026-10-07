@@ -540,18 +540,13 @@ select {
     border-color: var(--teal);
 }
 
+/* thumbnails use the same img.icon sizing as the other module cards */
 .pillar-thumbs {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
-
-    .pillar-thumbs img {
-        width: 112px;
-        height: 112px;
-        object-fit: contain;
-    }
 
 .base-sis-list {
     margin: 0 0 12px;
@@ -981,16 +976,10 @@ footer {
         }
 
     .pillar-thumbs {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: flex-start;
+        display: grid;
+        grid-template-columns: repeat(2, 88px);
         gap: 10px;
     }
-
-        .pillar-thumbs img {
-            width: 88px;
-            height: 88px;
-        }
 
     .paper {
         padding: 22px;

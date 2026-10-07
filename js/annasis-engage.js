@@ -485,7 +485,7 @@
                 { v: 'billing', l: 'Billing or payment' },
                 { v: 'registration', l: 'Registration or event' },
                 { v: 'store', l: 'Store / order' },
-                { v: 'gradebook', l: 'Gradebook / SIS' },
+                { v: 'gradebook', l: 'Base SIS / Gradebook' },
                 { v: 'other', l: 'Something else' }
             ];
             var sel = el('select', { id: catId, name: 'category', required: true, 'aria-required': 'true' }, [el('option', { value: '', text: 'Choose one' })].concat(cats.map(function (c) {
@@ -746,9 +746,8 @@
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore Schools'),
             quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
             tuition: M('Tuition & billing', 'Payment plans, invoices, incidental billing, and online payments — part of the operating system, not a hidden or add-on cost later.', u.education, 'Explore Schools'),
-            portal: M('Parent portal & group communication', 'One Parent portal with email and text announcements in Base SIS, plus email and SMS to groups, teams, and lists — on the school’s own site, no required app.', u.different, 'See The Difference'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore Schools'),
-            basesis: M('Base SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, Parent portal, email and text announcements, medical notes, and discipline log.', u.education, 'Explore Schools')
+            basesis: M('Base SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore Schools')
         };
     }
 
@@ -761,7 +760,7 @@
      *  - School + no SIS picked (beside/explore)       → start-modules
      * Modules for beside-sis / start-modules come from tools + pains, in this order:
      *   Eventbrite or "outside" → Event registration; Shopify or "outside" → School store;
-     *   FinalForms or "outside" → Athletics; "logins" → Parent portal & group communication;
+     *   FinalForms or "outside" → Athletics; "logins" → Base SIS (Parent portal & communication);
      *   "addons" → Tuition & billing; QuickBooks or "double" → QuickBooks accounting;
      *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + School store.
      *   Title uses the first two; up to four are listed.
@@ -838,7 +837,7 @@
         if (has(tools, 'eventbrite') || has(pain, 'outside')) { add('events'); }
         if (has(tools, 'shopify') || has(pain, 'outside')) { add('store'); }
         if (has(tools, 'finalforms') || has(pain, 'outside')) { add('athletics'); }
-        if (has(pain, 'logins')) { add('portal'); }
+        if (has(pain, 'logins')) { add('basesis'); }
         if (has(pain, 'addons')) { add('tuition'); }
         if (has(tools, 'quickbooks') || has(pain, 'double')) { add('quickbooks'); }
         if (has(pain, 'reporting')) { add('reporting'); }
@@ -849,7 +848,7 @@
             res = {
                 id: 'full-os',
                 title: 'Full school operating system',
-                body: 'Run the school on one platform: Base SIS plus nine foundation modules on one student and family record — from Admissions, Attendance, and Gradebook in Base SIS to tuition & billing, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                body: 'Run the school on one platform: Base SIS plus seven foundation modules on one student and family record — from Admissions, Attendance, and Gradebook in Base SIS to tuition & billing, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.basesis, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
             };
         } else if (sisPicked.length) {
@@ -1168,7 +1167,7 @@
             sis: {
                 topic: 'Current SIS',
                 keywords: ['current sis', 'my sis', 'our sis', 'existing', 'sis', 'student information system', 'facts', 'renweb', 'classreach', 'sycamore', 'gradelink', 'alma', 'veracross', 'blackbaud', 'rediker', 'jupiter', 'replace', 'switch', 'sit beside', 'alongside', 'work with', 'keep our', 'rip out'],
-                text: 'Yes — ANNASIS can sit beside the student information system you run today and turn on the modules your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, uniform exchange, and Parent communication. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
+                text: 'Yes — ANNASIS can sit beside the student information system you run today and turn on the modules your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
                 links: [{ label: 'Integrations', href: U.integrations }, { label: 'Take the fit quiz', href: U.quiz }]
             },
             data: {
@@ -1241,7 +1240,7 @@
             basesis: {
                 topic: 'Base SIS',
                 keywords: ['base sis', 'base', 'attendance', 'bell schedule', 'class schedule', 'scheduler', 'discipline', 'behavior', 'family record', 'household', 'multi-campus', 'multi campus', 'second campus', 'campus'],
-                text: 'Base SIS is one student and family system: the family record (including a second campus with multi-campus support), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, the Parent portal, email and text announcements, medical notes, and the discipline log. Scheduler and Student locator keep the office current on where Students are during the day.',
+                text: 'Base SIS is one student and family system: the family record (including a second campus with multi-campus support), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, the Parent portal and communication, health records and medical notes, and the discipline log. Scheduler and Student locator keep the office current on where Students are during the day.',
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             admissions: {
@@ -1265,7 +1264,7 @@
             health: {
                 topic: 'Health records',
                 keywords: ['health', 'medical', 'nurse', 'immunization', 'allergy', 'allergies', 'medication', 'physical'],
-                text: 'Medical notes sit on the student record in Base SIS, and the Health records module keeps immunizations, allergies, medications, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
+                text: 'Health records are part of Base SIS — immunizations, allergies, medications, medical notes, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             athletics: {
@@ -1277,7 +1276,7 @@
             communication: {
                 topic: 'Communication & portal',
                 keywords: ['email', 'sms', 'text message', 'texting', 'notification', 'notice', 'app', 'mobile', 'portal', 'parent portal', 'family portal', 'logins', 'separate logins'],
-                text: 'Base SIS gives Parents one family portal — apply, register, pay, and stay informed on the school’s own site — plus school-wide email and text announcements. The Group communication module adds email and SMS messaging to groups, teams, and lists. Phone-friendly portal and SMS — no required app.',
+                text: 'Communication is part of Base SIS: Parents get one family portal — apply, register, pay, and stay informed on the school’s own site — plus email and text announcements and email and SMS messaging to groups, teams, and lists. Phone-friendly portal and SMS — no required app.',
                 links: [{ label: 'The Difference', href: U.different }]
             },
             fundraising: {
@@ -1301,7 +1300,7 @@
             what: {
                 topic: 'What is ANNASIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'ANNASIS is a school operating system for private education — not just a student information system. Base SIS plus nine foundation modules share one student and family record: Base SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal, announcements, medical notes, and discipline log), tuition & billing, health records, the school store, group communication, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'ANNASIS is a school operating system for private education — not just a student information system. Base SIS plus seven foundation modules share one student and family record: Base SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), tuition & billing, the school store, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore Schools', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
@@ -1485,7 +1484,7 @@
         { v: 'billing', l: 'Billing or payment' },
         { v: 'registration', l: 'Registration or event' },
         { v: 'store', l: 'Store / order' },
-        { v: 'gradebook', l: 'Gradebook / SIS' },
+        { v: 'gradebook', l: 'Base SIS / Gradebook' },
         { v: 'other', l: 'Something else' }
     ];
 
