@@ -6,6 +6,13 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Aaron's 2:25 PM edits — annual-price phrase removed; Core SIS lead-ins; health before portal (2026-10-07)
+
+- Removed "— in the annual price, not as hidden or add-on costs later" (home Tuition card, `index.html`) and the matching Anna chat pricing line ("— in the annual student price, not a hidden or add-on cost later").
+- Core SIS bullets on `education.html`: bold lead-ins no longer end with periods; now "**Lead-in** — text" like the other cards. Tuition, Billing & Fundraising and Churches giving bullets made consistent (em dash after every bold lead-in).
+- Core SIS order: Health records & medical notes now comes before Parent portal & communication (bullets + intro sentence); proposal Core SIS "What it covers" reordered to match.
+- Cache bump `?v=20261007g`.
+
 ## Module thumbnails matched to one visible tile size (2026-10-07)
 
 - Donations, Core SIS "SIS" and "Grades", School Store, Events, Workflow, Uniform Swap had visible tiles smaller than the 224–226/256 Tuition tile (measured at the tile edge, excluding soft shadows). Adjusted copies in `Images/pillar/matched/` (originals untouched); Accounting (no visible tile) content scaled to match.
