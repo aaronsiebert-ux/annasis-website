@@ -6,6 +6,16 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Base SIS absorbs Health records + Communication; thumbnails matched (2026-10-07)
+
+- Aaron feedback: thumbnail sizes must match the other cards; drop the Admissions thumbnail; order SIS → Gradebook → Health → Communication; fold Health records and Group communication into Base SIS. Lineup is now **Base SIS + seven modules** (Tuition & billing, School store, Event registration, Donations & fundraising, Athletics eligibility & workflows, Accounting (QuickBooks), Uniform exchange).
+- Thumbnails: the Base SIS images now use the same `img.icon` class as every other card (112px desktop / 88px ≤760px; rendered boxes measured identical in headless Chrome). The source PNGs have different white margins, so normalized copies in `Images/pillar/base-sis/annasis-base-sis-{sis,grades,health,communication}-256.png` scale each visible tile to the Tuitions tile (226/256 px, same center). `.pillar-thumbs` = left-aligned vertical stack on desktop, 2×2 grid on mobile. Home Base SIS card shows the same four (48px `home-pillar-icon`, like the other home cards).
+- `education.html`: Base SIS copy gains "Parent portal & communication" and "Health records & medical notes" bullets (existing site language); Health Records and Group Communication cards removed (no inbound links to `#health` / `#communication`); renumbered 1–8; h1/leads/metas say seven.
+- `index.html`, `different.html`, `stories.html`, `integrations.html`: counts and lists updated; sit-beside lists no longer offer communication/admissions as separate modules (integrations hero lead + "sit beside" lead; different.html sit-beside list).
+- `js/annasis-engage.js`: quiz `portal` card removed — "too many logins" now recommends Base SIS; Base SIS card/answer include communication + health; health/communication/what/Current SIS answers updated; support category label "Gradebook / SIS" → "Base SIS / Gradebook" (value unchanged).
+- Cache: `app.46zixdbv0d.css?v=20261007c`, `annasis-engage.css?v=20261007c`, `annasis-engage.js?v=20261007c` on all 15 pages.
+- Preview GitHub Pages only — not IIS / www.annasis.com.
+
 ## Base SIS thumbnails at original size (2026-10-07)
 
 - Aaron feedback: show the Base SIS thumbnails at their original size, stacked vertically.
