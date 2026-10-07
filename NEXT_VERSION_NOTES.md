@@ -6,6 +6,13 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Pricing/bundling claims → "Where paying and giving meet" / "Every transaction, a chance to give" (2026-10-07)
+
+- Aaron is avoiding pricing/bundling claims. Tuition, Billing & Fundraising card: "Incumbents… not as a later add-on" replaced with **Where paying and giving meet** (option 3).
+- **Every transaction, a chance to give** (option 4) with "our optional fundraising Power-up": School Store and Event Registration cards (`education.html`, school wording), `events.html` fundraising card and `ecommerce.html` round-up card (organization-neutral; replaces the duplicate round-up sentence).
+- Anna chat: Tuition answer (option 3), fundraising answer (option 4 lead), store and events answers (option 4 + optional Power-up). Fit page "Cheap SIS" answer → option 3.
+- Cache bump `?v=20261007h`.
+
 ## Aaron's 2:25 PM edits — annual-price phrase removed; Core SIS lead-ins; health before portal (2026-10-07)
 
 - Removed "— in the annual price, not as hidden or add-on costs later" (home Tuition card, `index.html`) and the matching Anna chat pricing line ("— in the annual student price, not a hidden or add-on cost later").
