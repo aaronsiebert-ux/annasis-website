@@ -534,6 +534,45 @@ select {
         object-fit: contain;
     }
 
+/* Base SIS: bundled first row shows the absorbed modules' thumbnails */
+.pillar-row--base {
+    align-items: start;
+    border-color: var(--teal);
+}
+
+.pillar-thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, 54px);
+    gap: 8px;
+    justify-content: center;
+    padding-top: 4px;
+}
+
+    .pillar-thumbs img {
+        width: 54px;
+        height: 54px;
+        object-fit: contain;
+    }
+
+        .pillar-thumbs img:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+            justify-self: center;
+        }
+
+.base-sis-list {
+    margin: 0 0 12px;
+    padding-left: 20px;
+}
+
+    .base-sis-list li {
+        margin: 0 0 6px;
+    }
+
+.home-pillar-thumbs {
+    display: flex;
+    gap: 6px;
+}
+
 .paper {
     background: #fff;
     border: 1px solid var(--line);
@@ -946,6 +985,20 @@ footer {
             width: 88px;
             height: 88px;
         }
+
+    .pillar-thumbs {
+        grid-template-columns: repeat(3, 48px);
+        justify-content: start;
+    }
+
+        .pillar-thumbs img {
+            width: 48px;
+            height: 48px;
+        }
+
+            .pillar-thumbs img:last-child:nth-child(odd) {
+                grid-column: auto;
+            }
 
     .paper {
         padding: 22px;

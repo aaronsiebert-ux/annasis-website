@@ -6,6 +6,18 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Base SIS lineup — twelve itemized modules → Base SIS + nine modules (2026-10-07)
+
+- Aaron decision: bundle **Base SIS** = family record (incl. second campus / multi-campus), Admissions, re-enrollment, Attendance, class schedule, bell schedule, Gradebook, report cards, transcripts, Parent view (family portal), email, text announcements, medical notes, discipline log.
+- `education.html`: new first card **1. Base SIS** (`#base-sis`, `.pillar-row--base`) with a thumbnail strip of the absorbed module icons (pillar-01 Admissions, 02 SIS, 03 Grades) and a grouped list using existing site language. Removed cards **Admissions**, **Student Information System (SIS)**, **Learning Management & Gradebook** (anchors `#admissions`, `#sis`, `#grades` had no inbound links). Renamed **Health & Medical Records → Health Records** (medical notes now in Base SIS) and **Communication → Group Communication** (group/team/list email + SMS; family portal + school-wide announcements now in Base SIS; Student locator sentence moved to Base SIS). Renumbered 1–10; kept `#tuitions`, `#health`, `#store`, `#communication`, `#events`, `#donations`, `#workflow`, `#accounting`, `#swap`. h1/lead/listing/meta/og/twitter/ld+json/keywords updated.
+- `index.html`: h2 "Base SIS plus nine modules. One family record."; lead rewritten; home grid now Base SIS (3-thumb strip, links `education.html#base-sis`) · Tuition & billing · Events · Athletics eligibility (replaces Admissions + Gradebook cards); metas updated.
+- `different.html` (category row + footing paragraph), `stories.html` (household paragraph): lineup lists updated.
+- `js/annasis-engage.js`: quiz catalog `admissions`/`sis`/`gradebook` → `basesis`; full-OS result body + modules; `portal` card → "Parent portal & group communication"; chat: new `basesis` topic; admissions/gradebook/health/communication/what answers say which parts live in Base SIS.
+- `app.46zixdbv0d.css`: `.pillar-row--base`, `.pillar-thumbs`, `.base-sis-list`, `.home-pillar-thumbs` (+ ≤760px rule).
+- Cache: `app.46zixdbv0d.css?v=20261007a`, `annasis-engage.css?v=20261007b`, `annasis-engage.js?v=20261007b` on all 15 pages.
+- Left as-is (flag for Aaron): generic "admissions, grades, and tuition" on Events/Store/Camps/Churches; support category "Gradebook / SIS"; sit-beside lists mentioning "communication" / "Parent communication"; fit.html generic module copy.
+- Preview GitHub Pages only — not IIS / www.annasis.com.
+
 ## OneRoster supported today (2026-10-07)
 
 - Aaron decision: **OneRoster is supported (done)** — treat as a current capability, not roadmap. Supersedes the 2026-10-05 "Capability Catalog lists OneRoster as ROADMAP" correction below.
