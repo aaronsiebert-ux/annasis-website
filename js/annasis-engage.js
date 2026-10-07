@@ -1233,7 +1233,7 @@
             pricing: {
                 topic: 'Pricing',
                 keywords: ['price', 'pricing', 'cost', 'how much', 'expensive', 'cheap', 'budget', 'add-on', 'addon', 'per student'],
-                text: 'Pricing is discussed in conversation, so it fits Core SIS and the Power-ups your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system — in the annual student price, not a hidden or add-on cost later. Talk with Sales for specifics.',
+                text: 'Pricing is discussed in conversation, so it fits Core SIS and the Power-ups your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system. Talk with Sales for specifics.',
                 links: [{ label: 'Talk with Sales', href: U.contact }, { label: 'Take the fit quiz', href: U.quiz }],
                 action: 'pricing' // asks tools → org type → size first, then this text + lead form
             },
