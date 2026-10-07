@@ -6,6 +6,15 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Cost claims softened to value framing (2026-10-07)
+
+- Aaron approved removing price/cost promises. Every "…and lower cost for private schools" ending now uses a distinct value phrase: home intro "a platform right-sized for private schools"; home closing "less time on double entry"; home "Are we a fit?" "fewer systems to reconcile"; Explore the system intro "one record the whole office trusts"; fit intro "fewer handoffs between departments"; fit closing "less time chasing paperwork"; The Difference "one system Faculty and families learn once".
+- Home Real World card: "…simpler operations; lower cost." → "…simpler operations; more time for Parents and Students."
+- The Difference: removed "at the same price".
+- Meta/og/twitter/JSON-LD descriptions: index "…streamlined operations, room to grow."; fit "…, a system that scales with you."; different "…, built for how private schools run."
+- Stories: "Operating effort and cost fell" → "Operating effort fell".
+- Cache bump `?v=20261007j`.
+
 ## "Complete" package; Power-up-as-you-grow pricing framing; paid & free events (2026-10-07)
 
 - Aaron: the all-inclusive package is **Complete** (was "Enterprise"); framing "Start with Core SIS and Power-up as you grow, or go Complete." No "included in the annual price" / "no hidden or add-on costs" / "at one price" claims (pricing models may differ).
