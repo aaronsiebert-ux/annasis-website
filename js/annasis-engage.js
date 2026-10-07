@@ -485,7 +485,7 @@
                 { v: 'billing', l: 'Billing or payment' },
                 { v: 'registration', l: 'Registration or event' },
                 { v: 'store', l: 'Store / order' },
-                { v: 'gradebook', l: 'Base SIS / Gradebook' },
+                { v: 'gradebook', l: 'Core SIS / Gradebook' },
                 { v: 'other', l: 'Something else' }
             ];
             var sel = el('select', { id: catId, name: 'category', required: true, 'aria-required': 'true' }, [el('option', { value: '', text: 'Choose one' })].concat(cats.map(function (c) {
@@ -674,7 +674,7 @@
             options: function (a) {
                 var cur = a.type === 'school' ? 'our current SIS' : 'what we run today';
                 return [
-                    { v: 'beside', l: 'Add modules beside ' + cur + ' now' },
+                    { v: 'beside', l: 'Add Power-ups beside ' + cur + ' now' },
                     { v: 'later', l: 'Start beside ' + cur + ', full switch later' },
                     { v: 'full', l: 'Full switch to one system' },
                     { v: 'explore', l: 'Just exploring' }
@@ -743,11 +743,11 @@
         return {
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system without add-ons and high fees.', u.events, 'See Events'),
             store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — no second shop login to reconcile.', u.ecommerce, 'See Store'),
-            athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore Schools'),
+            athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore the system'),
             quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
-            tuition: M('Tuition & billing', 'Payment plans, invoices, incidental billing, and online payments — part of the operating system, not a hidden or add-on cost later.', u.education, 'Explore Schools'),
-            reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore Schools'),
-            basesis: M('Base SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore Schools')
+            tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, incidental billing, online payments, and one-time and recurring giving with sponsor invites and round-up — part of the operating system, not a hidden or add-on cost later.', u.education, 'Explore the system'),
+            reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
+            coresis: M('Core SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore the system')
         };
     }
 
@@ -760,7 +760,7 @@
      *  - School + no SIS picked (beside/explore)       → start-modules
      * Modules for beside-sis / start-modules come from tools + pains, in this order:
      *   Eventbrite or "outside" → Event registration; Shopify or "outside" → School store;
-     *   FinalForms or "outside" → Athletics; "logins" → Base SIS (Parent portal & communication);
+     *   FinalForms or "outside" → Athletics; "logins" → Core SIS (Parent portal & communication);
      *   "addons" → Tuition & billing; QuickBooks or "double" → QuickBooks accounting;
      *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + School store.
      *   Title uses the first two; up to four are listed.
@@ -837,7 +837,7 @@
         if (has(tools, 'eventbrite') || has(pain, 'outside')) { add('events'); }
         if (has(tools, 'shopify') || has(pain, 'outside')) { add('store'); }
         if (has(tools, 'finalforms') || has(pain, 'outside')) { add('athletics'); }
-        if (has(pain, 'logins')) { add('basesis'); }
+        if (has(pain, 'logins')) { add('coresis'); }
         if (has(pain, 'addons')) { add('tuition'); }
         if (has(tools, 'quickbooks') || has(pain, 'double')) { add('quickbooks'); }
         if (has(pain, 'reporting')) { add('reporting'); }
@@ -848,14 +848,14 @@
             res = {
                 id: 'full-os',
                 title: 'Full school operating system',
-                body: 'Run the school on one platform: Base SIS plus seven foundation modules on one student and family record — from Admissions, Attendance, and Gradebook in Base SIS to tuition & billing, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
-                modules: [C.basesis, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
+                body: 'Run the school on one platform: Core SIS plus six Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                modules: [C.coresis, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
             };
         } else if (sisPicked.length) {
             res = {
                 id: 'beside-sis',
                 title: 'Start beside ' + sisName + ' with ' + top,
-                body: 'Keep ' + sisName + ' and let ANNASIS sit beside it, turning on the modules that fill today’s gaps. Jog before you run' +
+                body: 'Keep ' + sisName + ' and let ANNASIS sit beside it, turning on the Power-ups that fill today’s gaps. Jog before you run' +
                     (a.plan === 'later' ? ' — then grow into the full school operating system when the office is ready.' : '; expand or replace when the office is ready.'),
                 modules: picks.slice(0, 4).map(function (k) { return C[k]; })
             };
@@ -863,13 +863,13 @@
             res = {
                 id: 'start-modules',
                 title: 'Start with ' + top + ' on the school operating system',
-                body: 'Begin with the modules that hurt most today — on one student and family record — and add the rest of the foundation when the office is ready. Jog before you run.',
+                body: 'Begin with the Power-ups that solve what hurts most today — on one student and family record — and add the rest of the foundation when the office is ready. Jog before you run.',
                 modules: picks.slice(0, 4).map(function (k) { return C[k]; })
             };
         }
-        if (a.when === 'term') { res.body += ' Scope a first site to the modules the office will run this term.'; }
+        if (a.when === 'term') { res.body += ' Scope a first site to the Power-ups the office will run this term.'; }
         res.links = [
-            { label: 'Explore Schools', href: u.education }, { label: 'Events', href: u.events },
+            { label: 'Explore the system', href: u.education }, { label: 'Events', href: u.events },
             { label: 'Store', href: u.ecommerce }, { label: 'Integrations', href: u.integrations }, { label: 'The Difference', href: u.different }
         ];
         return res;
@@ -1160,14 +1160,14 @@
             quiz: {
                 topic: 'Fit quiz',
                 keywords: ['quiz', 'are we a fit', 'good fit', 'right for us', 'fit for', 'assessment', 'fit'],
-                text: 'The “Are we a fit?” quiz is six quick questions — what you run today, what hurts, and how you would like to start. You get a tailored recommendation of ANNASIS modules at the end.',
+                text: 'The “Are we a fit?” quiz is six quick questions — what you run today, what hurts, and how you would like to start. You get a tailored recommendation of Core SIS and Power-ups at the end.',
                 links: [],
                 action: 'quiz' // off fit.html: "Start the quiz" button; on fit.html: closes chat and jumps to the quiz
             },
             sis: {
                 topic: 'Current SIS',
                 keywords: ['current sis', 'my sis', 'our sis', 'existing', 'sis', 'student information system', 'facts', 'renweb', 'classreach', 'sycamore', 'gradelink', 'alma', 'veracross', 'blackbaud', 'rediker', 'jupiter', 'replace', 'switch', 'sit beside', 'alongside', 'work with', 'keep our', 'rip out'],
-                text: 'Yes — ANNASIS can sit beside the student information system you run today and turn on the modules your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
+                text: 'Yes — ANNASIS can sit beside the student information system you run today and turn on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
                 links: [{ label: 'Integrations', href: U.integrations }, { label: 'Take the fit quiz', href: U.quiz }]
             },
             data: {
@@ -1228,67 +1228,67 @@
                 topic: 'Uniform exchange',
                 keywords: ['uniform', 'uniform exchange', 'used uniform', 'swap', 'exchange', 'facebook'],
                 text: 'Uniform exchange lives in the family portal: Parents publish uniforms for other Parents or Students to exchange or purchase. No middleman required — and used uniforms stay in the community instead of a Facebook thread the office cannot see.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             pricing: {
                 topic: 'Pricing',
                 keywords: ['price', 'pricing', 'cost', 'how much', 'expensive', 'cheap', 'budget', 'add-on', 'addon', 'per student'],
-                text: 'Pricing is discussed in conversation, so it fits the modules your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system — in the annual student price, not a hidden or add-on cost later. Talk with Sales for specifics.',
+                text: 'Pricing is discussed in conversation, so it fits Core SIS and the Power-ups your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system — in the annual student price, not a hidden or add-on cost later. Talk with Sales for specifics.',
                 links: [{ label: 'Talk with Sales', href: U.contact }, { label: 'Take the fit quiz', href: U.quiz }],
                 action: 'pricing' // asks tools → org type → size first, then this text + lead form
             },
-            basesis: {
-                topic: 'Base SIS',
-                keywords: ['base sis', 'base', 'attendance', 'bell schedule', 'class schedule', 'scheduler', 'discipline', 'behavior', 'family record', 'household', 'multi-campus', 'multi campus', 'second campus', 'campus'],
-                text: 'Base SIS is one student and family system: the family record (including a second campus with multi-campus support), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, the Parent portal and communication, health records and medical notes, and the discipline log. Scheduler and Student locator keep the office current on where Students are during the day.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+            coresis: {
+                topic: 'Core SIS',
+                keywords: ['core sis', 'core', 'base sis', 'base', 'power-up', 'power-ups', 'power up', 'power ups', 'attendance', 'bell schedule', 'class schedule', 'scheduler', 'discipline', 'behavior', 'family record', 'household', 'multi-campus', 'multi campus', 'second campus', 'campus'],
+                text: 'Core SIS is one student and family system: the family record (including a second campus with multi-campus support), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, the Parent portal and communication, health records and medical notes, and the discipline log. Scheduler and Student locator keep the office current on where Students are during the day.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             admissions: {
                 topic: 'Admissions',
                 keywords: ['admission', 'admissions', 'enroll', 'enrollment', 'application', 'apply', 'inquiry', 're-enrollment', 'reenrollment'],
-                text: 'Admissions is part of Base SIS — inquiry, online application, enrollment, and re-enrollment — one pipeline with configurable application forms. Embed Apply on the website you already have, and collect waivers and consents in enrollment packets on the same student and family system.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                text: 'Admissions is part of Core SIS — inquiry, online application, enrollment, and re-enrollment — one pipeline with configurable application forms. Embed Apply on the website you already have, and collect waivers and consents in enrollment packets on the same student and family system.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             gradebook: {
                 topic: 'Gradebook',
                 keywords: ['grade', 'gradebook', 'report card', 'transcript', 'gpa', 'progress report', 'rubric', 'assignment'],
-                text: 'Gradebook, report cards, and transcripts are part of Base SIS — assignments, rubrics, progress reports, and GPA too. Faculty live here; Parents and Students see the same academic record in the family portal — no separate parent grade portal.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                text: 'Gradebook, report cards, and transcripts are part of Core SIS — assignments, rubrics, progress reports, and GPA too. Faculty live here; Parents and Students see the same academic record in the family portal — no separate parent grade portal.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             tuition: {
-                topic: 'Tuition & billing',
+                topic: 'Tuition, billing & fundraising',
                 keywords: ['tuition', 'billing', 'invoice', 'payment plan', 'payment', 'pay', 'ach', 'stripe', 'finance', 'fees'],
-                text: 'Tuition management covers payment plans, invoices, incidental billing, online payments, and family-portal pay. Finance is part of the operating system — not a hidden or add-on cost later.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                text: 'Tuition, billing & fundraising is one Power-up: payment plans, invoices, incidental billing, online payments, and family-portal pay, plus one-time and recurring giving. Finance and fundraising are part of the operating system — not a hidden or add-on cost later.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             health: {
                 topic: 'Health records',
                 keywords: ['health', 'medical', 'nurse', 'immunization', 'allergy', 'allergies', 'medication', 'physical'],
-                text: 'Health records are part of Base SIS — immunizations, allergies, medications, medical notes, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                text: 'Health records are part of Core SIS — immunizations, allergies, medications, medical notes, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             athletics: {
                 topic: 'Athletics & forms',
                 keywords: ['athletic', 'athletics', 'sport', 'eligibility', 'clearance', 'finalforms', 'waiver', 'consent', 'approval', 'workflow', 'forms', 'coach'],
                 text: 'Athletics eligibility & workflows handle clearance with waivers, consents, and serial or parallel approvals — reusable for enrollment packets and purchase approval, without a bolt-on forms product like FinalForms. Clearance sits on the same student and family system as fees and roster.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             communication: {
                 topic: 'Communication & portal',
                 keywords: ['email', 'sms', 'text message', 'texting', 'notification', 'notice', 'app', 'mobile', 'portal', 'parent portal', 'family portal', 'logins', 'separate logins'],
-                text: 'Communication is part of Base SIS: Parents get one family portal — apply, register, pay, and stay informed on the school’s own site — plus email and text announcements and email and SMS messaging to groups, teams, and lists. Phone-friendly portal and SMS — no required app.',
+                text: 'Communication is part of Core SIS: Parents get one family portal — apply, register, pay, and stay informed on the school’s own site — plus email and text announcements and email and SMS messaging to groups, teams, and lists. Phone-friendly portal and SMS — no required app.',
                 links: [{ label: 'The Difference', href: U.different }]
             },
             fundraising: {
                 topic: 'Fundraising',
                 keywords: ['donation', 'donate', 'fundraising', 'fundraise', 'giving', 'give', 'sponsor', 'campaign', 'round-up', 'round up', 'goal', 'annual fund'],
-                text: 'Donations & fundraising cover one-time and recurring giving on the same family wallet. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants, and optional round-up on store purchases drives additional giving. A class, team, or campaign can see progress — dollars raised against a goal, rankings, and percent to goal.',
-                links: [{ label: 'Explore Schools', href: U.education }]
+                text: 'Fundraising is part of the Tuition, billing & fundraising Power-up: one-time and recurring giving on the same family wallet. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants, and optional round-up on store purchases drives additional giving, applied to one or multiple funds. Giving leaderboards and goal meters let a class, team, or campaign see progress — dollars raised against a goal, rankings, and percent to goal.',
+                links: [{ label: 'Explore the system', href: U.education }]
             },
             partnership: {
                 topic: 'Partnership & onboarding',
                 keywords: ['implementation support', 'implementation', 'onboarding', 'training', 'partner', 'partnership', 'roadmap', 'go-live', 'go live'],
-                text: 'Implementation and support are part of how ANNASIS works — mapping your real programs, registration flows, and store needs, then staying available as seasons change. We share where the product is going, listen to what offices need next, and ship in the open. Jog before you run — modules when you are ready.',
+                text: 'Implementation and support are part of how ANNASIS works — mapping your real programs, registration flows, and store needs, then staying available as seasons change. We share where the product is going, listen to what offices need next, and ship in the open. Jog before you run — Power-ups when you are ready.',
                 links: [{ label: 'Partnership', href: U.partner }]
             },
             about: {
@@ -1300,8 +1300,8 @@
             what: {
                 topic: 'What is ANNASIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'ANNASIS is a school operating system for private education — not just a student information system. Base SIS plus seven foundation modules share one student and family record: Base SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), tuition & billing, the school store, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
-                links: [{ label: 'Explore Schools', href: U.education }, { label: 'The Difference', href: U.different }]
+                text: 'ANNASIS is a school operating system for private education — not just a student information system. Core SIS plus six Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, uniform exchange, and QuickBooks accounting. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
             // Listed late so ties go to product topics ("ticket" alone → Events ticketing;
@@ -1328,7 +1328,7 @@
         },
         fallback: {
             topic: 'Other question',
-            text: 'I don’t have a scripted answer for that yet. The two-minute fit quiz can point you to the right modules, Talk with Sales, or visit the Support page.',
+            text: 'I don’t have a scripted answer for that yet. The two-minute fit quiz can point you to the right Power-ups, Talk with Sales, or visit the Support page.',
             links: [{ label: 'Take the fit quiz', href: U.quiz }, { label: 'Talk with Sales', href: U.contact }, { label: 'Support', href: U.support }],
             action: 'lead'
         }
@@ -1484,7 +1484,7 @@
         { v: 'billing', l: 'Billing or payment' },
         { v: 'registration', l: 'Registration or event' },
         { v: 'store', l: 'Store / order' },
-        { v: 'gradebook', l: 'Base SIS / Gradebook' },
+        { v: 'gradebook', l: 'Core SIS / Gradebook' },
         { v: 'other', l: 'Something else' }
     ];
 
@@ -1691,7 +1691,7 @@
             var toolStep = QUIZ.filter(function (s) { return s.id === 'tools'; })[0];
             var typeStep = QUIZ.filter(function (s) { return s.id === 'type'; })[0];
             var sizeStep = QUIZ.filter(function (s) { return s.id === 'size'; })[0];
-            say('Happy to help with pricing. It’s tailored to the modules you’ll actually run, so three quick questions first. What do you use today? Pick all that apply.');
+            say('Happy to help with pricing. It’s tailored to the Power-ups you’ll actually run, so three quick questions first. What do you use today? Pick all that apply.');
             askChoice({
                 multi: true,
                 label: 'What do you use today?',
