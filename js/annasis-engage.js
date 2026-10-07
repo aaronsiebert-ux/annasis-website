@@ -1203,7 +1203,7 @@
             events: {
                 topic: 'Events',
                 keywords: ['event', 'registration', 'register', 'ticket', 'ticketing', 'eventbrite', 'conference', 'convention', 'check-in', 'checkin', 'exhibitor', 'fundraiser', 'plays', 'enrichment'],
-                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraisers, church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage.',
+                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraisers, church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Every transaction, a chance to give: with our optional fundraising Power-up, people who register see a simple way to support the organization’s goals in the same moment.',
                 links: [{ label: 'See Events', href: U.events }]
             },
             camps: {
@@ -1221,7 +1221,7 @@
             store: {
                 topic: 'School store',
                 keywords: ['store', 'shop', 'ecommerce', 'e-commerce', 'shopify', 'merch', 'merchandise', 'spirit wear', 'checkout', 'buy', 'purchase', 'books'],
-                text: 'The ANNASIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer Shopify the office reconciles at night. Store purchases land on the family beside tuition & billing, and optional round-up at checkout turns everyday purchases into extra giving. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
+                text: 'The ANNASIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer Shopify the office reconciles at night. Store purchases land on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
             uniforms: {
@@ -1258,7 +1258,7 @@
             tuition: {
                 topic: 'Tuition, billing & fundraising',
                 keywords: ['tuition', 'billing', 'invoice', 'payment plan', 'payment', 'pay', 'ach', 'stripe', 'finance', 'fees'],
-                text: 'Tuition, billing & fundraising is one Power-up: payment plans, invoices, incidental billing, online payments, and family-portal pay, plus one-time and recurring giving. Finance and fundraising are part of the operating system — not a hidden or add-on cost later.',
+                text: 'Tuition, billing & fundraising is one Power-up: payment plans, invoices, incidental billing, online payments, and family-portal pay, plus one-time and recurring giving. Where paying and giving meet: one-time and recurring gifts appear right at checkout, and every dollar lands on the same family record your office already uses.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             health: {
@@ -1282,7 +1282,7 @@
             fundraising: {
                 topic: 'Fundraising',
                 keywords: ['donation', 'donate', 'fundraising', 'fundraise', 'giving', 'give', 'sponsor', 'campaign', 'round-up', 'round up', 'goal', 'annual fund'],
-                text: 'Fundraising is part of the Tuition, billing & fundraising Power-up, with giving features shown to improve giving for our customers: one-time and recurring giving offered during every transaction; round-up campaigns to one or multiple funds (including round-up on store purchases); giving leaderboards; and goal meters that show dollars raised and percent to goal. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants.',
+                text: 'Every transaction, a chance to give: families pay tuition, buy from the store, or register for events and see a simple way to support the school’s goals in the same moment. Fundraising is part of the Tuition, billing & fundraising Power-up, with giving features shown to improve giving for our customers: one-time and recurring giving offered during every transaction; round-up campaigns to one or multiple funds (including round-up on store purchases); giving leaderboards; and goal meters that show dollars raised and percent to goal. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             partnership: {
