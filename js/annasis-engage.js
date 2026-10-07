@@ -745,7 +745,7 @@
             store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — no second shop login to reconcile.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore the system'),
             quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
-            tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, incidental billing, online payments, and one-time and recurring giving with sponsor invites and round-up — part of the operating system, not a hidden or add-on cost later.', u.education, 'Explore the system'),
+            tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
             coresis: M('Core SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore the system')
         };
@@ -802,7 +802,7 @@
                     body: 'Run the ministry year in one place: event management for conferences, large events, and multi-session programs; online giving and fundraising; check-in for kids and volunteers; and a real store for merch and resources.',
                     modules: [
                         M('Event management', 'Conferences, life groups, camps, VBS, classes, sports, and midweek — paid and free signups.', u.events, 'See Events'),
-                        M('Online giving & fundraising', 'Donations, campaign gifts, sponsor invites, and round-up on store purchases.', u.churches, 'See Churches'),
+                        M('Online giving & fundraising', 'One-time and recurring giving, round-up campaigns, leaderboards, goal meters, and sponsor invites.', u.churches, 'See Churches'),
                         M('Check-in', 'Kids, families, and volunteers — tied to the same people and program records.', u.churches, 'See Churches'),
                         M('Store & e-commerce', 'Merch, resource tables, books, and program materials.', u.ecommerce, 'See Store')
                     ]
@@ -1282,7 +1282,7 @@
             fundraising: {
                 topic: 'Fundraising',
                 keywords: ['donation', 'donate', 'fundraising', 'fundraise', 'giving', 'give', 'sponsor', 'campaign', 'round-up', 'round up', 'goal', 'annual fund'],
-                text: 'Fundraising is part of the Tuition, billing & fundraising Power-up: one-time and recurring giving on the same family wallet. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants, and optional round-up on store purchases drives additional giving, applied to one or multiple funds. Giving leaderboards and goal meters let a class, team, or campaign see progress — dollars raised against a goal, rankings, and percent to goal.',
+                text: 'Fundraising is part of the Tuition, billing & fundraising Power-up, with giving features shown to improve giving for our customers: one-time and recurring giving offered during every transaction; round-up campaigns to one or multiple funds (including round-up on store purchases); giving leaderboards; and goal meters that show dollars raised and percent to goal. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             partnership: {

@@ -6,6 +6,14 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Giving features broken down — Tuition, Billing & Fundraising (2026-10-07)
+
+- Aaron's giving language ("giving features shown to improve giving for our customers"; one-time and recurring options offered during every transaction; round-up campaigns to one or multiple funds; giving leaderboards; goal meters) broken into short skimmable points, not pasted verbatim.
+- `education.html#tuition-fundraising`: lead line + five bullets (one-time & recurring, round-up campaigns, leaderboards, goal meters, sponsor invites); earlier round-up / leaderboard / goal paragraphs folded in so nothing repeats.
+- `churches.html` "Online giving & fundraising" card: same claim + four bullets.
+- Anna chat fundraising answer and the Tuition / Churches catalog cards updated to match.
+- Cache bump `?v=20261007e` on all 15 pages.
+
 ## Core SIS + six Power-ups; Tuition, Billing & Fundraising merged; "Explore the system" (2026-10-07)
 
 - Aaron naming decision: **Base SIS → Core SIS** everywhere (site, Anna chat, quiz, support form label "Core SIS / Gradebook"; older entries below updated to the new name). The add-on modules are now **Power-ups** ("Core SIS plus six Power-ups").
