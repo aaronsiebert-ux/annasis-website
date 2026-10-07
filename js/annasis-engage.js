@@ -746,11 +746,9 @@
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore Schools'),
             quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
             tuition: M('Tuition & billing', 'Payment plans, invoices, incidental billing, and online payments — part of the operating system, not a hidden or add-on cost later.', u.education, 'Explore Schools'),
-            portal: M('Family portal & communication', 'One family portal for Parents plus email and SMS — on the school’s own site, no required app.', u.different, 'See The Difference'),
+            portal: M('Parent portal & group communication', 'One Parent portal with email and text announcements in Base SIS, plus email and SMS to groups, teams, and lists — on the school’s own site, no required app.', u.different, 'See The Difference'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore Schools'),
-            admissions: M('Admissions', 'Inquiry, online application, enrollment, and re-enrollment — with waivers and consents on the school site.', u.education, 'Explore Schools'),
-            sis: M('Student information system', 'One student and family record — demographics, Attendance, Scheduler, Behavior / Discipline, and reporting.', u.education, 'Explore Schools'),
-            gradebook: M('Learning Management & Gradebook', 'Gradebook, progress reports, report cards, and transcripts on the same student and family system.', u.education, 'Explore Schools')
+            basesis: M('Base SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, Parent portal, email and text announcements, medical notes, and discipline log.', u.education, 'Explore Schools')
         };
     }
 
@@ -763,7 +761,7 @@
      *  - School + no SIS picked (beside/explore)       → start-modules
      * Modules for beside-sis / start-modules come from tools + pains, in this order:
      *   Eventbrite or "outside" → Event registration; Shopify or "outside" → School store;
-     *   FinalForms or "outside" → Athletics; "logins" → Family portal & communication;
+     *   FinalForms or "outside" → Athletics; "logins" → Parent portal & group communication;
      *   "addons" → Tuition & billing; QuickBooks or "double" → QuickBooks accounting;
      *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + School store.
      *   Title uses the first two; up to four are listed.
@@ -851,8 +849,8 @@
             res = {
                 id: 'full-os',
                 title: 'Full school operating system',
-                body: 'Run the school on one platform: twelve foundation modules on one student and family record — from Admissions and Gradebook to tuition & billing, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
-                modules: [C.admissions, C.sis, C.gradebook, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
+                body: 'Run the school on one platform: Base SIS plus nine foundation modules on one student and family record — from Admissions, Attendance, and Gradebook in Base SIS to tuition & billing, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                modules: [C.basesis, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
             };
         } else if (sisPicked.length) {
             res = {
@@ -1240,16 +1238,22 @@
                 links: [{ label: 'Talk with Sales', href: U.contact }, { label: 'Take the fit quiz', href: U.quiz }],
                 action: 'pricing' // asks tools → org type → size first, then this text + lead form
             },
+            basesis: {
+                topic: 'Base SIS',
+                keywords: ['base sis', 'base', 'attendance', 'bell schedule', 'class schedule', 'scheduler', 'discipline', 'behavior', 'family record', 'household', 'multi-campus', 'multi campus', 'second campus', 'campus'],
+                text: 'Base SIS is one student and family system: the family record (including a second campus with multi-campus support), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, the Parent portal, email and text announcements, medical notes, and the discipline log. Scheduler and Student locator keep the office current on where Students are during the day.',
+                links: [{ label: 'Explore Schools', href: U.education }]
+            },
             admissions: {
                 topic: 'Admissions',
                 keywords: ['admission', 'admissions', 'enroll', 'enrollment', 'application', 'apply', 'inquiry', 're-enrollment', 'reenrollment'],
-                text: 'Admissions covers inquiry, online application, enrollment, and re-enrollment — one pipeline with configurable application forms. Embed Apply on the website you already have, and collect waivers and consents in enrollment packets on the same student and family system.',
+                text: 'Admissions is part of Base SIS — inquiry, online application, enrollment, and re-enrollment — one pipeline with configurable application forms. Embed Apply on the website you already have, and collect waivers and consents in enrollment packets on the same student and family system.',
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             gradebook: {
                 topic: 'Gradebook',
                 keywords: ['grade', 'gradebook', 'report card', 'transcript', 'gpa', 'progress report', 'rubric', 'assignment'],
-                text: 'Learning Management & Gradebook includes assignments, rubrics, report cards, progress reports, transcripts, and GPA. Faculty live here; Parents and Students see the same academic record in the family portal — no separate parent grade portal.',
+                text: 'Gradebook, report cards, and transcripts are part of Base SIS — assignments, rubrics, progress reports, and GPA too. Faculty live here; Parents and Students see the same academic record in the family portal — no separate parent grade portal.',
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             tuition: {
@@ -1261,7 +1265,7 @@
             health: {
                 topic: 'Health records',
                 keywords: ['health', 'medical', 'nurse', 'immunization', 'allergy', 'allergies', 'medication', 'physical'],
-                text: 'Health & medical records keep immunizations, allergies, medications, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
+                text: 'Medical notes sit on the student record in Base SIS, and the Health records module keeps immunizations, allergies, medications, and emergency-card details on the student system. Athletics physicals that expire use the same workflows as eligibility and clearance — nurse, coach, and office look at one Student.',
                 links: [{ label: 'Explore Schools', href: U.education }]
             },
             athletics: {
@@ -1273,7 +1277,7 @@
             communication: {
                 topic: 'Communication & portal',
                 keywords: ['email', 'sms', 'text message', 'texting', 'notification', 'notice', 'app', 'mobile', 'portal', 'parent portal', 'family portal', 'logins', 'separate logins'],
-                text: 'Email and SMS messaging go to groups, teams, and lists, and Parents get one family portal — apply, register, pay, and stay informed on the school’s own site. Phone-friendly portal and SMS — no required app.',
+                text: 'Base SIS gives Parents one family portal — apply, register, pay, and stay informed on the school’s own site — plus school-wide email and text announcements. The Group communication module adds email and SMS messaging to groups, teams, and lists. Phone-friendly portal and SMS — no required app.',
                 links: [{ label: 'The Difference', href: U.different }]
             },
             fundraising: {
@@ -1297,7 +1301,7 @@
             what: {
                 topic: 'What is ANNASIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'ANNASIS is a school operating system for private education — not just a student information system. Twelve foundation modules share one student and family record: Admissions, SIS, Learning Management & Gradebook, tuition & billing, health & medical records, the school store, communication, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'ANNASIS is a school operating system for private education — not just a student information system. Base SIS plus nine foundation modules share one student and family record: Base SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal, announcements, medical notes, and discipline log), tuition & billing, health records, the school store, group communication, event registration, donations & fundraising, QuickBooks accounting, uniform exchange, and athletics eligibility & workflows. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore Schools', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
