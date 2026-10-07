@@ -534,8 +534,8 @@ select {
         object-fit: contain;
     }
 
-/* Base SIS: bundled first row shows the absorbed modules' thumbnails */
-.pillar-row--base {
+/* Core SIS: bundled first row shows the absorbed modules' thumbnails */
+.pillar-row--core {
     align-items: start;
     border-color: var(--teal);
 }
@@ -548,12 +548,12 @@ select {
     gap: 12px;
 }
 
-.base-sis-list {
+.core-sis-list {
     margin: 0 0 12px;
     padding-left: 20px;
 }
 
-    .base-sis-list li {
+    .core-sis-list li {
         margin: 0 0 6px;
     }
 

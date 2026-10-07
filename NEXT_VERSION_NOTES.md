@@ -6,32 +6,45 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
-## Base SIS absorbs Health records + Communication; thumbnails matched (2026-10-07)
+## Core SIS + six Power-ups; Tuition, Billing & Fundraising merged; "Explore the system" (2026-10-07)
 
-- Aaron feedback: thumbnail sizes must match the other cards; drop the Admissions thumbnail; order SIS → Gradebook → Health → Communication; fold Health records and Group communication into Base SIS. Lineup is now **Base SIS + seven modules** (Tuition & billing, School store, Event registration, Donations & fundraising, Athletics eligibility & workflows, Accounting (QuickBooks), Uniform exchange).
-- Thumbnails: the Base SIS images now use the same `img.icon` class as every other card (112px desktop / 88px ≤760px; rendered boxes measured identical in headless Chrome). The source PNGs have different white margins, so normalized copies in `Images/pillar/base-sis/annasis-base-sis-{sis,grades,health,communication}-256.png` scale each visible tile to the Tuitions tile (226/256 px, same center). `.pillar-thumbs` = left-aligned vertical stack on desktop, 2×2 grid on mobile. Home Base SIS card shows the same four (48px `home-pillar-icon`, like the other home cards).
-- `education.html`: Base SIS copy gains "Parent portal & communication" and "Health records & medical notes" bullets (existing site language); Health Records and Group Communication cards removed (no inbound links to `#health` / `#communication`); renumbered 1–8; h1/leads/metas say seven.
+- Aaron naming decision: **Base SIS → Core SIS** everywhere (site, Anna chat, quiz, support form label "Core SIS / Gradebook"; older entries below updated to the new name). The add-on modules are now **Power-ups** ("Core SIS plus six Power-ups").
+- **Tuition & Billing + Donations & Fundraising → one Power-up, "Tuition, Billing & Fundraising"** (`#tuition-fundraising`; old `#tuitions` / `#donations` anchors removed; Events and Store page links updated). Copy merges both cards; adds "applied to one or multiple funds" and "giving leaderboards and goal meters" from Aaron's proposal "Giving and Fundraising" bullet. Thumbnails stacked Tuition → Donations using normalized tiles in `Images/pillar/power-ups/` (same 226/256 visible tile as the other cards; `img.icon` 112px / 88px).
+- Order on `education.html`: Core SIS · Tuition, Billing & Fundraising · School Store · Event Registration · Athletics Eligibility & Workflows · Uniform Exchange · Accounting (QuickBooks). Numbering removed from all card titles.
+- Count wording now "Core SIS plus six Power-ups" (education h1/lead/meta ×4, index h2/lead/meta ×3, different.html category row, engage.js full-OS result + "what" answer); generic "modules" → "Power-ups" in quiz/chat copy, fit.html, index fit section, integrations sit-beside lead, pricing/different metas, and "Power-ups when you are ready" on segment pages + partner.
+- Image folder `Images/pillar/base-sis/` renamed to `Images/pillar/core-sis/`; CSS `.pillar-row--core`, `.core-sis-list`; id `#core-sis`.
+- Links to `education.html` now read **"Explore the system"** (header nav, mobile menu, footer on all pages, integrations button, home/fit "See the foundation modules" buttons, Anna chat/quiz link labels); education.html kicker "Explore the system".
+- Home grid: Core SIS · Tuition, billing & fundraising (2 thumbs) · Events · Athletics eligibility.
+- Quiz: the "Tuition & billing" card is now "Tuition, billing & fundraising" (the only school tuition/fundraising card).
+- Cache: `app.46zixdbv0d.css?v=20261007d`, `annasis-engage.css?v=20261007d`, `annasis-engage.js?v=20261007d` on all 15 pages.
+- Preview GitHub Pages only — not IIS / www.annasis.com.
+
+## Core SIS absorbs Health records + Communication; thumbnails matched (2026-10-07)
+
+- Aaron feedback: thumbnail sizes must match the other cards; drop the Admissions thumbnail; order SIS → Gradebook → Health → Communication; fold Health records and Group communication into Core SIS. Lineup is now **Core SIS + seven modules** (Tuition & billing, School store, Event registration, Donations & fundraising, Athletics eligibility & workflows, Accounting (QuickBooks), Uniform exchange).
+- Thumbnails: the Core SIS images now use the same `img.icon` class as every other card (112px desktop / 88px ≤760px; rendered boxes measured identical in headless Chrome). The source PNGs have different white margins, so normalized copies in `Images/pillar/core-sis/annasis-core-sis-{sis,grades,health,communication}-256.png` scale each visible tile to the Tuitions tile (226/256 px, same center). `.pillar-thumbs` = left-aligned vertical stack on desktop, 2×2 grid on mobile. Home Core SIS card shows the same four (48px `home-pillar-icon`, like the other home cards).
+- `education.html`: Core SIS copy gains "Parent portal & communication" and "Health records & medical notes" bullets (existing site language); Health Records and Group Communication cards removed (no inbound links to `#health` / `#communication`); renumbered 1–8; h1/leads/metas say seven.
 - `index.html`, `different.html`, `stories.html`, `integrations.html`: counts and lists updated; sit-beside lists no longer offer communication/admissions as separate modules (integrations hero lead + "sit beside" lead; different.html sit-beside list).
-- `js/annasis-engage.js`: quiz `portal` card removed — "too many logins" now recommends Base SIS; Base SIS card/answer include communication + health; health/communication/what/Current SIS answers updated; support category label "Gradebook / SIS" → "Base SIS / Gradebook" (value unchanged).
+- `js/annasis-engage.js`: quiz `portal` card removed — "too many logins" now recommends Core SIS; Core SIS card/answer include communication + health; health/communication/what/Current SIS answers updated; support category label "Gradebook / SIS" → "Core SIS / Gradebook" (value unchanged).
 - Cache: `app.46zixdbv0d.css?v=20261007c`, `annasis-engage.css?v=20261007c`, `annasis-engage.js?v=20261007c` on all 15 pages.
 - Preview GitHub Pages only — not IIS / www.annasis.com.
 
-## Base SIS thumbnails at original size (2026-10-07)
+## Core SIS thumbnails at original size (2026-10-07)
 
-- Aaron feedback: show the Base SIS thumbnails at their original size, stacked vertically.
-- `education.html` Base SIS card: `.pillar-thumbs` now stacks the three icons (Admissions, SIS, Gradebook) vertically at 112px each, the same size as `.pillar-row img.icon` on the other module cards. At ≤760px they sit in a wrapping row at 88px each (matches the mobile `.pillar-row img.icon` size).
-- Home Base SIS card was already at the home card icon size (`.home-pillar-icon` 48px, same as the other home cards) — unchanged. Quiz result cards have no icons — unchanged.
+- Aaron feedback: show the Core SIS thumbnails at their original size, stacked vertically.
+- `education.html` Core SIS card: `.pillar-thumbs` now stacks the three icons (Admissions, SIS, Gradebook) vertically at 112px each, the same size as `.pillar-row img.icon` on the other module cards. At ≤760px they sit in a wrapping row at 88px each (matches the mobile `.pillar-row img.icon` size).
+- Home Core SIS card was already at the home card icon size (`.home-pillar-icon` 48px, same as the other home cards) — unchanged. Quiz result cards have no icons — unchanged.
 - Cache: `app.46zixdbv0d.css?v=20261007b` on all 15 pages.
 - Preview GitHub Pages only — not IIS / www.annasis.com.
 
-## Base SIS lineup — twelve itemized modules → Base SIS + nine modules (2026-10-07)
+## Core SIS lineup — twelve itemized modules → Core SIS + nine modules (2026-10-07)
 
-- Aaron decision: bundle **Base SIS** = family record (incl. second campus / multi-campus), Admissions, re-enrollment, Attendance, class schedule, bell schedule, Gradebook, report cards, transcripts, Parent view (family portal), email, text announcements, medical notes, discipline log.
-- `education.html`: new first card **1. Base SIS** (`#base-sis`, `.pillar-row--base`) with a thumbnail strip of the absorbed module icons (pillar-01 Admissions, 02 SIS, 03 Grades) and a grouped list using existing site language. Removed cards **Admissions**, **Student Information System (SIS)**, **Learning Management & Gradebook** (anchors `#admissions`, `#sis`, `#grades` had no inbound links). Renamed **Health & Medical Records → Health Records** (medical notes now in Base SIS) and **Communication → Group Communication** (group/team/list email + SMS; family portal + school-wide announcements now in Base SIS; Student locator sentence moved to Base SIS). Renumbered 1–10; kept `#tuitions`, `#health`, `#store`, `#communication`, `#events`, `#donations`, `#workflow`, `#accounting`, `#swap`. h1/lead/listing/meta/og/twitter/ld+json/keywords updated.
-- `index.html`: h2 "Base SIS plus nine modules. One family record."; lead rewritten; home grid now Base SIS (3-thumb strip, links `education.html#base-sis`) · Tuition & billing · Events · Athletics eligibility (replaces Admissions + Gradebook cards); metas updated.
+- Aaron decision: bundle **Core SIS** = family record (incl. second campus / multi-campus), Admissions, re-enrollment, Attendance, class schedule, bell schedule, Gradebook, report cards, transcripts, Parent view (family portal), email, text announcements, medical notes, discipline log.
+- `education.html`: new first card **1. Core SIS** (`#core-sis`, `.pillar-row--core`) with a thumbnail strip of the absorbed module icons (pillar-01 Admissions, 02 SIS, 03 Grades) and a grouped list using existing site language. Removed cards **Admissions**, **Student Information System (SIS)**, **Learning Management & Gradebook** (anchors `#admissions`, `#sis`, `#grades` had no inbound links). Renamed **Health & Medical Records → Health Records** (medical notes now in Core SIS) and **Communication → Group Communication** (group/team/list email + SMS; family portal + school-wide announcements now in Core SIS; Student locator sentence moved to Core SIS). Renumbered 1–10; kept `#tuitions`, `#health`, `#store`, `#communication`, `#events`, `#donations`, `#workflow`, `#accounting`, `#swap`. h1/lead/listing/meta/og/twitter/ld+json/keywords updated.
+- `index.html`: h2 "Core SIS plus nine modules. One family record."; lead rewritten; home grid now Core SIS (3-thumb strip, links `education.html#core-sis`) · Tuition & billing · Events · Athletics eligibility (replaces Admissions + Gradebook cards); metas updated.
 - `different.html` (category row + footing paragraph), `stories.html` (household paragraph): lineup lists updated.
-- `js/annasis-engage.js`: quiz catalog `admissions`/`sis`/`gradebook` → `basesis`; full-OS result body + modules; `portal` card → "Parent portal & group communication"; chat: new `basesis` topic; admissions/gradebook/health/communication/what answers say which parts live in Base SIS.
-- `app.46zixdbv0d.css`: `.pillar-row--base`, `.pillar-thumbs`, `.base-sis-list`, `.home-pillar-thumbs` (+ ≤760px rule).
+- `js/annasis-engage.js`: quiz catalog `admissions`/`sis`/`gradebook` → `coresis`; full-OS result body + modules; `portal` card → "Parent portal & group communication"; chat: new `coresis` topic; admissions/gradebook/health/communication/what answers say which parts live in Core SIS.
+- `app.46zixdbv0d.css`: `.pillar-row--core`, `.pillar-thumbs`, `.core-sis-list`, `.home-pillar-thumbs` (+ ≤760px rule).
 - Cache: `app.46zixdbv0d.css?v=20261007a`, `annasis-engage.css?v=20261007b`, `annasis-engage.js?v=20261007b` on all 15 pages.
 - Left as-is (flag for Aaron): generic "admissions, grades, and tuition" on Events/Store/Camps/Churches; support category "Gradebook / SIS"; sit-beside lists mentioning "communication" / "Parent communication"; fit.html generic module copy.
 - Preview GitHub Pages only — not IIS / www.annasis.com.
