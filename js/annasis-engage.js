@@ -1176,7 +1176,7 @@
             data: {
                 topic: 'Roster data',
                 keywords: ['oneroster', 'roster', 'rostering', 'import', 'sync', 'migrate', 'migration', 'data transfer', 'api'],
-                text: 'Many SIS packages can share rosters in a standard called OneRoster — directly, or through Clever or ClassLink. Standards-based roster sharing is on the ANNASIS roadmap. Today, we map each school’s handoff during onboarding and confirm the path with your vendors before we commit to a date.',
+                text: 'OneRoster is the common standard many SIS packages use to share rosters. ANNASIS supports OneRoster today — standards-based roster sharing so classes and enrollments flow cleanly to your LMS and sign-on tools, directly from the SIS or through Clever or ClassLink. We confirm the path with each school’s vendors during onboarding.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             lms: {

@@ -6,6 +6,14 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## OneRoster supported today (2026-10-07)
+
+- Aaron decision: **OneRoster is supported (done)** — treat as a current capability, not roadmap. Supersedes the 2026-10-05 "Capability Catalog lists OneRoster as ROADMAP" correction below.
+- `integrations.html` "For the data-minded / How roster data travels" lead now reads: “OneRoster is the common standard many SIS packages use to share student, Faculty, and class rosters. ANNASIS supports OneRoster today — standards-based roster sharing so classes and enrollments flow cleanly to your LMS and sign-on tools, directly from the SIS or through Clever or ClassLink. We confirm the path with each school’s vendors during onboarding.”
+- Anna chat (`js/annasis-engage.js`) Roster data answer updated to the same wording. Matches the Enterprise proposal template (Integrations & Ecosystem section) and its "We support OneRoster interfaces" bullet.
+- Other "roadmap" mentions (partner.html, about.html, stories.html, chat implementation-support keywords) are about the general product roadmap, not OneRoster — unchanged.
+- Cache: `annasis-engage.js` / `.css` `?v=20261007a`. Preview GitHub Pages only — not IIS / `www.annasis.com`.
+
 ## Anna support chip wording (2026-10-06)
 
 - Customer-status **Yes** chip: changed from “Yes — my school or organization uses ANNASIS” to **“Yes — we use ANNASIS software”** (ANNASIS all caps). School/organization remains the required form field label — only the Yes chip (and related Support page path headings) were softened.
