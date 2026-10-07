@@ -6,6 +6,14 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Base SIS thumbnails at original size (2026-10-07)
+
+- Aaron feedback: show the Base SIS thumbnails at their original size, stacked vertically.
+- `education.html` Base SIS card: `.pillar-thumbs` now stacks the three icons (Admissions, SIS, Gradebook) vertically at 112px each, the same size as `.pillar-row img.icon` on the other module cards. At ≤760px they sit in a wrapping row at 88px each (matches the mobile `.pillar-row img.icon` size).
+- Home Base SIS card was already at the home card icon size (`.home-pillar-icon` 48px, same as the other home cards) — unchanged. Quiz result cards have no icons — unchanged.
+- Cache: `app.46zixdbv0d.css?v=20261007b` on all 15 pages.
+- Preview GitHub Pages only — not IIS / www.annasis.com.
+
 ## Base SIS lineup — twelve itemized modules → Base SIS + nine modules (2026-10-07)
 
 - Aaron decision: bundle **Base SIS** = family record (incl. second campus / multi-campus), Admissions, re-enrollment, Attendance, class schedule, bell schedule, Gradebook, report cards, transcripts, Parent view (family portal), email, text announcements, medical notes, discipline log.
