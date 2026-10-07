@@ -662,7 +662,7 @@
                 return [
                     { v: 'logins', l: school ? 'Separate logins for Parents' : 'Separate logins for families' },
                     { v: 'double', l: 'Office double entry' },
-                    { v: 'addons', l: 'Hidden add-on costs' },
+                    { v: 'addons', l: 'Costs that grow unexpectedly' },
                     { v: 'outside', l: school ? 'Events, store, or athletics outside the SIS' : 'Registration, store, or giving in separate tools' },
                     { v: 'reporting', l: 'Reporting' }
                 ];
@@ -741,7 +741,7 @@
     function modulesCatalog() {
         var u = CONFIG.urls;
         return {
-            events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system without add-ons and high fees.', u.events, 'See Events'),
+            events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
             store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — no second shop login to reconcile.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore the system'),
             quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
@@ -761,7 +761,7 @@
      * Modules for beside-sis / start-modules come from tools + pains, in this order:
      *   Eventbrite or "outside" → Event registration; Shopify or "outside" → School store;
      *   FinalForms or "outside" → Athletics; "logins" → Core SIS (Parent portal & communication);
-     *   "addons" → Tuition & billing; QuickBooks or "double" → QuickBooks accounting;
+     *   "addons" (costs that grow unexpectedly) → Tuition & billing + "Scale up, not over" note; QuickBooks or "double" → QuickBooks accounting;
      *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + School store.
      *   Title uses the first two; up to four are listed.
      */
@@ -847,8 +847,8 @@
         if (a.plan === 'full' || (!sisPicked.length && a.plan === 'later')) {
             res = {
                 id: 'full-os',
-                title: 'Full school operating system',
-                body: 'Run the school on one platform: Core SIS plus six Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                title: 'Complete — the full school operating system',
+                body: 'Go Complete and run the school on one platform: Core SIS plus six Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.coresis, C.tuition, C.events, C.store, C.athletics, C.quickbooks]
             };
         } else if (sisPicked.length) {
@@ -867,6 +867,7 @@
                 modules: picks.slice(0, 4).map(function (k) { return C[k]; })
             };
         }
+        if (has(pain, 'addons')) { res.body += ' Scale up, not over — when you need more, you add a Power-up instead of switching systems.'; }
         if (a.when === 'term') { res.body += ' Scope a first site to the Power-ups the office will run this term.'; }
         res.links = [
             { label: 'Explore the system', href: u.education }, { label: 'Events', href: u.events },
@@ -1203,7 +1204,7 @@
             events: {
                 topic: 'Events',
                 keywords: ['event', 'registration', 'register', 'ticket', 'ticketing', 'eventbrite', 'conference', 'convention', 'check-in', 'checkin', 'exhibitor', 'fundraiser', 'plays', 'enrichment'],
-                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraisers, church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Every transaction, a chance to give: with our optional fundraising Power-up, people who register see a simple way to support the organization’s goals in the same moment.',
+                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraising events and galas (auctions, dinners, golf tournaments, fun runs), church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Every transaction, a chance to give: with our optional fundraising Power-up, people who register see a simple way to support the organization’s goals in the same moment.',
                 links: [{ label: 'See Events', href: U.events }]
             },
             camps: {
@@ -1233,7 +1234,7 @@
             pricing: {
                 topic: 'Pricing',
                 keywords: ['price', 'pricing', 'cost', 'how much', 'expensive', 'cheap', 'budget', 'add-on', 'addon', 'per student'],
-                text: 'Pricing is discussed in conversation, so it fits Core SIS and the Power-ups your office will actually run. One thing the site is clear on: tuition & billing is part of the operating system. Talk with Sales for specifics.',
+                text: 'Pricing is discussed in conversation, so it fits Core SIS and the Power-ups your office will actually run. One system, two ways to start — go all in with Complete at one scalable price, or start lean with Core SIS and power up as you grow. Talk with Sales for specifics.',
                 links: [{ label: 'Talk with Sales', href: U.contact }, { label: 'Take the fit quiz', href: U.quiz }],
                 action: 'pricing' // asks tools → org type → size first, then this text + lead form
             },

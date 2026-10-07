@@ -6,6 +6,16 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## "Complete" package; Power-up-as-you-grow pricing framing; paid & free events (2026-10-07)
+
+- Aaron: the all-inclusive package is **Complete** (was "Enterprise"); framing "Start with Core SIS and Power-up as you grow, or go Complete." No "included in the annual price" / "no hidden or add-on costs" / "at one price" claims (pricing models may differ).
+- Home intro + Core SIS intro: "a system that grows with you instead of one you outgrow". Home closing: "…share one system — all in up front, or Power-up as you grow." "not an all-inclusive list/catalog" → "not an exhaustive list/catalog".
+- The Difference table Tuition / financials (ANNASIS column): "All in up front, or a Power-up as you grow".
+- Event registration (card, fit page, Anna/quiz): "with transparent options that scale with you". Event Registration card now leads with **Paid and free events** and adds fundraising events and galas (auctions, dinners, golf tournaments, fun runs); Anna events answer mirrors it.
+- Fit page: "Outgrowing your SIS?" item. Quiz pain "Costs that grow unexpectedly" adds a "Scale up, not over" note; full-OS result titled "Complete — the full school operating system".
+- Anna pricing: "One system, two ways to start — go all in with Complete at one scalable price, or start lean with Core SIS and power up as you grow." `pricing.html` stub: "Your pace, your plan" + "No surprises, just Power-ups".
+- Cache bump `?v=20261007i`.
+
 ## Pricing/bundling claims → "Where paying and giving meet" / "Every transaction, a chance to give" (2026-10-07)
 
 - Aaron is avoiding pricing/bundling claims. Tuition, Billing & Fundraising card: "Incumbents… not as a later add-on" replaced with **Where paying and giving meet** (option 3).
