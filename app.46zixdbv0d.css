@@ -541,23 +541,17 @@ select {
 }
 
 .pillar-thumbs {
-    display: grid;
-    grid-template-columns: repeat(2, 54px);
-    gap: 8px;
-    justify-content: center;
-    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
     .pillar-thumbs img {
-        width: 54px;
-        height: 54px;
+        width: 112px;
+        height: 112px;
         object-fit: contain;
     }
-
-        .pillar-thumbs img:last-child:nth-child(odd) {
-            grid-column: 1 / -1;
-            justify-self: center;
-        }
 
 .base-sis-list {
     margin: 0 0 12px;
@@ -987,18 +981,16 @@ footer {
         }
 
     .pillar-thumbs {
-        grid-template-columns: repeat(3, 48px);
-        justify-content: start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
     }
 
         .pillar-thumbs img {
-            width: 48px;
-            height: 48px;
+            width: 88px;
+            height: 88px;
         }
-
-            .pillar-thumbs img:last-child:nth-child(odd) {
-                grid-column: auto;
-            }
 
     .paper {
         padding: 22px;
