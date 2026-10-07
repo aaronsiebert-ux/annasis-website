@@ -6,6 +6,13 @@
 **Preview:** GitHub Pages `https://aaronsiebert-ux.github.io/annasis-website/` (draft push; not IIS/Blazor prod).
 
 
+## Home module grid: School Store replaces Athletics eligibility (2026-10-07)
+
+- index.html home module grid: the Athletics eligibility box is replaced by School Store (matched School Store thumbnail, 48px like the others, links to education.html#store).
+- All four home boxes rewritten to match the education.html cards: Core SIS, Tuition, Billing & Fundraising (giving features), Event Registration (paid and free events, fundraising events and galas), School Store (with the optional fundraising Power-up line). Each box links to its education.html anchor.
+- Box lengths balanced: 10 lines each at desktop widths and equal card heights at tablet/mobile widths. No pricing or cost claims.
+- Cache bump to ?v=20261007k.
+
 ## Cost claims softened to value framing (2026-10-07)
 
 - Aaron approved removing price/cost promises. Every "…and lower cost for private schools" ending now uses a distinct value phrase: home intro "a platform right-sized for private schools"; home closing "less time on double entry"; home "Are we a fit?" "fewer systems to reconcile"; Explore the system intro "one record the whole office trusts"; fit intro "fewer handoffs between departments"; fit closing "less time chasing paperwork"; The Difference "one system Faculty and families learn once".
