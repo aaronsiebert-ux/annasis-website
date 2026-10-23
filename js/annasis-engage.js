@@ -109,7 +109,7 @@
             // endpoint: 'https://annasis-lead.<you>.workers.dev' (tools/pipedrive-lead-worker)
             //   or a Zapier / Make URL -> POST the flat JSON payload; the server creates
             //   Person + Organization + Lead + Note in Pipedrive with a token kept server-side.
-            endpoint: '',
+            endpoint: 'https://annasis-lead.annasis.workers.dev',
             // Sent as text/plain so the browser makes a "simple" request (no CORS preflight).
             // The body is still JSON; the Worker / Zapier / Make parse it.
             contentType: 'text/plain;charset=UTF-8',

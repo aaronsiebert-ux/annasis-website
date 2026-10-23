@@ -1,1 +1,1 @@
-{ "name": "annasis-lead-worker", "private": true, "type": "module", "scripts": { "test": "node test.mjs", "deploy": "wrangler deploy" } }
+{"name":"annasis-lead-worker","private":true,"type":"module","scripts":{"test":"node test.mjs","deploy":"wrangler deploy"},"devDependencies":{"wrangler":"^4.86.0"}}
