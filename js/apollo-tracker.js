@@ -28,12 +28,14 @@
 
     // Always load when the owner looks like our market. Wins over everything.
     const ICP_PATTERNS = [
-        /\.edu\b/i, /\bk12\b/i, /\bk-12\b/i, /school/i, /academy/i, /montessori/i,
-        /christian/i, /catholic/i, /lutheran/i, /baptist/i, /adventist/i, /parochial/i,
-        /church/i, /ministr/i, /diocese/i, /parish/i, /chapel/i, /fellowship/i,
-        /\bcamps?\b/i, /retreat/i, /conference center/i, /convention/i, /\bexpo\b/i,
-        /\bevents?\b/i, /\bleague\b/i, /athletic/i, /college/i, /universit/i,
-        /seminary/i, /institute/i, /education/i, /learning/i, /prep\b/i, /\bisd\b/i
+        // Schools: private, Christian, Montessori, k12, .edu
+        /school/i, /academy/i, /christian/i, /montessori/i, /\bk-?12\b/i, /\.edu\b/i,
+        // Camps
+        /\bcamps?\b/i,
+        // Churches and ministries
+        /church/i, /ministr/i,
+        // Events, conventions, expos, leagues
+        /\bevents?\b/i, /convention/i, /\bexpo\b/i, /\bleague\b/i
     ];
 
     // Obviously out of scope: cloud, hosting, data centers, scanners, data/security firms,
