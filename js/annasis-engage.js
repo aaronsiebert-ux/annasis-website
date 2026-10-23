@@ -847,7 +847,7 @@
             res = {
                 id: 'full-os',
                 title: 'Complete — the full school operating system',
-                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Families and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.coresis, C.tuition, C.events, C.store, C.athletics]
             };
         } else if (sisPicked.length) {
@@ -1233,7 +1233,7 @@
             uniforms: {
                 topic: 'Uniform exchange',
                 keywords: ['uniform', 'uniform exchange', 'used uniform', 'swap', 'exchange', 'facebook'],
-                text: 'Uniform exchange lives in the family portal: Parents publish uniforms for other Parents or Students to exchange or purchase. No middleman required — and used uniforms stay in the community instead of a Facebook thread the office cannot see.',
+                text: 'Uniform exchange lives in the family portal: Parents publish uniforms for other families to exchange or purchase. No middleman required — and used uniforms stay in the community instead of a Facebook thread the office cannot see.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             pricing: {
@@ -1258,7 +1258,7 @@
             gradebook: {
                 topic: 'Gradebook',
                 keywords: ['grade', 'gradebook', 'report card', 'transcript', 'gpa', 'progress report', 'rubric', 'assignment'],
-                text: 'Gradebook, report cards, and transcripts are part of Core SIS — assignments, rubrics, progress reports, and GPA too. Faculty live here; Parents and Students see the same academic record in the family portal — no separate parent grade portal.',
+                text: 'Gradebook, report cards, and transcripts are part of Core SIS — assignments, rubrics, progress reports, and GPA too. Faculty live here; Families see the same academic record in the family portal — no separate parent grade portal.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             tuition: {
@@ -1300,13 +1300,13 @@
             about: {
                 topic: 'About AnnaSIS',
                 keywords: ['who are you', 'about annasis', 'about you', 'founder', 'history', 'origin', 'company', 'story', 'stories', 'customer', 'reference'],
-                text: 'AnnaSIS started with private schools, where Parents, Students, and Faculty are customers — designed with a private school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
+                text: 'AnnaSIS started with private schools, where Families and Faculty are customers — designed with a private school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
                 links: [{ label: 'About', href: U.about }, { label: 'Stories', href: U.stories }]
             },
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid, AnnaSIS League, and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid, AnnaSIS League, and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
