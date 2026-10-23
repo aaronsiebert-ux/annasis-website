@@ -9,10 +9,10 @@
  *      church, camp, events, .edu, k12...)  -> load Apollo
  *   3. Owner is obviously out of scope
  *      (cloud host, data center, scanner,
- *      security/data firm, big corporate)   -> skip Apollo
- *   4. Anything else (Comcast, AT&T, home
- *      or business ISPs, unknown, lookup
- *      failed)                              -> load Apollo
+ *      data vendor, proxy/VPN)               -> skip Apollo
+ *   4. Anything else (Comcast, Charter, T-Mobile,
+ *      home ISPs, carriers, unknown,
+ *      lookup failed)                              -> load Apollo
  * Rule of thumb from Aaron: if it isn't obviously out of scope, include it.
  * The decision is cached for the browser session.
  * Debug: add ?apollodebug=1 to any URL to see the decision in the console.
@@ -23,37 +23,60 @@
     const LOOKUP_URL = 'https://ipwho.is/';
     const LOOKUP_TIMEOUT_MS = 2500;
     const CACHE_KEY = 'annasisApolloDecision';
-    // Set to false to also skip home/business ISP traffic (saves more credits).
-    const ALLOW_ISP_TRAFFIC = true;
 
-    // Always load when the owner looks like our market. Wins over everything.
+    // ICP allow-words (brief Part A). Any match loads Apollo and beats every deny list.
     const ICP_PATTERNS = [
-        // Schools: private, Christian, Montessori, k12, .edu
-        /school/i, /academy/i, /christian/i, /montessori/i, /\bk-?12\b/i, /\.edu\b/i,
-        // Camps
-        /\bcamps?\b/i,
-        // Churches and ministries
-        /church/i, /ministr/i,
-        // Events, conventions, expos, leagues
-        /\bevents?\b/i, /convention/i, /\bexpo\b/i, /\bleague\b/i
+        // School
+        /school/i, /academy/i, /christian/i, /catholic/i, /parish/i, /diocese/i, /lutheran/i,
+        /adventist/i, /baptist/i, /montessori/i, /classical/i, /\bprep(aratory)?\b/i,
+        /charter/i, /\bpcs\b/i, /\bk-?12\b/i, /\.edu\b/i, /heritage/i, /covenant/i,
+        /\bsaint\b/i, /\bst\.\s/i, /elementary/i,
+        // ASSC: associations, accreditation, ESD/ESA/BOCES
+        /association/i, /\bacsi\b/i, /accreditation/i, /conference of/i, /office of (education|schools)/i,
+        /\besd\b/i, /\besa\b/i, /\bboces\b/i, /intermediate unit/i, /education service/i,
+        // Church
+        /church/i, /chapel/i, /ministr/i, /fellowship/i, /cathedral/i, /tabernacle/i, /assembly/i,
+        /\bbible\b/i, /gospel/i, /worship/i, /congregation/i, /synagogue/i, /\btemple\b/i,
+        // Camp
+        /\bcamps?\b/i, /retreat/i, /conference cent(er|re)/i, /\bymca\b/i, /\bywca\b/i, /scouts?\b/i,
+        // Events / conventions
+        /\bcon\b/i, /comic/i, /\bexpo\b/i, /convention/i, /festival/i, /\bfest\b/i, /\bfair\b/i,
+        /conference/i, /summit/i, /\bgala\b/i, /\bevents?\b/i, /productions/i, /\bvenue\b/i,
+        /dance (studio|academy)/i, /ballet/i,
+        // Sports leagues / associations
+        /league/i, /soccer/i, /softball/i, /baseball/i, /basketball/i, /lacrosse/i, /hockey/i,
+        /swim club/i, /golf association/i, /\bewga\b/i, /pickleball/i, /running club/i,
+        /cycling club/i, /athletic association/i, /booster/i,
+        // Store
+        /spirit ?wear/i, /\bpto\b/i, /\bpta\b/i
     ];
 
-    // Obviously out of scope: cloud, hosting, data centers, scanners, data/security firms,
-    // and very large corporate networks.
+    // Skip only clear infrastructure: cloud/hosting/CDN, scanners, data vendors,
+    // proxy/VPN networks and crawler operators. ISPs, mobile carriers and unknown owners pass.
     const NON_ICP_PATTERNS = [
-        /amazon/i, /\baws\b/i, /google/i, /microsoft/i, /azure/i, /oracle/i, /\bibm\b/i,
-        /digitalocean/i, /linode/i, /akamai/i, /cloudflare/i, /fastly/i, /hetzner/i,
-        /\bovh/i, /vultr/i, /leaseweb/i, /contabo/i, /choopa/i, /m247/i, /datacamp/i,
-        /alibaba/i, /tencent/i, /huawei cloud/i, /scaleway/i, /rackspace/i, /hostinger/i,
-        /godaddy/i, /\bhosting\b/i, /\bhost\b/i, /data ?cent(er|re)/i, /\bserver/i,
-        /\bcloud\b/i, /\bvps\b/i, /colocation/i, /\bcdn\b/i,
-        /censys/i, /shodan/i, /palo alto/i, /zscaler/i, /crowdstrike/i, /qualys/i,
-        /rapid7/i, /tenable/i, /recorded future/i, /binaryedge/i, /internet ?measurement/i,
-        /\bscan/i, /crawl/i, /\bbot\b/i, /security/i, /cyber/i, /threat/i, /\bvpn\b/i,
-        /\bproxy\b/i, /\btor\b/i, /facebook/i, /\bmeta platforms/i, /apple inc/i,
-        /\bbank\b/i, /jpmorgan/i, /wells fargo/i, /citigroup/i, /goldman/i, /walmart/i,
-        /salesforce/i, /zoominfo/i, /\bapollo\b/i, /clearbit/i, /6sense/i, /demandbase/i
+        // Cloud / hosting / CDN
+        /amazon/i, /\baws\b/i, /google(?! fiber)/i, /microsoft/i, /azure/i, /oracle/i,
+        /digitalocean/i, /linode/i, /akamai/i, /\bovh/i, /hetzner/i, /vultr/i, /cloudflare/i,
+        /fastly/i, /alibaba/i, /tencent/i, /leaseweb/i, /contabo/i, /choopa/i, /m247/i,
+        /datacamp/i, /scaleway/i, /rackspace/i, /hostinger/i, /\bhosting\b/i,
+        /data ?cent(er|re)/i, /\bcolo(cation)?\b/i, /\bservers?\b/i, /\bvps\b/i, /\bcdn\b/i,
+        // Scanners / security egress
+        /censys/i, /shodan/i, /palo alto/i, /expanse/i, /rapid7/i, /qualys/i, /tenable/i,
+        /recorded future/i, /binaryedge/i, /shadowserver/i, /internet ?measurement/i,
+        /zscaler/i, /netskope/i,
+        // Data vendors / crawlers / SEO / proxy networks / VPN
+        /zoominfo/i, /\bapollo\b/i, /clearbit/i, /lusha/i, /semrush/i, /ahrefs/i, /\bmoz\b/i,
+        /builtwith/i, /similarweb/i, /common ?crawl/i, /dataforseo/i, /bright ?data/i, /luminati/i,
+        /oxylabs/i, /\bproxy\b/i, /\bvpn\b/i, /nordvpn/i, /expressvpn/i, /surfshark/i,
+        /private internet access/i, /mullvad/i, /\btor\b/i,
+        // Bot / AI crawler operators and uptime monitors
+        /openai/i, /anthropic/i, /perplexity/i, /bytedance/i, /bytespider/i, /facebook/i,
+        /meta platforms/i, /pingdom/i, /uptimerobot/i, /statuscake/i, /\bcrawl/i
     ];
+
+    // ISP names that would otherwise trip an allow-word (e.g. "charter"). Removed before
+    // ICP matching so they fall through to the default allow, untagged.
+    const ISP_NEUTRAL = [/charter communications/ig, /spectrum/ig];
 
     const BOT_UA = /bot|crawl|spider|slurp|headless|phantom|puppeteer|playwright|selenium|lighthouse|pingdom|uptime|monitor|scan|curl|wget|python|httpclient|java\//i;
 
@@ -69,10 +92,11 @@
         const c = info.connection || {};
         const text = [c.org, c.isp, c.domain].filter(Boolean).join(' | ');
         if (!text) return { load: true, why: 'no owner info, allow' };
-        if (ICP_PATTERNS.some(function (p) { return p.test(text); })) return { load: true, why: 'ICP match: ' + text };
+        let icpText = text;
+        ISP_NEUTRAL.forEach(function (p) { icpText = icpText.replace(p, ' '); });
+        if (ICP_PATTERNS.some(function (p) { return p.test(icpText); })) return { load: true, why: 'ICP match: ' + text };
         if (NON_ICP_PATTERNS.some(function (p) { return p.test(text); })) return { load: false, why: 'non-ICP: ' + text };
-        if (!ALLOW_ISP_TRAFFIC) return { load: false, why: 'ISP/other skipped by setting: ' + text };
-        return { load: true, why: 'not obviously out of scope: ' + text };
+        return { load: true, why: 'default allow (ISP/carrier/other): ' + text };
     }
 
     function runApolloTracking() {
