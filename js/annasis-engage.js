@@ -1,5 +1,5 @@
 /* =========================================================
-   ANNASIS Engage — "Are we a fit?" quiz, Anna chat assistant,
+   AnnaSIS Engage — "Are we a fit?" quiz, Anna chat assistant,
    and lead capture. Self-contained: this file + css/annasis-engage.css.
    No backend required. No API tokens belong in this file.
 
@@ -60,8 +60,8 @@
         // LeadBooster playbook settings (botName "Anna", mainColor #1855AA).
         anna: {
             name: 'Anna',
-            title: 'Anna · ANNASIS assistant',
-            subtitle: 'Answers from the ANNASIS site',
+            title: 'Anna · AnnaSIS assistant',
+            subtitle: 'Answers from the AnnaSIS site',
             annaAvatar: 'Images/anna-bot-avatar.png',
             color: '#1855AA',
             greeting: 'Welcome to our website!',
@@ -95,7 +95,7 @@
         // Support page: urls.support (support.html). No dedicated support inbox yet
         // (only sales@annasis.com is public). TODO: set support.email to support@annasis.com
         // when Aaron confirms that inbox; leave url empty (the Support page is urls.support).
-        // While email is empty, Anna says the ANNASIS team will follow up by email.
+        // While email is empty, Anna says the AnnaSIS team will follow up by email.
         support: {
             email: '',
             url: ''
@@ -113,7 +113,7 @@
             // Sent as text/plain so the browser makes a "simple" request (no CORS preflight).
             // The body is still JSON; the Worker / Zapier / Make parse it.
             contentType: 'text/plain;charset=UTF-8',
-            // 'cors' (default): the response status is readable. The ANNASIS lead Worker sends
+            // 'cors' (default): the response status is readable. The AnnaSIS lead Worker sends
             //   CORS headers, so if Pipedrive rejects a lead the visitor is sent to the contact
             //   page instead of the lead being lost.
             // 'no-cors': for a webhook that sends no CORS headers. The response is opaque and
@@ -292,8 +292,8 @@
         'intent', 'customerStatus', 'questions', 'website'];
 
     function sourceLabel(p) {
-        if (p.source === 'fit-quiz') { return 'ANNASIS website fit quiz'; }
-        return 'ANNASIS website chat (Anna)' + (p.intent === 'pricing' ? ' — pricing request' : '');
+        if (p.source === 'fit-quiz') { return 'AnnaSIS website fit quiz'; }
+        return 'AnnaSIS website chat (Anna)' + (p.intent === 'pricing' ? ' — pricing request' : '');
     }
 
     function buildNote(p) {
@@ -302,7 +302,7 @@
             if (Array.isArray(v)) { v = v.join(', '); }
             if (v) { lines.push(label + ': ' + v); }
         }
-        lines.push(p.type === 'support' ? '[Support] Support request from the ANNASIS website' : 'Sales lead from the ANNASIS website');
+        lines.push(p.type === 'support' ? '[Support] Support request from the AnnaSIS website' : 'Sales lead from the AnnaSIS website');
         line('Source', sourceLabel(p));
         if (p.type === 'support') {
             line('Category', p.supportCategory);
@@ -525,7 +525,7 @@
             grid.push(field('phone', 'Phone', 'tel', false, 'tel'));
         }
 
-        var submitBtn = el('button', { type: 'submit', className: 'btn ae-lead-submit', text: support ? 'Send to ANNASIS support' : 'Send to ANNASIS sales' });
+        var submitBtn = el('button', { type: 'submit', className: 'btn ae-lead-submit', text: support ? 'Send to AnnaSIS support' : 'Send to AnnaSIS sales' });
 
         var form = el('form', { className: 'ae-lead-form' + (opts.compact ? ' ae-lead-form--compact' : '') + (support ? ' ae-lead-form--support' : ''), novalidate: true, 'aria-describedby': fid + '-intro' }, [
             el('p', { id: fid + '-intro', className: 'ae-lead-intro', text: opts.intro }),
@@ -591,8 +591,8 @@
                 if (r.mode !== 'endpoint') { return; }
                 var first = data.name.split(' ')[0];
                 var lines = support
-                    ? ['Your request is with the ANNASIS team — we’ll follow up by email.']
-                    : ['ANNASIS sales will follow up from sales@annasis.com.'];
+                    ? ['Your request is with the AnnaSIS team — we’ll follow up by email.']
+                    : ['AnnaSIS sales will follow up from sales@annasis.com.'];
                 if (support && CONFIG.support.email) { lines.push('You can also reach us at ' + CONFIG.support.email + '.'); }
                 var done = el('div', { className: 'ae-lead-done', tabindex: '-1' }, [el('p', { className: 'ae-lead-done-title', text: 'Thanks, ' + first + '.' })].concat(lines.map(function (t) {
                     return el('p', { text: t });
@@ -744,7 +744,7 @@
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
             store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — no second shop login to reconcile.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product like FinalForms.', u.education, 'Explore the system'),
-            quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; ANNASIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
+            quickbooks: M('QuickBooks accounting', 'Keep QuickBooks as books of record; AnnaSIS posts operations so the office stops triple-entry.', u.integrations, 'See Integrations'),
             tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
             coresis: M('Core SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore the system')
@@ -820,7 +820,7 @@
             };
             res = segments[a.type] || segments.events;
             if (a.plan === 'beside' || a.plan === 'later') {
-                res.body += ' If you already run other software, ANNASIS can cover these paths alongside it — jog before you run.';
+                res.body += ' If you already run other software, AnnaSIS can cover these paths alongside it — jog before you run.';
             }
             res.links = [
                 { label: 'Events', href: u.events }, { label: 'Store', href: u.ecommerce },
@@ -855,7 +855,7 @@
             res = {
                 id: 'beside-sis',
                 title: 'Start beside ' + sisName + ' with ' + top,
-                body: 'Keep ' + sisName + ' and let ANNASIS sit beside it, turning on the Power-ups that fill today’s gaps. Jog before you run' +
+                body: 'Keep ' + sisName + ' and let AnnaSIS sit beside it, turning on the Power-ups that fill today’s gaps. Jog before you run' +
                     (a.plan === 'later' ? ' — then grow into the full school operating system when the office is ready.' : '; expand or replace when the office is ready.'),
                 modules: picks.slice(0, 4).map(function (k) { return C[k]; })
             };
@@ -1018,7 +1018,7 @@
             leadWrap.appendChild(buildLeadForm({
                 kind: 'sales',
                 source: 'fit-quiz',
-                intro: 'Send your answers and this recommendation to ANNASIS sales. We will follow up from sales@annasis.com.',
+                intro: 'Send your answers and this recommendation to AnnaSIS sales. We will follow up from sales@annasis.com.',
                 getExtra: function () { return quizFlat(answers, rec); },
                 getParams: function () { return params; }
             }));
@@ -1116,8 +1116,8 @@
             el('div', { className: 'kicker', text: isSupport ? 'Your support request' : (source === 'chat' ? 'From your chat with Anna' : 'From your fit quiz') }),
             el('h2', { id: taId + '-h', className: 'ae-contact-title', text: isSupport ? 'Your request, ready to send' : 'Your answers, ready to send' }),
             el('p', { text: isSupport
-                ? 'Copy this summary and paste it into the message box in the form below so the ANNASIS team sees your request and can follow up.'
-                : 'Copy this summary and paste it into the message box in the form below so ANNASIS sales sees your answers.' }),
+                ? 'Copy this summary and paste it into the message box in the form below so the AnnaSIS team sees your request and can follow up.'
+                : 'Copy this summary and paste it into the message box in the form below so AnnaSIS sales sees your answers.' }),
             el('label', { className: 'ae-sr', 'for': taId, text: 'Summary' }),
             ta,
             el('p', { className: 'ae-contact-actions' }, [copyBtn, status])
@@ -1128,7 +1128,7 @@
     /* =========================================================
        ANNA CHAT — scripted knowledge base
        ---------------------------------------------------------
-       Written only from ANNASIS site copy (no prices, customer names,
+       Written only from AnnaSIS site copy (no prices, customer names,
        stats, or features that are not on the site).
        It is a plain object so it can later be swapped for a real AI
        backend: replace ANNASIS_CHAT.answer(text) with a call to your
@@ -1139,7 +1139,7 @@
     var U = CONFIG.urls;
     var ANNASIS_CHAT_KB = {
         chips: [
-            { label: 'What is ANNASIS?', intent: 'what' },
+            { label: 'What is AnnaSIS?', intent: 'what' },
             { label: 'Does it work with my current SIS?', intent: 'sis' },
             { label: 'Events', intent: 'events' },
             { label: 'Camps', intent: 'camps' },
@@ -1154,7 +1154,7 @@
             demo: {
                 topic: 'Book a demo',
                 keywords: ['demo', 'demonstration', 'book a', 'schedule a', 'meeting', 'call me', 'talk to', 'talk with', 'sales', 'salesperson', 'contact', 'conversation', 'human', 'someone', 'representative', 'quote'],
-                text: 'Happy to connect you with ANNASIS sales. Share a few details below and we will follow up from sales@annasis.com — or use the Request a conversation page.',
+                text: 'Happy to connect you with AnnaSIS sales. Share a few details below and we will follow up from sales@annasis.com — or use the Request a conversation page.',
                 links: [{ label: 'Request a conversation', href: U.contact }],
                 action: 'lead'
             },
@@ -1168,61 +1168,61 @@
             sis: {
                 topic: 'Current SIS',
                 keywords: ['current sis', 'my sis', 'our sis', 'existing', 'sis', 'student information system', 'facts', 'renweb', 'classreach', 'sycamore', 'gradelink', 'alma', 'veracross', 'blackbaud', 'rediker', 'jupiter', 'replace', 'switch', 'sit beside', 'alongside', 'work with', 'keep our', 'rip out'],
-                text: 'Yes — ANNASIS can sit beside the student information system you run today and turn on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
+                text: 'Yes — AnnaSIS can sit beside the student information system you run today and turn on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
                 links: [{ label: 'Integrations', href: U.integrations }, { label: 'Take the fit quiz', href: U.quiz }]
             },
             data: {
                 topic: 'Roster data',
                 keywords: ['oneroster', 'roster', 'rostering', 'import', 'sync', 'migrate', 'migration', 'data transfer', 'api'],
-                text: 'OneRoster is the common standard many SIS packages use to share rosters. ANNASIS supports OneRoster today — standards-based roster sharing so classes and enrollments flow cleanly to your LMS and sign-on tools, directly from the SIS or through Clever or ClassLink. We confirm the path with each school’s vendors during onboarding.',
+                text: 'OneRoster is the common standard many SIS packages use to share rosters. AnnaSIS supports OneRoster today — standards-based roster sharing so classes and enrollments flow cleanly to your LMS and sign-on tools, directly from the SIS or through Clever or ClassLink. We confirm the path with each school’s vendors during onboarding.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             lms: {
                 topic: 'LMS',
                 keywords: ['lms', 'learning management', 'google classroom', 'canvas', 'schoology', 'microsoft teams', 'teams', 'coursework'],
-                text: 'Faculty keep teaching where they already teach. The LMS keeps coursework and assignments — Google Classroom, Canvas, Schoology, or Microsoft Teams — and ANNASIS runs the office side of the school: enrollment, billing, events, the store, forms, and Parent communication.',
+                text: 'Faculty keep teaching where they already teach. The LMS keeps coursework and assignments — Google Classroom, Canvas, Schoology, or Microsoft Teams — and AnnaSIS runs the office side of the school: enrollment, billing, events, the store, forms, and Parent communication.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             clever: {
                 topic: 'Clever / ClassLink',
                 keywords: ['clever', 'classlink', 'single sign', 'sso', 'sign-on', 'sign on', 'planbook', 'seesaw', 'nearpod', 'edpuzzle', 'kahoot'],
-                text: 'Where Clever or ClassLink is already in place, it keeps working beside ANNASIS. These hubs are optional — plenty of private schools run without them, and we never assume you have one.',
+                text: 'Where Clever or ClassLink is already in place, it keeps working beside AnnaSIS. These hubs are optional — plenty of private schools run without them, and we never assume you have one.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             quickbooks: {
                 topic: 'QuickBooks',
                 keywords: ['quickbooks', 'accounting', 'ledger', 'accountant', 'bookkeeping', 'books of record', 'qbo'],
-                text: 'Keep QuickBooks as your books of record. ANNASIS posts school operations to QuickBooks Online automatically, with a file export for offices on QuickBooks Desktop. We do not replace the accountant’s general ledger — we stop the office from typing the same family three times.',
+                text: 'Keep QuickBooks as your books of record. AnnaSIS posts school operations to QuickBooks Online automatically, with a file export for offices on QuickBooks Desktop. We do not replace the accountant’s general ledger — we stop the office from typing the same family three times.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             workspace: {
                 topic: 'Google / Microsoft 365',
                 keywords: ['google workspace', 'google', 'gmail', 'microsoft 365', 'microsoft', 'office 365', 'outlook', 'email domain'],
-                text: 'ANNASIS connects to your school’s Google Workspace or Microsoft 365 — your tenant, your domain, your accounts — so school email and communication stay where you already manage them.',
+                text: 'AnnaSIS connects to your school’s Google Workspace or Microsoft 365 — your tenant, your domain, your accounts — so school email and communication stay where you already manage them.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             events: {
                 topic: 'Events',
                 keywords: ['event', 'registration', 'register', 'ticket', 'ticketing', 'eventbrite', 'conference', 'convention', 'check-in', 'checkin', 'exhibitor', 'fundraiser', 'plays', 'enrichment'],
-                text: 'ANNASIS event registration covers sports, plays, camps, enrichment, games, fundraising events and galas (auctions, dinners, golf tournaments, fun runs), church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Every transaction, a chance to give: with our optional fundraising Power-up, people who register see a simple way to support the organization’s goals in the same moment.',
+                text: 'AnnaSIS event registration covers sports, plays, camps, enrichment, games, fundraising events and galas (auctions, dinners, golf tournaments, fun runs), church programs, conferences, and conventions — registration and ticketing for paid and free events, check-in and scheduling, exhibitor and add-on paths where your event needs them, and fundraising with sponsor invites and round-up beside payments. For schools it stays on the same student and family record as tuition & billing — no Eventbrite leakage. Every transaction, a chance to give: with our optional fundraising Power-up, people who register see a simple way to support the organization’s goals in the same moment.',
                 links: [{ label: 'See Events', href: U.events }]
             },
             camps: {
                 topic: 'Camps',
                 keywords: ['camp', 'summer', 'overnight', 'day camp', 'camper', 'session'],
-                text: 'ANNASIS is one-stop for camps: online registration for day, overnight, and multi-session programs; a real camp store for merch and materials; attendance and check-in paths; and fundraising — including sponsor invites for campers and round-up on camp store purchases. Forms and health information parents provide before camp ride the same registration path.',
+                text: 'AnnaSIS is one-stop for camps: online registration for day, overnight, and multi-session programs; a real camp store for merch and materials; attendance and check-in paths; and fundraising — including sponsor invites for campers and round-up on camp store purchases. Forms and health information parents provide before camp ride the same registration path.',
                 links: [{ label: 'See Camps', href: U.camps }]
             },
             churches: {
                 topic: 'Churches',
                 keywords: ['church', 'ministry', 'ministries', 'congregation', 'vbs', 'life group', 'tithe', 'tithing', 'volunteer'],
-                text: 'ANNASIS is one-stop for churches: event management for conferences, large events, and multi-session programs; online giving and fundraising; check-in for kids, families, and volunteers; and a real store for merch and resources.',
+                text: 'AnnaSIS is one-stop for churches: event management for conferences, large events, and multi-session programs; online giving and fundraising; check-in for kids, families, and volunteers; and a real store for merch and resources.',
                 links: [{ label: 'See Churches', href: U.churches }]
             },
             store: {
                 topic: 'School store',
                 keywords: ['store', 'shop', 'ecommerce', 'e-commerce', 'shopify', 'merch', 'merchandise', 'spirit wear', 'checkout', 'buy', 'purchase', 'books'],
-                text: 'The ANNASIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer Shopify the office reconciles at night. Store purchases land on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
+                text: 'The AnnaSIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer Shopify the office reconciles at night. Store purchases land on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
             uniforms: {
@@ -1289,19 +1289,19 @@
             partnership: {
                 topic: 'Partnership & onboarding',
                 keywords: ['implementation support', 'implementation', 'onboarding', 'training', 'partner', 'partnership', 'roadmap', 'go-live', 'go live'],
-                text: 'Implementation and support are part of how ANNASIS works — mapping your real programs, registration flows, and store needs, then staying available as seasons change. We share where the product is going, listen to what offices need next, and ship in the open. Jog before you run — Power-ups when you are ready.',
+                text: 'Implementation and support are part of how AnnaSIS works — mapping your real programs, registration flows, and store needs, then staying available as seasons change. We share where the product is going, listen to what offices need next, and ship in the open. Jog before you run — Power-ups when you are ready.',
                 links: [{ label: 'Partnership', href: U.partner }]
             },
             about: {
-                topic: 'About ANNASIS',
+                topic: 'About AnnaSIS',
                 keywords: ['who are you', 'about annasis', 'about you', 'founder', 'history', 'origin', 'company', 'story', 'stories', 'customer', 'reference'],
-                text: 'ANNASIS started with private schools, where Parents, Students, and Faculty are customers — designed with a private school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
+                text: 'AnnaSIS started with private schools, where Parents, Students, and Faculty are customers — designed with a private school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
                 links: [{ label: 'About', href: U.about }, { label: 'Stories', href: U.stories }]
             },
             what: {
-                topic: 'What is ANNASIS?',
+                topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'ANNASIS is a school operating system for private education — not just a student information system. Core SIS plus six Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, uniform exchange, and QuickBooks accounting. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus six Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, uniform exchange, and QuickBooks accounting. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
@@ -1317,7 +1317,7 @@
             hello: {
                 topic: 'Hello',
                 keywords: ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening'],
-                text: 'Hi! I’m Anna. Ask me about ANNASIS, or pick a topic below.',
+                text: 'Hi! I’m Anna. Ask me about AnnaSIS, or pick a topic below.',
                 links: []
             },
             thanks: {
@@ -1381,7 +1381,7 @@
        LeadBooster coexistence
        --------------------------------------------------------- */
     function ensureLeadBooster() {
-        // js/annasis.js already loads LeadBooster on the ANNASIS site; only load here if missing.
+        // js/annasis.js already loads LeadBooster on the AnnaSIS site; only load here if missing.
         if (window.LeadBooster || document.getElementById('annasis-pipedrive-leadbooster') || document.getElementById('ae-leadbooster-loader')) { return; }
         if (!CONFIG.leadbooster.loadIfMissing) { return; }
         // === LeadBooster chatbot embed (Pipedrive > LeadBooster > Chatbot > Install code) ===
@@ -1475,11 +1475,11 @@
     var CHAT_QUAL_KEY = 'annasis_chat_qual';
 
     var SUPPORT_CUSTOMER = [
-        { v: 'customer', l: 'Yes — we use ANNASIS software' },
+        { v: 'customer', l: 'Yes — we use AnnaSIS software' },
         { v: 'parent', l: 'I’m a Parent or family member' },
         { v: 'prospect', l: 'Not yet / not sure' }
     ];
-    var SUPPORT_CUSTOMER_STATUS = { customer: 'ANNASIS customer (staff)', parent: 'Parent / family member', prospect: 'Not a customer yet / not sure' };
+    var SUPPORT_CUSTOMER_STATUS = { customer: 'AnnaSIS customer (staff)', parent: 'Parent / family member', prospect: 'Not a customer yet / not sure' };
     var SUPPORT_CATEGORIES = [
         { v: 'login', l: 'Login / account access' },
         { v: 'billing', l: 'Billing or payment' },
@@ -1664,7 +1664,7 @@
                 kind: 'sales',
                 source: 'chat',
                 compact: true,
-                intro: 'Share a few details and ANNASIS sales will follow up from sales@annasis.com. Your chat answers come along so you don’t have to repeat yourself.',
+                intro: 'Share a few details and AnnaSIS sales will follow up from sales@annasis.com. Your chat answers come along so you don’t have to repeat yourself.',
                 getExtra: function () {
                     var q = readJSON(CHAT_QUAL_KEY, {});
                     return {
@@ -1729,14 +1729,14 @@
 
         /* ---- Support: customer? → category → description + contact ---- */
         function startSupportFlow() {
-            say('Sorry you’re running into trouble — let’s get this to the right people. Are you an ANNASIS customer?');
+            say('Sorry you’re running into trouble — let’s get this to the right people. Are you an AnnaSIS customer?');
             askChoice({
-                label: 'Are you an ANNASIS customer?',
+                label: 'Are you an AnnaSIS customer?',
                 options: SUPPORT_CUSTOMER,
                 onDone: function (custVals) {
                     var cust = custVals[0];
                     if (cust === 'parent') {
-                        say('Thanks! For questions about your Student or family account — like grades, balances, or schedules — your school office is usually the fastest help, since they manage those records. If something in ANNASIS itself isn’t working, like signing in, I can pass it to our team.',
+                        say('Thanks! For questions about your Student or family account — like grades, balances, or schedules — your school office is usually the fastest help, since they manage those records. If something in AnnaSIS itself isn’t working, like signing in, I can pass it to our team.',
                             [{ label: 'Support', href: CONFIG.urls.support }]);
                     }
                     say('What is it about?');
@@ -1745,7 +1745,7 @@
                         options: SUPPORT_CATEGORIES,
                         onDone: function (catVals, catLabels) {
                             var cat = catVals[0];
-                            var followUp = 'The ANNASIS team will follow up by email.';
+                            var followUp = 'The AnnaSIS team will follow up by email.';
                             if (CONFIG.support.email) { followUp += ' You can also write to ' + CONFIG.support.email + '.'; }
                             var supportLinks = [{ label: 'Support', href: CONFIG.urls.support }].concat(
                                 CONFIG.support.url ? [{ label: 'Help center', href: CONFIG.support.url }] : []
@@ -1908,9 +1908,9 @@
             source: 'support-page',
             includeCategory: true,
             orgLabel: 'School or organization',
-            intro: 'The ANNASIS team will follow up by email.',
+            intro: 'The AnnaSIS team will follow up by email.',
             getExtra: function () {
-                return { intent: 'support', customerStatus: 'ANNASIS customer (staff)' };
+                return { intent: 'support', customerStatus: 'AnnaSIS customer (staff)' };
             },
             getParams: function () { return { src: 'support' }; }
         }));
