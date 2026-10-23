@@ -1227,7 +1227,7 @@
             aid: {
                 topic: 'Scholarships & Aid',
                 keywords: ['financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'need-based aid', 'scholarship fund'],
-                text: 'Scholarships & Aid is a Power-up coming Spring 2027. Families submit one household application covering all siblings, with income documents attached. A named reviewer at the school awards or denies aid — a person always decides — and every decision is kept on an auditable record. The award posts to the household bill as a named fund, so tuition due drops. Tuition assistance, need-based aid and the school’s own scholarship funds are tracked on the same bill, with reporting on what each fund has awarded. It works alongside AnnaSIS League for multi-school scholarship programs.',
+                text: 'Scholarships & Aid is a Power-up coming Spring 2027. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. It works alongside AnnaSIS League for multi-school scholarship programs.',
                 links: [{ label: 'See Scholarships & Aid', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
             },
             uniforms: {
