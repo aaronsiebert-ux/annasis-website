@@ -74,6 +74,42 @@
         /meta platforms/i, /pingdom/i, /uptimerobot/i, /statuscake/i, /\bcrawl/i
     ];
 
+    // Explicit ICP exceptions: always win over the business deny groups below.
+    const ICP_EXCEPTIONS = [
+        /montessori/i, /charter/i, /\bpcs\b/i, /\besd\b/i, /\besa\b/i, /\bboces\b/i,
+        /intermediate unit/i, /education service/i, /association/i, /church/i, /\bcamps?\b/i,
+        /christian/i, /academy/i, /catholic/i, /ministr/i, /diocese/i, /parish/i
+    ];
+
+    // Public school districts (Apollo rule): skipped unless a district exception matches.
+    // Plain "school" never overrides this.
+    const DISTRICT_PATTERNS = [
+        /district/i, /unified/i, /\bisd\b/i, /public schools/i, /public school system/i,
+        /county office of education/i, /board of education/i, /department of education/i
+    ];
+    const DISTRICT_EXCEPTIONS = [
+        /montessori/i, /charter/i, /\besd\b/i, /\besa\b/i, /\bboces\b/i, /christian/i, /academy/i
+    ];
+
+    // Business deny groups (Aaron, 10/23). Checked after ICP_EXCEPTIONS but before the
+    // generic ICP words, so "school district" is skipped even though "school" is an ICP word.
+    const DENY_BUSINESS = [
+        // Competitor / event-software vendors
+        /planning center/i, /pushpay/i, /tithe\.?ly/i, /subsplash/i, /acs technologies/i,
+        /campminder/i, /ultracamp/i, /campbrain/i, /campdoc/i, /active network/i, /eventbrite/i,
+        /\bcvent\b/i, /regfox/i, /webconnex/i, /ticket tailor/i, /swapcard/i, /eventeny/i,
+        /shopify/i, /square,? inc/i, /\bblock,? inc/i, /kev group/i, /heartland payment/i,
+        /heartland school/i, /leagueapps/i, /teamsnap/i, /sportsengine/i, /blackbaud/i,
+        /facts management/i, /powerschool/i,
+        // Banks and insurers
+        /\bbank\b/i, /bancorp/i, /jpmorgan/i, /wells fargo/i, /citigroup/i, /goldman/i,
+        /credit union/i, /insurance/i, /state farm/i, /allstate/i, /geico/i, /progressive corp/i,
+        /\bmetlife\b/i, /prudential/i, /nationwide mutual/i, /liberty mutual/i,
+        // Healthcare
+        /hospital/i, /health ?system/i, /\bclinic\b/i, /medical cent(er|re)/i, /kaiser/i,
+        /healthcare/i, /health care/i
+    ];
+
     // ISP names that would otherwise trip an allow-word (e.g. "charter"). Removed before
     // ICP matching so they fall through to the default allow, untagged.
     const ISP_NEUTRAL = [/charter communications/ig, /spectrum/ig];
@@ -94,8 +130,12 @@
         if (!text) return { load: true, why: 'no owner info, allow' };
         let icpText = text;
         ISP_NEUTRAL.forEach(function (p) { icpText = icpText.replace(p, ' '); });
-        if (ICP_PATTERNS.some(function (p) { return p.test(icpText); })) return { load: true, why: 'ICP match: ' + text };
-        if (NON_ICP_PATTERNS.some(function (p) { return p.test(text); })) return { load: false, why: 'non-ICP: ' + text };
+        function any(list, t) { return list.some(function (p) { return p.test(t); }); }
+        if (any(NON_ICP_PATTERNS, text)) return { load: false, why: 'infrastructure: ' + text };
+        if (any(DISTRICT_PATTERNS, text) && !any(DISTRICT_EXCEPTIONS, icpText)) return { load: false, why: 'public district: ' + text };
+        if (any(ICP_EXCEPTIONS, icpText)) return { load: true, why: 'ICP exception: ' + text };
+        if (any(DENY_BUSINESS, text)) return { load: false, why: 'non-ICP business: ' + text };
+        if (any(ICP_PATTERNS, icpText)) return { load: true, why: 'ICP match: ' + text };
         return { load: true, why: 'default allow (ISP/carrier/other): ' + text };
     }
 
