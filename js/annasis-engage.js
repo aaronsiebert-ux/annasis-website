@@ -1145,13 +1145,13 @@
             { label: 'School store', intent: 'store' },
             { label: 'Pricing', intent: 'pricing' },
             { label: 'Take the fit quiz', intent: 'quiz' },
-            { label: 'Book a demo', intent: 'demo' },
+            { label: 'Book a meeting', intent: 'demo' },
             { label: 'Get support', intent: 'support' }
         ],
         // Keyword order inside an intent does not matter; intent order breaks ties (earlier wins).
         intents: {
             demo: {
-                topic: 'Book a demo',
+                topic: 'Book a meeting',
                 keywords: ['demo', 'demonstration', 'book a', 'schedule a', 'meeting', 'call me', 'talk to', 'talk with', 'sales', 'salesperson', 'contact', 'conversation', 'human', 'someone', 'representative', 'quote'],
                 text: 'Happy to connect you with AnnaSIS sales. Share a few details below and we will follow up from sales@annasis.com — or use the Request a conversation page.',
                 links: [{ label: 'Request a conversation', href: U.contact }],
