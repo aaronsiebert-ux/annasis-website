@@ -2,19 +2,23 @@
 import assert from 'node:assert/strict';
 import { handleRequest, validate } from './worker.js';
 
-const ENV = { PIPEDRIVE_API_TOKEN: 'test-token-not-real', PIPEDRIVE_DOMAIN: 'annasis' };
+const ENV = { PIPEDRIVE_API_TOKEN: 'test-token-not-real', PIPEDRIVE_DOMAIN: 'annasis', JOB_TITLE_FIELD: 'TITLE', SEGMENT_FIELD: 'SEG', LABEL_WEBSITE_CHAT: 'chat-label', LABEL_FIT_QUIZ: 'quiz-label' };
 const ORIGIN = 'https://aaronsiebert-ux.github.io';
 
-function mockPipedrive({ existingOrg = null, existingPerson = null, failOn = null } = {}) {
+function mockPipedrive({ existingOrg = null, existingPerson = null, domainOrg = null, failOn = null } = {}) {
   const calls = [];
   const fetchImpl = async (url, init = {}) => {
     const u = new URL(url);
     const method = init.method || 'GET';
     const body = init.body ? JSON.parse(init.body) : null;
-    calls.push({ method, path: u.pathname, query: Object.fromEntries(u.searchParams), body, host: u.host });
+    calls.push({ method, path: u.pathname, query: Object.fromEntries(u.searchParams), body, host: u.host, token: (init.headers || {})['x-api-token'] });
     const ok = (data) => new Response(JSON.stringify({ success: true, data }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     if (failOn && u.pathname.endsWith(failOn)) return new Response(JSON.stringify({ success: false, error: 'boom' }), { status: 500 });
-    if (u.pathname.endsWith('/organizations/search')) return ok({ items: existingOrg ? [{ item: existingOrg }] : [] });
+    if (u.pathname.endsWith('/organizations/search')) {
+      if (u.searchParams.get('exact_match')) return ok({ items: existingOrg ? [{ item: existingOrg }] : [] });
+      return ok({ items: domainOrg ? [{ item: { id: domainOrg.id } }] : [] });
+    }
+    if (/\/organizations\/\d+$/.test(u.pathname)) return ok(domainOrg);
     if (u.pathname.endsWith('/persons/search')) return ok({ items: existingPerson ? [{ item: existingPerson }] : [] });
     if (u.pathname.endsWith('/organizations')) return ok({ id: 101 });
     if (u.pathname.endsWith('/persons')) return ok({ id: 202 });
@@ -47,43 +51,69 @@ const req = (body, { origin = ORIGIN, method = 'POST', ct = 'text/plain;charset=
 let n = 0;
 async function t(name, fn) { await fn(); n++; console.log('ok -', name); }
 
-await t('sales: creates org, person, lead, note (text/plain body)', async () => {
+await t('sales: new person + new org (name AND domain searched first), lead, note', async () => {
   const m = mockPipedrive();
   const res = await handleRequest(req(sales), ENV, m.fetchImpl);
   const data = await res.json();
   assert.equal(res.status, 200);
-  assert.deepEqual(data, { ok: true, type: 'sales', orgId: 101, personId: 202, leadId: 'lead-uuid-1', noteId: 303 });
+  assert.deepEqual(data, { ok: true, type: 'sales', orgId: 101, personId: 202, leadId: 'lead-uuid-1', noteId: 303, orgCreated: true, orgMatchedBy: null, personCreated: true });
   assert.equal(res.headers.get('Access-Control-Allow-Origin'), ORIGIN);
   const paths = m.calls.map((c) => c.method + ' ' + c.path.replace('/api/v1', ''));
-  assert.deepEqual(paths, ['GET /organizations/search', 'POST /organizations', 'GET /persons/search', 'POST /persons', 'POST /leads', 'POST /notes']);
+  assert.deepEqual(paths, ['GET /persons/search', 'GET /organizations/search', 'GET /organizations/search', 'GET /organizations/search', 'POST /organizations', 'POST /persons', 'POST /leads', 'POST /notes']);
   assert.equal(m.calls[0].host, 'annasis.pipedrive.com');
-  assert.equal(m.calls[0].query.api_token, 'test-token-not-real');
-  assert.equal(m.calls[0].query.term, 'Example Academy');
-  assert.equal(m.calls[2].query.term, 'pat@example.org');
-  assert.equal(m.calls[3].body.org_id, 101);
-  assert.equal(m.calls[3].body.job_title, 'Business office / finance');
-  assert.equal(m.calls[3].body.phone[0].value, '555-0100');
-  assert.deepEqual(m.calls[4].body, { title: 'Website pricing (Anna) – Example Academy', person_id: 202, organization_id: 101 });
-  assert.equal(m.calls[5].body.lead_id, 'lead-uuid-1');
-  assert.match(m.calls[5].body.content, /Sales lead from the ANNASIS website<br>Name: Pat Tester/);
+  assert.equal(m.calls[0].token, 'test-token-not-real'); assert.equal(m.calls[0].query.api_token, undefined);
+  assert.equal(m.calls[0].query.term, 'pat@example.org');
+  assert.equal(m.calls[1].query.term, 'Example Academy');
+  assert.equal(m.calls[2].query.term, 'example.org');
+  assert.deepEqual(m.calls[4].body, { name: 'Example Academy', website: 'https://example.org', SEG: 'Private school' });
+  assert.equal(m.calls[5].body.org_id, 101);
+  assert.equal(m.calls[5].body.TITLE, 'Business office / finance');
+  assert.deepEqual(m.calls[6].body, { title: 'Website pricing (Anna) – Example Academy', person_id: 202, organization_id: 101, label_ids: ['chat-label'] });
+  assert.equal(m.calls[7].body.lead_id, 'lead-uuid-1');
+  assert.match(m.calls[7].body.content, /^Source: Website chat<br>Sales lead/);
 });
 
-await t('sales: reuses existing org + person (JSON content type, default api host)', async () => {
-  const m = mockPipedrive({ existingOrg: { id: 7, name: 'Example Academy' }, existingPerson: { id: 8, organization: null, phones: [] } });
-  const res = await handleRequest(req(sales, { ct: 'application/json' }), { PIPEDRIVE_API_TOKEN: 'x' }, m.fetchImpl);
-  const data = await res.json();
-  assert.equal(data.orgId, 7); assert.equal(data.personId, 8);
+await t('sales: existing person by email → reuse person AND their org (no org search)', async () => {
+  const m = mockPipedrive({ existingPerson: { id: 8, organization: { id: 7 }, phones: [] } });
+  const data = await (await handleRequest(req(sales, { ct: 'application/json' }), { PIPEDRIVE_API_TOKEN: 'x' }, m.fetchImpl)).json();
+  assert.equal(data.orgId, 7); assert.equal(data.personId, 8); assert.equal(data.orgMatchedBy, 'person');
   const paths = m.calls.map((c) => c.method + ' ' + c.path.replace('/v1', ''));
-  assert.deepEqual(paths, ['GET /organizations/search', 'GET /persons/search', 'PUT /persons/8', 'POST /leads', 'POST /notes']);
+  assert.deepEqual(paths, ['GET /persons/search', 'PUT /persons/8', 'POST /leads', 'POST /notes']);
   assert.equal(m.calls[0].host, 'api.pipedrive.com');
-  assert.deepEqual(m.calls[2].body, { org_id: 7, phone: [{ value: '555-0100', primary: true, label: 'work' }] });
+});
+
+await t('sales: org matched by exact name', async () => {
+  const m = mockPipedrive({ existingOrg: { id: 7, name: 'Example Academy' } });
+  const data = await (await handleRequest(req(sales), ENV, m.fetchImpl)).json();
+  assert.equal(data.orgId, 7); assert.equal(data.orgMatchedBy, 'name');
+  assert.ok(!m.calls.some((c) => c.method === 'POST' && c.path.endsWith('/organizations')));
+});
+
+await t('sales: org matched by website domain when name differs; fit quiz label', async () => {
+  const m = mockPipedrive({ domainOrg: { id: 9, website: 'http://www.example.org/' } });
+  const data = await (await handleRequest(req(Object.assign({}, sales, { source: 'fit-quiz', organization: 'Example Acad.' })), ENV, m.fetchImpl)).json();
+  assert.equal(data.orgId, 9); assert.equal(data.orgMatchedBy, 'website');
+  assert.deepEqual(m.calls.find((c) => c.path.endsWith('/leads')).body.label_ids, ['quiz-label']);
+});
+
+await t('gmail address → no domain search, no website set', async () => {
+  const m = mockPipedrive();
+  await handleRequest(req(Object.assign({}, sales, { email: 'pat@gmail.com' })), ENV, m.fetchImpl);
+  assert.equal(m.calls.filter((c) => c.path.endsWith('/organizations/search')).length, 1);
+  assert.equal(m.calls.find((c) => c.method === 'POST' && c.path.endsWith('/organizations')).body.website, undefined);
+});
+
+await t('spam: link-stuffed message silently dropped', async () => {
+  const m = mockPipedrive();
+  const res = await handleRequest(req(Object.assign({}, sales, { message: 'http://a http://b http://c' })), ENV, m.fetchImpl);
+  assert.equal(res.status, 200); assert.equal(m.calls.length, 0);
 });
 
 await t('support: no lead; [Support] note on person/org + task activity', async () => {
   const m = mockPipedrive();
   const res = await handleRequest(req(support), ENV, m.fetchImpl);
   const data = await res.json();
-  assert.deepEqual(data, { ok: true, type: 'support', orgId: 101, personId: 202, noteId: 303, activityId: 404 });
+  assert.deepEqual(data, { ok: true, type: 'support', orgId: 101, personId: 202, noteId: 303, activityId: 404, orgCreated: true, orgMatchedBy: null, personCreated: true });
   const paths = m.calls.map((c) => c.method + ' ' + c.path.replace('/api/v1', ''));
   assert.ok(!paths.includes('POST /leads'));
   const note = m.calls.find((c) => c.path.endsWith('/notes')).body;

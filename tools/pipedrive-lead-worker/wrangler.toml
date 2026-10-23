@@ -8,6 +8,13 @@ compatibility_date = "2026-10-01"
 [vars]
 # Optional: your Pipedrive company domain (the part before .pipedrive.com).
 # Leave empty to use https://api.pipedrive.com.
-PIPEDRIVE_DOMAIN = ""
+PIPEDRIVE_DOMAIN = "annasis"
 # Sites allowed to send leads (comma-separated, exact origins).
 ALLOWED_ORIGINS = "https://annasis.com,https://www.annasis.com,https://aaronsiebert-ux.github.io"
+# AnnaSIS Pipedrive field keys (not secrets): Person "Title", Organization "Segment".
+JOB_TITLE_FIELD = "cdb5fd686e8f0151342c67ee4cf46c497ae792e7"
+SEGMENT_FIELD = "a1fda8a9f0ce20faa91e4aad649359aeb97d5e03"
+# Lead labels "Website chat" / "Fit quiz" don't exist yet (only Hot/Warm/Cold). Create them in
+# Pipedrive (Leads inbox > label > Manage labels), then paste their UUIDs here:
+LABEL_WEBSITE_CHAT = ""
+LABEL_FIT_QUIZ = ""

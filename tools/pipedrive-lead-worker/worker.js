@@ -16,7 +16,9 @@
  * Env:  PIPEDRIVE_API_TOKEN (secret, required)
  *       PIPEDRIVE_DOMAIN    (optional, e.g. "annasis" → https://annasis.pipedrive.com)
  *       ALLOWED_ORIGINS     (optional, comma-separated; defaults below)
- *       JOB_TITLE_FIELD     (optional; Person field key for job title, default "job_title")
+ *       JOB_TITLE_FIELD     (optional; Person field key for the visitor's role, default "job_title")
+ *       SEGMENT_FIELD       (optional; Organization field key that receives orgType on NEW orgs)
+ *       LABEL_WEBSITE_CHAT / LABEL_FIT_QUIZ (optional; Pipedrive lead-label UUIDs)
  */
 
 const DEFAULT_ORIGINS = [
@@ -90,6 +92,9 @@ function validate(raw) {
   if (!p.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) missing.push('email');
   if (!p.organization) missing.push('organization');
   if (p.type === 'support' && !p.message) missing.push('message');
+  // Spam heuristics: link-stuffed messages or a name/org that is a URL.
+  const urls = (p.message.match(/https?:\/\/|www\./gi) || []).length;
+  if (urls > 2 || /https?:\/\//i.test(p.name + p.organization)) return { ok: false, silent: true, error: 'spam' };
   if (missing.length) return { ok: false, error: 'Missing or invalid: ' + missing.join(', ') };
   if (!p.leadTitle) {
     p.leadTitle = p.type === 'support'
@@ -121,10 +126,9 @@ function pipedrive(env, fetchImpl) {
   async function call(method, path, body, query) {
     const url = new URL(base + path);
     Object.entries(query || {}).forEach(([k, v]) => url.searchParams.set(k, v));
-    url.searchParams.set('api_token', token);
     const res = await fetchImpl(url.toString(), {
       method,
-      headers: body ? { 'Content-Type': 'application/json', Accept: 'application/json' } : { Accept: 'application/json' },
+      headers: Object.assign({ Accept: 'application/json', 'x-api-token': token }, body ? { 'Content-Type': 'application/json' } : {}),
       body: body ? JSON.stringify(body) : undefined
     });
     let data = null;
@@ -139,57 +143,117 @@ function pipedrive(env, fetchImpl) {
   return { call };
 }
 
-async function findOrCreateOrg(pd, name) {
-  const found = await pd.call('GET', '/organizations/search', null, { term: name, fields: 'name', exact_match: 'true', limit: '1' });
-  const item = found && found.items && found.items[0] && found.items[0].item;
-  if (item && item.id) return { id: item.id, created: false };
-  const org = await pd.call('POST', '/organizations', { name });
-  return { id: org.id, created: true };
+const FREEMAIL = new Set(['gmail.com', 'googlemail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'live.com',
+  'msn.com', 'aol.com', 'icloud.com', 'me.com', 'mac.com', 'protonmail.com', 'proton.me', 'comcast.net',
+  'att.net', 'sbcglobal.net', 'verizon.net', 'ymail.com', 'gmx.com', 'mail.com']);
+
+/** Organization domain from the visitor's email (null for free-mail addresses). */
+function emailDomain(email) {
+  const d = (String(email).split('@')[1] || '').toLowerCase().replace(/^www\./, '');
+  return d && !FREEMAIL.has(d) ? d : null;
+}
+function hostOf(url) {
+  if (!url) return '';
+  try { return new URL(/^https?:\/\//i.test(url) ? url : 'https://' + url).hostname.toLowerCase().replace(/^www\./, ''); }
+  catch (e) { return ''; }
+}
+const normName = (n) => String(n || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const first = (found) => (found && found.items && found.items[0] && found.items[0].item) || null;
+
+/**
+ * CRM rule: search by NAME and by DOMAIN/website before creating an org.
+ * 1) org already linked to the existing Person (by email) wins;
+ * 2) exact name match; 3) an org whose website matches the email domain;
+ * 4) otherwise create (with website + segment filled).
+ */
+async function findOrCreateOrg(pd, p, env, personOrgId) {
+  if (personOrgId) return { id: personOrgId, created: false, matchedBy: 'person' };
+  const byName = first(await pd.call('GET', '/organizations/search', null, { term: p.organization, fields: 'name', exact_match: 'true', limit: '1' }));
+  if (byName && byName.id) return { id: byName.id, created: false, matchedBy: 'name' };
+  const domain = emailDomain(p.email);
+  if (domain) {
+    const label = domain.split('.')[0];
+    const hits = await pd.call('GET', '/organizations/search', null, { term: domain, limit: '10' });
+    const nameHits = label.length >= 3 ? await pd.call('GET', '/organizations/search', null, { term: label, fields: 'name', limit: '10' }) : null;
+    const ids = [...new Set([...(hits && hits.items) || [], ...(nameHits && nameHits.items) || []].map((x) => x.item && x.item.id).filter(Boolean))].slice(0, 10);
+    for (const id of ids) {
+      const org = await pd.call('GET', `/organizations/${id}`);
+      if (org && hostOf(org.website) === domain) return { id, created: false, matchedBy: 'website' };
+    }
+  }
+  const body = { name: p.organization };
+  if (domain) body.website = 'https://' + domain;
+  if (p.orgType && env.SEGMENT_FIELD) body[env.SEGMENT_FIELD] = p.orgType;
+  const org = await pd.call('POST', '/organizations', body);
+  return { id: org.id, created: true, matchedBy: null };
 }
 
-async function findOrCreatePerson(pd, p, orgId, env) {
-  const found = await pd.call('GET', '/persons/search', null, { term: p.email, fields: 'email', exact_match: 'true', limit: '1' });
-  const item = found && found.items && found.items[0] && found.items[0].item;
-  const jobKey = (env && env.JOB_TITLE_FIELD) || 'job_title';
-  if (item && item.id) {
+async function findPerson(pd, p) {
+  return first(await pd.call('GET', '/persons/search', null, { term: p.email, fields: 'email', exact_match: 'true', limit: '1' }));
+}
+
+async function upsertPerson(pd, p, existing, orgId, env) {
+  const jobKey = env.JOB_TITLE_FIELD || 'job_title';
+  if (existing && existing.id) {
     // Fill gaps only — never overwrite what the team already entered.
     const patch = {};
-    if (!item.organization && orgId) patch.org_id = orgId;
-    if (p.phone && !(item.phones && item.phones.length)) patch.phone = [{ value: p.phone, primary: true, label: 'work' }];
-    if (Object.keys(patch).length) await pd.call('PUT', `/persons/${item.id}`, patch);
-    return { id: item.id, created: false };
+    if (!existing.organization && orgId) patch.org_id = orgId;
+    if (p.phone && !(existing.phones && existing.phones.length)) patch.phone = [{ value: p.phone, primary: true, label: 'work' }];
+    if (Object.keys(patch).length) await pd.call('PUT', `/persons/${existing.id}`, patch);
+    return { id: existing.id, created: false };
   }
-  const body = {
-    name: p.name,
-    email: [{ value: p.email, primary: true, label: 'work' }],
-    org_id: orgId || undefined
-  };
+  const body = { name: p.name, email: [{ value: p.email, primary: true, label: 'work' }], org_id: orgId || undefined };
   if (p.phone) body.phone = [{ value: p.phone, primary: true, label: 'work' }];
   if (p.role) body[jobKey] = p.role;
   const person = await pd.call('POST', '/persons', body);
   return { id: person.id, created: true };
 }
 
+function sourceName(p) { return p.source === 'fit-quiz' ? 'Fit quiz' : 'Website chat'; }
+
 async function handleLead(p, env, fetchImpl) {
+  env = env || {};
   const pd = pipedrive(env, fetchImpl);
-  const org = await findOrCreateOrg(pd, p.organization);
-  const person = await findOrCreatePerson(pd, p, org.id, env);
+  const existing = await findPerson(pd, p);
+  const personOrgId = existing && existing.organization && (existing.organization.id || existing.organization);
+  const org = await findOrCreateOrg(pd, p, env, personOrgId || null);
+  const person = await upsertPerson(pd, p, existing, org.id, env);
+  const dedupe = { orgCreated: org.created, orgMatchedBy: org.matchedBy, personCreated: person.created };
   if (p.type === 'support') {
     const content = /^\[Support\]/.test(p.noteText) ? p.noteText : '[Support] ' + p.noteText;
-    const note = await pd.call('POST', '/notes', { content: content.replace(/\n/g, '<br>'), person_id: person.id, org_id: org.id });
+    const note = await pd.call('POST', '/notes', { content: esc(content), person_id: person.id, org_id: org.id });
     const activity = await pd.call('POST', '/activities', {
       subject: `[Support] ${p.supportCategory || 'Website request'} – ${p.organization}`.slice(0, 250),
-      type: 'task',
-      person_id: person.id,
-      org_id: org.id,
-      note: (p.message || '').replace(/\n/g, '<br>'),
-      due_date: new Date().toISOString().slice(0, 10)
+      type: 'task', person_id: person.id, org_id: org.id,
+      note: esc(p.message || ''), due_date: new Date().toISOString().slice(0, 10)
     });
-    return { type: 'support', orgId: org.id, personId: person.id, noteId: note.id, activityId: activity.id };
+    return Object.assign({ type: 'support', orgId: org.id, personId: person.id, noteId: note.id, activityId: activity.id }, dedupe);
   }
-  const lead = await pd.call('POST', '/leads', { title: p.leadTitle, person_id: person.id, organization_id: org.id });
-  const note = await pd.call('POST', '/notes', { content: p.noteText.replace(/\n/g, '<br>'), lead_id: lead.id });
-  return { type: 'sales', orgId: org.id, personId: person.id, leadId: lead.id, noteId: note.id };
+  const src = sourceName(p);
+  const title = /^(Website chat|Fit quiz)\b/i.test(p.leadTitle) || /^Website /i.test(p.leadTitle) ? p.leadTitle : `${src} – ${p.leadTitle}`;
+  const leadBody = { title: title.slice(0, 250), person_id: person.id, organization_id: org.id };
+  const labelId = p.source === 'fit-quiz' ? env.LABEL_FIT_QUIZ : env.LABEL_WEBSITE_CHAT;
+  if (labelId) leadBody.label_ids = [labelId];
+  const lead = await pd.call('POST', '/leads', leadBody);
+  const note = await pd.call('POST', '/notes', { content: esc(`Source: ${src}\n` + p.noteText), lead_id: lead.id });
+  return Object.assign({ type: 'sales', orgId: org.id, personId: person.id, leadId: lead.id, noteId: note.id }, dedupe);
+}
+
+/** Notes are HTML in Pipedrive: escape visitor text, keep line breaks. */
+function esc(t) {
+  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+}
+
+/* Best-effort per-isolate rate limit (no extra Cloudflare products needed). */
+const hits = new Map();
+const RATE_MAX = 5, RATE_WINDOW_MS = 10 * 60 * 1000;
+function rateLimited(ip, now = Date.now()) {
+  if (!ip) return false;
+  const arr = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+  arr.push(now);
+  hits.set(ip, arr);
+  if (hits.size > 5000) hits.clear();
+  return arr.length > RATE_MAX;
 }
 
 async function handleRequest(request, env, fetchImpl) {
@@ -202,6 +266,7 @@ async function handleRequest(request, env, fetchImpl) {
   // Browsers always send Origin on cross-site POSTs; scripts (test-lead-webhook.sh) set it explicitly.
   if (!allowedOrigins(env).includes(origin)) return json(403, { ok: false, error: 'Origin not allowed' }, origin, env);
   if (!env || !env.PIPEDRIVE_API_TOKEN) return json(500, { ok: false, error: 'Server not configured (PIPEDRIVE_API_TOKEN missing)' }, origin, env);
+  if (rateLimited(request.headers.get('CF-Connecting-IP'))) return json(429, { ok: false, error: 'Too many requests' }, origin, env);
   const text = await request.text();
   if (text.length > MAX_BODY) return json(413, { ok: false, error: 'Payload too large' }, origin, env);
   let raw;
@@ -221,4 +286,4 @@ async function handleRequest(request, env, fetchImpl) {
 export default {
   fetch(request, env) { return handleRequest(request, env); }
 };
-export { handleRequest, validate, handleLead, corsHeaders };
+export { handleRequest, validate, handleLead, corsHeaders, emailDomain, hostOf };

@@ -126,3 +126,13 @@ files. Until `endpoint` is set, the site keeps sending people to the contact pag
 - Pipedrive API v1 calls: `GET /organizations/search`, `POST /organizations`, `GET /persons/search`, `POST /persons`, `PUT /persons/{id}` (fills an empty org/phone only), `POST /leads`, `POST /notes`, `POST /activities`.
 - Accepts `text/plain` or `application/json` bodies up to 20 KB; replies with CORS headers for allowed origins and answers `OPTIONS` preflight.
 - Payload schema: see `NEXT_VERSION_NOTES.md` → "Lead webhook payload".
+
+## Dedupe & spam rules (2026-10-23)
+- Person: exact email search. If found, reuse it and its linked Organization; only fill gaps (phone, org).
+- Organization (CRM rule: name AND domain): exact name search, then the email domain (skipped for Gmail/Yahoo/etc.)
+  is searched and candidates are accepted only if their Website host equals the domain. New orgs get Website + Segment.
+- Lead title starts with "Website chat…"/"Website fit quiz…"; note starts "Source: Website chat|Fit quiz".
+  Optional lead labels via LABEL_WEBSITE_CHAT / LABEL_FIT_QUIZ (UUIDs) in wrangler.toml.
+- Spam: honeypot `website`, >2 links in message or URL in name/org → silently dropped; 5 posts / 10 min per IP
+  (best-effort, per isolate); 20 KB body cap; strict origin allowlist.
+- Token is sent as the `x-api-token` header (not in the URL), stored only as a Worker secret.
