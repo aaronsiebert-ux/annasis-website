@@ -847,7 +847,7 @@
             res = {
                 id: 'full-os',
                 title: 'Complete — the full school operating system',
-                body: 'Go Complete and run the school on one platform: Core SIS plus six Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Parents, Students, and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.coresis, C.tuition, C.events, C.store, C.athletics]
             };
         } else if (sisPicked.length) {
@@ -1224,6 +1224,12 @@
                 text: 'The AnnaSIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer online store the office reconciles at night. Store purchases land on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
+            aid: {
+                topic: 'Scholarships & Aid',
+                keywords: ['financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'esa', 'education savings account', 'need-based aid'],
+                text: 'Scholarships & Aid is a Power-up coming Spring 2027. Families submit one household application covering all siblings, with income documents attached. A named reviewer at the school awards or denies aid — a person always decides — and every decision is kept on an auditable record. The award posts to the household bill as a named fund, so tuition due drops. Tuition assistance, school scholarships and state school-choice ESA (education savings account) payments are tracked on the same bill, with reporting on ESA-funded vs privately funded students. It works alongside AnnaSIS League for multi-school scholarship programs.',
+                links: [{ label: 'See Scholarships & Aid', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
+            },
             uniforms: {
                 topic: 'Uniform exchange',
                 keywords: ['uniform', 'uniform exchange', 'used uniform', 'swap', 'exchange', 'facebook'],
@@ -1300,7 +1306,7 @@
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus six Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, AnnaSIS League, and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid, AnnaSIS League, and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Parents, Students, and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
