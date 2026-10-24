@@ -787,7 +787,7 @@
                 camp: {
                     id: 'camp',
                     title: 'One-stop camp management',
-                    body: 'Run the season in one place: online registration for day, overnight, and multi-session programs; a real camp store; attendance and check-in paths; and fundraising that sits beside your programs.',
+                    body: 'Run the season in one place: online registration for day, overnight, and multi-session programs; a real camp store; attendance and check-in paths; and fundraising built into your programs.',
                     modules: [
                         M('Registration & program signups', 'Day camps, overnight sessions, and multi-week summers — paid and free paths, capacity, and waivers where you need them.', u.camps, 'See Camps'),
                         M('Camp store & e-commerce', 'Merch, apparel, gear lists, and program materials — with optional round-up at checkout.', u.ecommerce, 'See Store'),
@@ -854,7 +854,7 @@
             res = {
                 id: 'beside-sis',
                 title: 'Start beside ' + sisName + ' with ' + top,
-                body: 'Keep ' + sisName + ' and let AnnaSIS sit beside it, turning on the Power-ups that fill today’s gaps. Jog before you run' +
+                body: 'Keep ' + sisName + ' and let AnnaSIS complement it, turning on the Power-ups that fill today’s gaps. Jog before you run' +
                     (a.plan === 'later' ? ' — then grow into the full school operating system when the office is ready.' : '; expand or replace when the office is ready.'),
                 modules: picks.slice(0, 4).map(function (k) { return C[k]; })
             };
@@ -1167,7 +1167,7 @@
             sis: {
                 topic: 'Current SIS',
                 keywords: ['current sis', 'my sis', 'our sis', 'existing', 'sis', 'student information system', 'facts', 'renweb', 'classreach', 'sycamore', 'gradelink', 'alma', 'veracross', 'blackbaud', 'rediker', 'jupiter', 'replace', 'switch', 'sit beside', 'alongside', 'work with', 'keep our', 'rip out'],
-                text: 'Yes — AnnaSIS can sit beside the student information system you run today and turn on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
+                text: 'Yes — AnnaSIS connects to the student information system you run today and turns on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
                 links: [{ label: 'Integrations', href: U.integrations }, { label: 'Take the fit quiz', href: U.quiz }]
             },
             data: {
