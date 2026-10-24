@@ -660,7 +660,7 @@
             options: function (a) {
                 var school = a.type === 'school';
                 return [
-                    { v: 'logins', l: school ? 'Separate logins for Parents' : 'Separate logins for families' },
+                    { v: 'logins', l: school ? 'No single view across our systems' : 'No single view across our systems' },
                     { v: 'double', l: 'Office double entry' },
                     { v: 'addons', l: 'Costs that grow unexpectedly' },
                     { v: 'outside', l: school ? 'Events, store, or athletics outside the SIS' : 'Registration, store, or giving in separate tools' },
@@ -742,7 +742,7 @@
         var u = CONFIG.urls;
         return {
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
-            store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — no second shop login to reconcile.', u.ecommerce, 'See Store'),
+            store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product.', u.education, 'Explore the system'),
             tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters — with accounting that syncs to QuickBooks.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
