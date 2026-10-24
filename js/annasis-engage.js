@@ -1334,7 +1334,7 @@
         },
         fallback: {
             topic: 'Other question',
-            text: 'I don’t have a scripted answer for that yet. The two-minute fit quiz can point you to the right Power-ups, Talk with Sales, or visit the Support page.',
+            text: 'Hmm, I’m not sure about that one. How about one of these?',
             links: [{ label: 'Take the fit quiz', href: U.quiz }, { label: 'Talk with Sales', href: U.contact }, { label: 'Support', href: U.support }],
             action: 'lead'
         }
