@@ -1225,10 +1225,10 @@
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
             aid: {
-                topic: 'Scholarships & Aid',
+                topic: 'Scholarships & Aid + SGO',
                 keywords: ['financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'need-based aid', 'scholarship fund'],
-                text: 'Scholarships & Aid is a Power-up coming Winter 2027. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. It works alongside AnnaSIS League for multi-school scholarship programs.',
-                links: [{ label: 'See Scholarships & Aid', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
+                text: 'Scholarships & Aid + SGO is a Power-up coming Winter 2027. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. For several schools, it also runs a shared scholarship program or Scholarship Granting Organization (SGO): families apply once, a named reviewer records each award, the award posts to the household bill, and gifts, awards and SGO reports come from the same records.',
+                links: [{ label: 'See Scholarships & Aid + SGO', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
             },
             uniforms: {
                 topic: 'Uniform exchange',
@@ -1306,7 +1306,7 @@
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid, AnnaSIS League, and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, AnnaSIS League (shared leagues and activities across schools), and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
@@ -1328,7 +1328,7 @@
             network: {
                 topic: 'Network',
                 keywords: ['network', 'cross-campus', 'cross campus', 'operator', 'school system', 'member schools', 'multiple schools', 'shared programs'],
-                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — scholarships, events, a school store and, coming Winter 2027, leagues — while each member school stays independent and families join from their own school account.',
+                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — events, a school store and, coming Winter 2027, Scholarships & Aid + SGO and AnnaSIS League for shared leagues and activities — while each member school stays independent and families join from their own school account.',
                 links: [{ label: 'See Network', href: 'network.html' }, { label: 'Talk with Sales', href: U.contact }]
             },
             thanks: {
@@ -1909,8 +1909,8 @@
         }
         var NET_Q = [
             { label: 'Have you started your SGO?', topic: 'Network: SGO',
-              yes: { text: 'Great. SGO & scholarships is coming Winter 2027. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'SGO & scholarships', href: 'network.html#use-sgo' }, { label: 'Talk with Sales', href: U.contact }] },
-              no: { text: 'No problem. SGO & scholarships is coming Winter 2027. Start with how an SGO and scholarship program can run across campuses, then take the fit quiz for a tailored starting point.', links: [{ label: 'SGO & scholarships', href: 'network.html#use-sgo' }, { label: 'Take the fit quiz', href: U.quiz }] } },
+              yes: { text: 'Great. Scholarships & Aid + SGO is coming Winter 2027. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'Scholarships & Aid + SGO', href: 'education.html#aid' }, { label: 'Talk with Sales', href: U.contact }] },
+              no: { text: 'No problem. Scholarships & Aid + SGO is coming Winter 2027. Start with how an SGO and scholarship program can run across campuses, then take the fit quiz for a tailored starting point.', links: [{ label: 'Scholarships & Aid + SGO', href: 'education.html#aid' }, { label: 'Take the fit quiz', href: U.quiz }] } },
             { label: 'Does your school play in a cross-campus league?', topic: 'Network: League',
               yes: { text: 'AnnaSIS League is coming Winter 2027: shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
               no: { text: 'Shared activities can start small. See how the network works, then take the fit quiz.', links: [{ label: 'How it works', href: 'network.html#how-it-works' }, { label: 'Take the fit quiz', href: U.quiz }] } },
