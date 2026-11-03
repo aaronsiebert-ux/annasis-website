@@ -742,7 +742,7 @@
         var u = CONFIG.urls;
         return {
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
-            store: M('School store', 'Uniforms, books, trips, and fees on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
+            store: M('School store', 'Uniforms, books, trips, and fees online and at point of sale, on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product.', u.education, 'Explore the system'),
             tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters — with accounting that syncs to QuickBooks.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
@@ -811,7 +811,7 @@
                     title: 'An institutional store beside registration and giving',
                     body: 'Sell uniforms, merch, materials, and add-ons on one institutional store — with round-up and sponsorship giving beside everyday checkout, not a separate online store for every table.',
                     modules: [
-                        M('Institutional store', 'School stores and uniform shops, camp merch, church bookstores, and event add-ons.', u.ecommerce, 'See Store'),
+                        M('Institutional store', 'School stores and uniform shops, camp merch, church bookstores, and event add-ons — online and in person with point of sale.', u.ecommerce, 'See Store'),
                         M('Round-up & sponsor giving', 'Optional round-up at checkout plus sponsor invites beside donations.', u.ecommerce, 'See Store'),
                         M('Event & program add-ons', 'Resource tables, conference merch, and camp session add-ons beside registration.', u.events, 'See Events')
                     ]
@@ -1220,8 +1220,8 @@
             },
             store: {
                 topic: 'School store',
-                keywords: ['store', 'shop', 'ecommerce', 'e-commerce', 'shopify', 'merch', 'merchandise', 'spirit wear', 'checkout', 'buy', 'purchase', 'books'],
-                text: 'The AnnaSIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer online store the office reconciles at night. Store purchases land on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
+                keywords: ['store', 'shop', 'ecommerce', 'e-commerce', 'shopify', 'merch', 'merchandise', 'spirit wear', 'checkout', 'buy', 'purchase', 'books', 'point of sale', 'pos', 'concessions', 'concession stand', 'in person', 'register', 'pop-up'],
+                text: 'The AnnaSIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer online store the office reconciles at night. One store for online and in person: point of sale rings up sales at the campus store counter, concessions, events and pop-ups from the same catalog and inventory, and every purchase lands on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
             aid: {
