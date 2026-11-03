@@ -1325,6 +1325,12 @@
                 text: 'Hi! I’m Anna. Ask me about AnnaSIS, or pick a topic below.',
                 links: []
             },
+            network: {
+                topic: 'Network',
+                keywords: ['network', 'cross-campus', 'cross campus', 'operator', 'school system', 'member schools', 'multiple schools', 'shared programs'],
+                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — scholarships, events, a school store and, coming Spring 2027, leagues — while each member school stays independent and families join from their own school account.',
+                links: [{ label: 'See Network', href: 'network.html' }, { label: 'Talk with Sales', href: U.contact }]
+            },
             thanks: {
                 topic: 'Thanks',
                 keywords: ['thanks', 'thank you', 'thx', 'appreciate', 'great', 'awesome', 'perfect'],
@@ -1887,9 +1893,72 @@
         ANNASIS_CHAT.ask = function (text, intentId) { if (panel.hidden) { openChat(false); } ask(text, intentId || null); };
         ANNASIS_CHAT.goToQuiz = goToQuiz;
 
+        /* ---- Network page only: engagement questions with quick replies ---- */
+        var NET_NUDGE_KEY = 'annasis_network_nudged';
+        var onNetwork = isPage('network');
+        function chipRow(buttons) {
+            var row = el('div', { className: 'ae-msg ae-msg--action ae-net-row' });
+            buttons.forEach(function (b) {
+                row.appendChild(el('button', { type: 'button', className: 'ae-chat-chip' + (b.primary ? ' ae-chat-chip--primary' : ''), text: b.label, onclick: function () {
+                    if (row.parentNode) { row.parentNode.removeChild(row); }
+                    b.run();
+                } }));
+            });
+            log.appendChild(row);
+            scrollLog();
+        }
+        var NET_Q = [
+            { label: 'Have you started your SGO?', topic: 'Network: SGO',
+              yes: { text: 'Great. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'Cross-campus SGO', href: 'network.html#use-sgo' }, { label: 'Talk with Sales', href: U.contact }] },
+              no: { text: 'No problem. Start with how a cross-campus SGO and scholarship program works, then take the fit quiz for a tailored starting point.', links: [{ label: 'Cross-campus SGO', href: 'network.html#use-sgo' }, { label: 'Take the fit quiz', href: U.quiz }] } },
+            { label: 'Does your school play in a cross-campus league?', topic: 'Network: League',
+              yes: { text: 'AnnaSIS League is coming Spring 2027: shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
+              no: { text: 'Shared activities can start small. See how the network works, then take the fit quiz.', links: [{ label: 'How it works', href: 'network.html#how-it-works' }, { label: 'Take the fit quiz', href: U.quiz }] } },
+            { label: 'Running a school store or events today?', topic: 'Network: Store & events',
+              yes: { text: 'Publish once and let every member school’s families register or order from their own account.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'School Store', href: 'network.html#use-store' }, { label: 'Talk with Sales', href: U.contact }] },
+              no: { text: 'Events and a school store are quick wins to share across schools. The fit quiz will suggest where to start.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'Take the fit quiz', href: U.quiz }] } }
+        ];
+        function netQuestions() {
+            chipRow(NET_Q.map(function (q) {
+                return { label: q.label, run: function () {
+                    addTopic(q.topic, null);
+                    say(q.label);
+                    chipRow([
+                        { label: 'Yes', primary: true, run: function () { pushMessage({ from: 'user', text: 'Yes' }); say(q.yes.text, q.yes.links); netMore(); } },
+                        { label: 'Not yet', run: function () { pushMessage({ from: 'user', text: 'Not yet' }); say(q.no.text, q.no.links); netMore(); } }
+                    ]);
+                } };
+            }));
+        }
+        function netMore() {
+            chipRow([
+                { label: 'Another question', run: function () { netQuestions(); } },
+                { label: 'Talk with Sales', primary: true, run: function () { ask('Talk with Sales', 'demo'); } }
+            ]);
+        }
+        function startNetworkFlow() {
+            store.set(NET_NUDGE_KEY, '1');
+            if (panel.hidden) { openChat(false); }
+            say('Sharing programs across schools? Pick a question and I’ll point you to the right spot.');
+            netQuestions();
+        }
+        if (onNetwork) {
+            ANNASIS_CHAT.startNetworkFlow = startNetworkFlow;
+            nudgeMsg.addEventListener('click', function () { if (!store.get(NET_NUDGE_KEY)) { startNetworkFlow(); } }, true);
+            nudgeClose.addEventListener('click', function () { store.set(NET_NUDGE_KEY, '1'); });
+            if (!store.get(NET_NUDGE_KEY)) {
+                setTimeout(function () {
+                    if (store.get(NET_NUDGE_KEY)) { return; }
+                    if (!panel.hidden) { startNetworkFlow(); return; }
+                    nudgeMsg.textContent = 'Running programs across schools? I have three quick questions.';
+                    nudge.hidden = false;
+                }, 6000);
+            }
+        }
+
         if (store.get(CHAT_OPEN_KEY) === '1') {
             openChat(false); // remember state across pages, but never steal focus on load
-        } else if (CONFIG.nudgeDelayMs > 0 && !store.get(CHAT_NUDGE_KEY) && !isPage('contact')) {
+        } else if (!onNetwork && CONFIG.nudgeDelayMs > 0 && !store.get(CHAT_NUDGE_KEY) && !isPage('contact')) {
             setTimeout(function () {
                 if (!panel.hidden || store.get(CHAT_NUDGE_KEY) || store.get(CHAT_OPEN_KEY) === '0') { return; }
                 nudge.hidden = false;
