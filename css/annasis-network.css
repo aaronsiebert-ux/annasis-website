@@ -12,7 +12,7 @@
 @keyframes nw-pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.8);opacity:0}}
 @media (prefers-reduced-motion:reduce){.nw-dot::after{animation:none}}
 .nw-pill{background:rgba(255,255,255,.95);color:var(--navy);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:700;white-space:nowrap;box-shadow:0 6px 16px rgba(12,53,88,.15)}
-.nw-pill--hub{display:inline-block;background:var(--navy);color:#fff;border-color:var(--navy);transform:translateY(64px)}
+.nw-pill--hub{display:inline-block;text-align:center;line-height:1.2;background:var(--navy);color:#fff;border-color:var(--navy);transform:translateY(64px)}
 .nw-spot-btn:hover .nw-pill,.nw-spot-btn:focus-visible .nw-pill,.nw-spot.is-open .nw-pill{background:var(--orange);color:#fff;border-color:var(--orange)}
 .nw-note{display:none;position:absolute;left:0;top:calc(100% + 8px);width:240px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;box-shadow:var(--shadow);z-index:3}
 .nw-note a{color:var(--ink);text-decoration:none}
@@ -39,3 +39,7 @@
  .nw-pill--hub{transform:none}
  .nw-spot--hub{order:-1}
 }
+.nw-pill--hub small{display:block;font-size:11px;font-weight:600;opacity:.85}
+.nw-soon{display:inline-block;margin-left:4px;font-size:11px;font-weight:800;color:var(--navy);background:var(--gold);border-radius:999px;padding:1px 7px}
+.nw-note{width:auto;white-space:nowrap}
+@media (max-width:720px){.nw-note{white-space:normal}}

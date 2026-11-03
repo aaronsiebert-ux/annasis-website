@@ -1227,7 +1227,7 @@
             aid: {
                 topic: 'Scholarships & Aid',
                 keywords: ['financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'need-based aid', 'scholarship fund'],
-                text: 'Scholarships & Aid is a Power-up coming Spring 2027. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. It works alongside AnnaSIS League for multi-school scholarship programs.',
+                text: 'Scholarships & Aid is a Power-up coming Winter 2027. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. It works alongside AnnaSIS League for multi-school scholarship programs.',
                 links: [{ label: 'See Scholarships & Aid', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
             },
             uniforms: {
@@ -1328,7 +1328,7 @@
             network: {
                 topic: 'Network',
                 keywords: ['network', 'cross-campus', 'cross campus', 'operator', 'school system', 'member schools', 'multiple schools', 'shared programs'],
-                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — scholarships, events, a school store and, coming Spring 2027, leagues — while each member school stays independent and families join from their own school account.',
+                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — scholarships, events, a school store and, coming Winter 2027, leagues — while each member school stays independent and families join from their own school account.',
                 links: [{ label: 'See Network', href: 'network.html' }, { label: 'Talk with Sales', href: U.contact }]
             },
             thanks: {
@@ -1909,10 +1909,10 @@
         }
         var NET_Q = [
             { label: 'Have you started your SGO?', topic: 'Network: SGO',
-              yes: { text: 'Great. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'Cross-campus SGO', href: 'network.html#use-sgo' }, { label: 'Talk with Sales', href: U.contact }] },
-              no: { text: 'No problem. Start with how a cross-campus SGO and scholarship program works, then take the fit quiz for a tailored starting point.', links: [{ label: 'Cross-campus SGO', href: 'network.html#use-sgo' }, { label: 'Take the fit quiz', href: U.quiz }] } },
+              yes: { text: 'Great. SGO & scholarships is coming Winter 2027. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'SGO & scholarships', href: 'network.html#use-sgo' }, { label: 'Talk with Sales', href: U.contact }] },
+              no: { text: 'No problem. SGO & scholarships is coming Winter 2027. Start with how an SGO and scholarship program can run across campuses, then take the fit quiz for a tailored starting point.', links: [{ label: 'SGO & scholarships', href: 'network.html#use-sgo' }, { label: 'Take the fit quiz', href: U.quiz }] } },
             { label: 'Does your school play in a cross-campus league?', topic: 'Network: League',
-              yes: { text: 'AnnaSIS League is coming Spring 2027: shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
+              yes: { text: 'AnnaSIS League is coming Winter 2027: shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
               no: { text: 'Shared activities can start small. See how the network works, then take the fit quiz.', links: [{ label: 'How it works', href: 'network.html#how-it-works' }, { label: 'Take the fit quiz', href: U.quiz }] } },
             { label: 'Running a school store or events today?', topic: 'Network: Store & events',
               yes: { text: 'Publish once and let every member school’s families register or order from their own account.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'School Store', href: 'network.html#use-store' }, { label: 'Talk with Sales', href: U.contact }] },
