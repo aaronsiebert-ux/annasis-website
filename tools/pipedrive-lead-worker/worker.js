@@ -256,9 +256,85 @@ function rateLimited(ip, now = Date.now()) {
   return arr.length > RATE_MAX;
 }
 
+/* ---- Skipped-visitor log (Apollo ICP filter). Never touches Pipedrive. No IPs/personal data stored. ---- */
+const SKIP_REASONS = ['infrastructure', 'public district', 'non-ICP business', 'other'];
+const SKIP_MAX_BODY = 1024, SKIP_TTL = 90 * 86400;
+const skipHits = new Map();
+function skipRateLimited(ip, now = Date.now()) {
+  if (!ip) return false;
+  const arr = (skipHits.get(ip) || []).filter((t) => now - t < 60 * 60 * 1000);
+  arr.push(now); skipHits.set(ip, arr);
+  if (skipHits.size > 5000) skipHits.clear();
+  return arr.length > 20;
+}
+function clean(v, n) { return String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n); }
+const NOINDEX = { 'X-Robots-Tag': 'noindex, nofollow, noarchive', 'Cache-Control': 'no-store' };
+
+async function handleSkip(request, env, origin) {
+  if (request.method === 'OPTIONS') return new Response(null, { status: allowedOrigins(env).includes(origin) ? 204 : 403, headers: corsHeaders(origin, env) });
+  if (request.method !== 'POST') return json(405, { ok: false, error: 'POST only' }, origin, env);
+  if (!allowedOrigins(env).includes(origin)) return json(403, { ok: false, error: 'Origin not allowed' }, origin, env);
+  if (!env || !env.SKIP_LOG) return json(500, { ok: false, error: 'Skip log not configured' }, origin, env);
+  if (skipRateLimited(request.headers.get('CF-Connecting-IP'))) return json(429, { ok: false, error: 'Too many requests' }, origin, env);
+  const text = await request.text();
+  if (text.length > SKIP_MAX_BODY) return json(413, { ok: false, error: 'Payload too large' }, origin, env);
+  let raw; try { raw = JSON.parse(text); } catch (e) { return json(400, { ok: false, error: 'Body must be JSON' }, origin, env); }
+  if (!raw || typeof raw !== 'object') return json(400, { ok: false, error: 'Body must be an object' }, origin, env);
+  const org = clean(raw.org, 200);
+  if (!org) return json(400, { ok: false, error: 'org required' }, origin, env);
+  const reason = SKIP_REASONS.includes(raw.reason) ? raw.reason : 'other';
+  let page = clean(raw.page, 200).split(/[?#]/)[0]; if (page && page[0] !== '/') page = '/' + page;
+  const ts = new Date().toISOString(); // server time; client ts ignored for integrity
+  const entry = { ts, org, reason, why: clean(raw.why, 300), page };
+  const key = 'skip:' + ts.slice(0, 10) + ':' + ts + ':' + Math.random().toString(36).slice(2, 8);
+  await env.SKIP_LOG.put(key, JSON.stringify(entry), { expirationTtl: SKIP_TTL });
+  return json(200, { ok: true }, origin, env);
+}
+
+async function readSkips(env, days) {
+  const out = [];
+  for (let i = 0; i < days; i++) {
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    let cursor;
+    do {
+      const r = await env.SKIP_LOG.list({ prefix: 'skip:' + d + ':', cursor });
+      const vals = await Promise.all(r.keys.map((k) => env.SKIP_LOG.get(k.name)));
+      vals.forEach((v) => { if (v) try { out.push(JSON.parse(v)); } catch (e) { } });
+      cursor = r.list_complete ? null : r.cursor;
+    } while (cursor && out.length < 5000);
+  }
+  return out.sort((a, b) => (a.ts < b.ts ? 1 : -1));
+}
+function csvCell(v) { v = String(v == null ? '' : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
+function htmlEsc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+async function handleSkipLog(request, env) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('GET only', { status: 405, headers: NOINDEX });
+  if (!env || !env.SKIP_LOG) return new Response('Skip log not configured', { status: 500, headers: NOINDEX });
+  const u = new URL(request.url);
+  const days = Math.min(90, Math.max(1, parseInt(u.searchParams.get('days') || '7', 10) || 7));
+  const fmt = (u.searchParams.get('format') || 'html').toLowerCase();
+  const rows = (await readSkips(env, days)).map((e) => ({ date: e.ts.slice(0, 10), time: e.ts.slice(11, 19) + 'Z', org: e.org, reason: e.reason, why: e.why, page: e.page }));
+  if (fmt === 'json') return new Response(JSON.stringify({ ok: true, days, count: rows.length, rows }), { headers: Object.assign({ 'Content-Type': 'application/json' }, NOINDEX) });
+  if (fmt === 'csv') {
+    const cols = ['date', 'time', 'org', 'reason', 'why', 'page'];
+    const body = [cols.join(',')].concat(rows.map((r) => cols.map((c) => csvCell(r[c])).join(','))).join('\n') + '\n';
+    return new Response(body, { headers: Object.assign({ 'Content-Type': 'text/csv; charset=utf-8' }, NOINDEX) });
+  }
+  const tr = rows.map((r) => '<tr><td>' + [r.date, r.time, r.org, r.reason, r.why, r.page].map(htmlEsc).join('</td><td>') + '</td></tr>').join('');
+  const html = '<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AnnaSIS skipped visitors</title><style>body{font:14px system-ui,sans-serif;margin:24px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:6px 8px;text-align:left;vertical-align:top}th{background:#f4f4f4}</style></head><body>'
+    + '<h1>Skipped visitors (Apollo ICP filter)</h1><p>Last ' + days + ' day(s), newest first: ' + rows.length + ' entries. Times are UTC. Change range with ?days=N (max 90). <a href="?days=' + days + '&format=csv">CSV</a> · <a href="?days=' + days + '&format=json">JSON</a></p>'
+    + '<table><thead><tr><th>Date</th><th>Time</th><th>Org</th><th>Reason</th><th>Why</th><th>Page</th></tr></thead><tbody>' + (tr || '<tr><td colspan="6">No skipped visitors logged.</td></tr>') + '</tbody></table></body></html>';
+  return new Response(html, { headers: Object.assign({ 'Content-Type': 'text/html; charset=utf-8' }, NOINDEX) });
+}
+
 async function handleRequest(request, env, fetchImpl) {
   fetchImpl = fetchImpl || fetch;
   const origin = request.headers.get('Origin') || '';
+  const path = new URL(request.url).pathname.replace(/\/+$/, '');
+  if (path === '/skip') return handleSkip(request, env, origin);
+  if (path === '/skip-log') return handleSkipLog(request, env);
+  if (path === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'Content-Type': 'text/plain' } });
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: allowedOrigins(env).includes(origin) ? 204 : 403, headers: corsHeaders(origin, env) });
   }
@@ -286,4 +362,4 @@ async function handleRequest(request, env, fetchImpl) {
 export default {
   fetch(request, env) { return handleRequest(request, env); }
 };
-export { handleRequest, validate, handleLead, corsHeaders, emailDomain, hostOf };
+export { handleSkip, handleSkipLog, handleRequest, validate, handleLead, corsHeaders, emailDomain, hostOf };
