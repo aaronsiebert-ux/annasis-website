@@ -950,6 +950,9 @@
 
 /* Card pill buttons */
 .home-modules-grid .card { display: flex; flex-direction: column; }
+/* Cards ending in pill buttons: stack content and pin pills to the bottom (fallback: pills simply follow the copy). */
+@supports selector(:has(*)) { .card:has(> .card-pills) { display: flex; flex-direction: column; } }
+.card > .card-pills { margin-top: auto; }
 .card-pills { margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 .pill-btn {
     display: inline-flex; align-items: center; justify-content: center;
