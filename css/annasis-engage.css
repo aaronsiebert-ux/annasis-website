@@ -945,3 +945,5 @@
     .card { transition: none; }
     .card:hover, .card:focus-within { transform: none; }
 }
+
+.home-network-inline{margin:28px 0 30px;padding-top:24px;border-top:1px solid var(--line)}
