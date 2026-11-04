@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="app.46zixdbv0d.css?v=20261007k" />
     <link rel="stylesheet" href="www.annasis.com.qtzilbwcho.styles.css" />
-    <link rel="stylesheet" href="css/annasis-engage.css?v=20261104g" />
+    <link rel="stylesheet" href="css/annasis-engage.css?v=20261104h" />
     <link rel="icon" type="image/jpeg" href="Images/nav-logo.jpg?v=20261103c">
 
     <script src="js/apollo-tracker.xg91sm7mp7.js"></script>
@@ -114,9 +114,24 @@
         <p class="lead">Want a Store, League or SGO that works with your SIS, or a full school operating system? Pick the fastest way to reach us.</p>
     <div class="contact-options">
         <article class="card"><h3>Ask Anna now</h3><p>Get quick answers about modules, integrations and fit, and Anna will pass your request to our team.</p><p class="card-pills"><button type="button" class="pill-btn" onclick="window.ANNASIS_CHAT&&ANNASIS_CHAT.open()">Chat with Anna</button></p></article>
-        <article class="card"><h3>Request a meeting</h3><p>Share a few details below and we’ll reply from sales@annasis.com to set a time.</p><p class="card-pills"><a class="pill-btn" href="#contact-form">Request a meeting</a></p></article>
+        <article class="card"><h3>Book a meeting</h3><p>Pick a time on our calendar after a few quick details. Prefer email? Send a note below and we’ll reply from sales@annasis.com.</p><p class="card-pills"><a class="pill-btn" href="#book">Book a meeting</a></p></article>
     </div>
-    <h2 id="contact-form" style="margin-top:36px">Request a meeting</h2>
+    <h2 id="book" style="margin-top:36px">Book a meeting</h2>
+    <p>Tell us who you are and the calendar opens right away.</p>
+    <div class="card book-gate">
+    <form id="book-form" class="book-form" novalidate>
+      <label>Name<input name="name" autocomplete="name" required></label>
+      <label>Work email<input name="email" type="email" autocomplete="email" required></label>
+      <label>School or organization<input name="organization" autocomplete="organization" required></label>
+      <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <p class="book-error" role="alert" hidden>Please fill in every field with a valid email and phone.</p>
+      <p class="card-pills"><button type="submit" class="pill-btn">Show available times</button></p>
+    </form>
+    <div id="book-cal" hidden><iframe class="book-iframe" title="Book a meeting with AnnaSIS" data-src="https://annasis.pipedrive.com/scheduler/AqApQEt6/meeting-email-scheduled"></iframe><p><a href="https://annasis.pipedrive.com/scheduler/AqApQEt6/meeting-email-scheduled" target="_blank" rel="noopener">Open the calendar in a new tab</a></p></div>
+    </div>
+    <script>(function(){var f=document.getElementById('book-form');if(!f)return;f.addEventListener('submit',function(e){e.preventDefault();var d={};new FormData(f).forEach(function(v,k){d[k]=String(v).trim()});var err=f.querySelector('.book-error');var ok=d.name&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)&&d.organization&&d.phone.replace(/\D/g,'').length>=7;if(!ok){err.hidden=false;return}err.hidden=true;if(d.website)return;if(window.ANNASIS_LEAD){window.ANNASIS_LEAD.submit({type:'sales',source:'meeting-request',name:d.name,email:d.email,organization:d.organization,phone:d.phone,leadTitle:'Meeting request: '+d.organization,message:'Opened the meeting scheduler from the Contact page.',pageUrl:location.href,submittedAt:new Date().toISOString()},{navigate:false})}var c=document.getElementById('book-cal'),i=c.querySelector('iframe');i.src=i.getAttribute('data-src');f.hidden=true;c.hidden=false;});})();</script>
+    <h2 id="contact-form" style="margin-top:36px">Prefer to send a note?</h2>
     <p>New here? Start with <a href="about.html">About AnnaSIS</a>.</p>
     <div class="card form-embed"><iframe class="pipedrive-form" src="https://webforms.pipedrive.com/f/c6B7d8ORXaM2dt2cjDX2r4wZPQx62KPFClR6cRgyITeRC41hz70EVMeIJj1v5zoZXB" title="Book a meeting with AnnaSIS" scrolling="no"></iframe></div></main>
 
