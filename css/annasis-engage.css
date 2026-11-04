@@ -859,12 +859,14 @@
 }
 
 
-/* Footer: Who we serve on its own row; copyright + links share the next */
+/* Footer: copyright left; one wrapping links row right */
 .footer-grid {
     align-items: center;
+    flex-wrap: nowrap;
 }
 
-.footer-grid > div:not(.footer-serve) {
+.footer-copy,
+.footer-links {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -874,9 +876,16 @@
     row-gap: 6px;
 }
 
-/* Quick-links row: wrap on narrow screens; separators via gap + span */
+.footer-copy {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 .footer-links {
+    flex: 1 1 0;
+    min-width: 0;
     justify-content: flex-end;
+    text-align: right;
     max-width: 100%;
 }
 
@@ -890,12 +899,19 @@
 }
 
 @media (max-width: 760px) {
-    .footer-grid > div:not(.footer-serve) {
-        justify-content: flex-start;
-        width: 100%;
+    .footer-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+    }
+    .footer-copy {
+        white-space: normal;
+        justify-content: center;
     }
     .footer-links {
-        justify-content: flex-start;
+        justify-content: center;
+        text-align: center;
         padding-bottom: 72px; /* clear Chat with Anna FAB */
     }
 }
