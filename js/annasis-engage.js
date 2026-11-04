@@ -1946,7 +1946,7 @@
         function startNetworkFlow() {
             store.set(NET_NUDGE_KEY, '1');
             if (panel.hidden) { openChat(false); }
-            say('Sharing programs across schools? Pick a question and I’ll point you to the right spot.');
+            say('Store, League or SGO that works with your SIS? Pick a question and I’ll point you to the right spot.');
             netQuestions();
         }
         if (onNetwork) {
@@ -1957,7 +1957,7 @@
                 setTimeout(function () {
                     if (store.get(NET_NUDGE_KEY)) { return; }
                     if (!panel.hidden) { startNetworkFlow(); return; }
-                    nudgeMsg.textContent = 'Running programs across schools? I have three quick questions.';
+                    nudgeMsg.textContent = 'Want a Store, League or SGO that works with your SIS? How can we help?';
                     nudge.hidden = false;
                 }, 12000);
             }
