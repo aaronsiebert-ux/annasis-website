@@ -1946,7 +1946,7 @@
         function startNetworkFlow() {
             store.set(NET_NUDGE_KEY, '1');
             if (panel.hidden) { openChat(false); }
-            say('Store, League or SGO that works with your SIS? Pick a question and I’ll point you to the right spot.');
+            say('Looking for a Store, League or SGO that works with your SIS? Pick a question and I’ll point you to the right spot.');
             netQuestions();
         }
         if (onNetwork) {
