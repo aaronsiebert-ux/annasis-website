@@ -1186,7 +1186,7 @@
             clever: {
                 topic: 'Clever / ClassLink',
                 keywords: ['clever', 'classlink', 'single sign', 'sso', 'sign-on', 'sign on', 'planbook', 'seesaw', 'nearpod', 'edpuzzle', 'kahoot'],
-                text: 'Where Clever or ClassLink is already in place, it keeps working beside AnnaSIS. These hubs are optional — plenty of private schools run without them, and we never assume you have one.',
+                text: 'Where Clever or ClassLink is already in place, it keeps working beside AnnaSIS. These hubs are optional — plenty of schools run without them, and we never assume you have one.',
                 links: [{ label: 'Integrations', href: U.integrations }]
             },
             quickbooks: {
@@ -1307,13 +1307,13 @@
             about: {
                 topic: 'About AnnaSIS',
                 keywords: ['who are you', 'about annasis', 'about you', 'founder', 'history', 'origin', 'company', 'story', 'stories', 'customer', 'reference'],
-                text: 'AnnaSIS started with private schools, where Families and Faculty are customers — designed with a private school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
+                text: 'AnnaSIS started with private schools, where Families and Faculty are customers — designed with a school where the founder’s children attended. We partner the same way with event and conference offices, institutional stores, camps, and churches: listen first, adapt the platform to each organization’s vision, and ship what the office needs.',
                 links: [{ label: 'About', href: U.about }, { label: 'Stories', href: U.stories }]
             },
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, League (shared leagues and activities across schools), and uniform exchange. Tuition & Fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, League (shared leagues and activities across schools), and uniform exchange. Tuition & Fundraising syncs to QuickBooks. Schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
