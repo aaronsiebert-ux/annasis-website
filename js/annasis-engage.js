@@ -1143,6 +1143,8 @@
             { label: 'Events', intent: 'events' },
             { label: 'Camps', intent: 'camps' },
             { label: 'School store', intent: 'store' },
+            { label: 'AnnaSIS League', intent: 'league' },
+            { label: 'Scholarships & Aid + SGO', intent: 'aid' },
             { label: 'Pricing', intent: 'pricing' },
             { label: 'Take the fit quiz', intent: 'quiz' },
             { label: 'Book a meeting', intent: 'demo' },
@@ -1226,9 +1228,15 @@
             },
             aid: {
                 topic: 'Scholarships & Aid + SGO',
-                keywords: ['financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'need-based aid', 'scholarship fund'],
+                keywords: ['sgo', 'scholarship granting organization', 'financial aid', 'tuition assistance', 'scholarship', 'aid application', 'grant', 'need-based aid', 'scholarship fund'],
                 text: 'Scholarships & Aid + SGO is a Power-up. Families apply once for tuition assistance and scholarships for every sibling, and the school reviews the application information and records each award. Awards post to the family account as named funds, so tuition due drops where families pay, and the school sees what each aid and scholarship fund has awarded. For several schools, it also runs a shared scholarship program or Scholarship Granting Organization (SGO): families apply once, a named reviewer records each award, the award posts to the household bill, and gifts, awards and SGO reports come from the same records.',
                 links: [{ label: 'See Scholarships & Aid + SGO', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
+            },
+            league: {
+                topic: 'AnnaSIS League',
+                keywords: ['league', 'leagues', 'athletic league', 'sports league', 'tournament', 'season', 'clinic', 'cross-campus league', 'shared activities'],
+                text: 'AnnaSIS League is a Power-up for shared leagues and activities across independent schools. Create a shared tournament, clinic or season registration that families from every member school join from their household account, with fees on the bill or at checkout. Each school keeps its own board and operations, and the league runs from one multi-school view.',
+                links: [{ label: 'See AnnaSIS League', href: U.education + '#league' }, { label: 'How Network works', href: 'network.html' }, { label: 'Request a meeting', href: U.contact }]
             },
             uniforms: {
                 topic: 'Uniform exchange',
@@ -1894,7 +1902,7 @@
         ANNASIS_CHAT.goToQuiz = goToQuiz;
 
         /* ---- Network page only: engagement questions with quick replies ---- */
-        var NET_NUDGE_KEY = 'annasis_network_nudged';
+        var NET_NUDGE_KEY = isPage('network') ? 'annasis_network_nudged' : 'annasis_home_network_nudged';
         var onNetwork = isPage('network') || isPage('index') || /\/$/.test(window.location.pathname);
         function chipRow(buttons) {
             var row = el('div', { className: 'ae-msg ae-msg--action ae-net-row' });
