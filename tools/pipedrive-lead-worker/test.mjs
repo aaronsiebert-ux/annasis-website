@@ -186,4 +186,50 @@ await t('token never appears in responses', async () => {
   assert.ok(!(await res.text()).includes('test-token-not-real'));
 });
 
+// ---- Skip log ----
+function mockKV() {
+  const m = new Map();
+  return { m, async put(k, v, o) { m.set(k, { v, o }); }, async get(k) { return m.has(k) ? m.get(k).v : null; },
+    async list({ prefix }) { return { keys: [...m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true }; } };
+}
+const W = 'https://annasis-lead.annasis.workers.dev';
+const skipReq = (body, { origin = ORIGIN, ip = '1.2.3.4' } = {}) => new Request(W + '/skip', { method: 'POST', headers: { Origin: origin, 'CF-Connecting-IP': ip, 'Content-Type': 'text/plain' }, body: typeof body === 'string' ? body : JSON.stringify(body) });
+
+await t('POST /skip stores org/reason/page, no IP, never calls Pipedrive', async () => {
+  const kv = mockKV(); let called = 0;
+  const res = await handleRequest(skipReq({ org: 'Amazon AWS', reason: 'infrastructure', why: 'infrastructure: Amazon', page: '/fit.html?x=1', ts: 1, email: 'x@y.z' }, { ip: '9.9.9.1' }), { ...ENV, SKIP_LOG: kv }, async () => { called++; return new Response('{}'); });
+  assert.equal(res.status, 200); assert.equal(called, 0); assert.equal(kv.m.size, 1);
+  const [[k, { v, o }]] = [...kv.m];
+  assert.match(k, /^skip:\d{4}-\d{2}-\d{2}:/); assert.equal(o.expirationTtl, 90 * 86400);
+  const e = JSON.parse(v); assert.equal(e.page, '/fit.html'); assert.equal(e.reason, 'infrastructure');
+  assert.ok(!v.includes('9.9.9.1') && !v.includes('x@y.z'));
+});
+await t('POST /skip rejects bad origin, big body, missing org; unknown reason -> other', async () => {
+  const kv = mockKV(); const env = { ...ENV, SKIP_LOG: kv };
+  assert.equal((await handleRequest(skipReq({ org: 'A' }, { origin: 'https://evil.example', ip: '9.9.9.2' }), env)).status, 403);
+  assert.equal((await handleRequest(skipReq('x'.repeat(2000), { ip: '9.9.9.2' }), env)).status, 413);
+  assert.equal((await handleRequest(skipReq({ reason: 'infrastructure' }, { ip: '9.9.9.2' }), env)).status, 400);
+  assert.equal((await handleRequest(skipReq({ org: 'B', reason: 'zzz' }, { ip: '9.9.9.2' }), env)).status, 200);
+  assert.equal(JSON.parse([...kv.m.values()][0].v).reason, 'other');
+});
+await t('POST /skip rate limits per IP', async () => {
+  const env = { ...ENV, SKIP_LOG: mockKV() }; let last;
+  for (let i = 0; i < 21; i++) last = await handleRequest(skipReq({ org: 'C' }, { ip: '9.9.9.3' }), env);
+  assert.equal(last.status, 429);
+});
+await t('GET /skip-log html/csv/json, newest first, noindex, no key needed', async () => {
+  const kv = mockKV(); const env = { ...ENV, SKIP_LOG: kv };
+  await handleRequest(skipReq({ org: 'Old <b>Org</b>', reason: 'public district' }, { ip: '9.9.9.4' }), env);
+  await new Promise((r) => setTimeout(r, 5));
+  await handleRequest(skipReq({ org: '=New, "Org"', reason: 'non-ICP business', page: '/a' }, { ip: '9.9.9.4' }), env);
+  const h = await handleRequest(new Request(W + '/skip-log'), env);
+  assert.equal(h.status, 200); assert.match(h.headers.get('X-Robots-Tag'), /noindex/);
+  const html = await h.text(); assert.ok(html.indexOf('New') < html.indexOf('Old')); assert.ok(html.includes('&lt;b&gt;'));
+  const c = await (await handleRequest(new Request(W + '/skip-log?days=2&format=csv'), env)).text();
+  assert.match(c, /^date,time,org,reason,why,page\n/); assert.ok(c.includes(`"'=New, ""Org"""`));
+  const j = await (await handleRequest(new Request(W + '/skip-log?format=json'), env)).json();
+  assert.equal(j.count, 2); assert.equal(j.rows[0].reason, 'non-ICP business');
+  assert.equal((await handleRequest(new Request(W + '/skip-log', { method: 'POST', headers: { Origin: ORIGIN } }), env)).status, 405);
+});
+
 console.log(`\n${n} tests passed`);

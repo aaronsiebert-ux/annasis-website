@@ -18,3 +18,8 @@ SEGMENT_FIELD = "a1fda8a9f0ce20faa91e4aad649359aeb97d5e03"
 # Pipedrive (Leads inbox > label > Manage labels), then paste their UUIDs here:
 LABEL_WEBSITE_CHAT = ""
 LABEL_FIT_QUIZ = ""
+
+# Skipped-visitor log (Apollo ICP filter). Public read at /skip-log (noindex). 90-day TTL.
+[[kv_namespaces]]
+binding = "SKIP_LOG"
+id = "7cfdefd0345d4a45a2ceb3fa7efdcbe5"

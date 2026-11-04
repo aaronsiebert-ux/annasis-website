@@ -157,10 +157,31 @@
         document.head.appendChild(script);
     }
 
+    // Private skipped-visitor log (Cloudflare worker, never the CRM). Org name + reason only.
+    const SKIP_LOG_URL = 'https://annasis-lead.annasis.workers.dev/skip';
+    const SKIP_SENT_KEY = 'annasisApolloSkipLogged';
+    function logSkip(decision) {
+        const m = /^(infrastructure|public district|non-ICP business): ([\s\S]*)$/.exec(decision.why || '');
+        if (!m) return; // only real skip decisions (never bots, lookup failures, ISP fallbacks)
+        try {
+            if (sessionStorage.getItem(SKIP_SENT_KEY)) return;
+            sessionStorage.setItem(SKIP_SENT_KEY, '1');
+        } catch (e) { return; }
+        const body = JSON.stringify({ org: m[2].slice(0, 200), reason: m[1], why: decision.why.slice(0, 300), page: location.pathname, ts: Date.now() });
+        setTimeout(function () {
+            try {
+                const blob = new Blob([body], { type: 'text/plain' });
+                if (navigator.sendBeacon && navigator.sendBeacon(SKIP_LOG_URL, blob)) return;
+            } catch (e) { }
+            try { fetch(SKIP_LOG_URL, { method: 'POST', body: body, keepalive: true, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } }).catch(function () { }); } catch (e) { }
+        }, 0);
+    }
+
     function apply(decision) {
         window.__annasisApolloDecision = decision;
         log(decision.load ? 'LOAD Apollo' : 'SKIP Apollo', decision.why);
         if (decision.load) loadApollo();
+        else logSkip(decision);
     }
 
     function decide() {
