@@ -742,7 +742,7 @@
         var u = CONFIG.urls;
         return {
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
-            store: M('School store', 'Uniforms, books, trips, and fees online and at point of sale, on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
+            store: M('Store', 'Uniforms, books, trips, and fees online and at point of sale, on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product.', u.education, 'Explore the system'),
             tuition: M('Tuition, billing & fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters — with accounting that syncs to QuickBooks.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
@@ -758,10 +758,10 @@
      *  - School + an SIS picked (beside/later/explore) → beside-sis
      *  - School + no SIS picked (beside/explore)       → start-modules
      * Modules for beside-sis / start-modules come from tools + pains, in this order:
-     *   Eventbrite or "outside" → Event registration; Shopify or "outside" → School store;
+     *   Eventbrite or "outside" → Event registration; Shopify or "outside" → Store;
      *   FinalForms or "outside" → Athletics; "logins" → Core SIS (Parent portal & communication);
      *   "addons" (costs that grow unexpectedly) → Tuition & billing + "Scale up, not over" note; QuickBooks or "double" → Tuition & billing (QuickBooks sync);
-     *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + School store.
+     *   "reporting" → Analytics & dashboards. Nothing picked → Event registration + Store.
      *   Title uses the first two; up to four are listed.
      */
     function recommend(a) {
@@ -811,7 +811,7 @@
                     title: 'An institutional store beside registration and giving',
                     body: 'Sell uniforms, merch, materials, and add-ons on one institutional store — with round-up and sponsorship giving beside everyday checkout, not a separate online store for every table.',
                     modules: [
-                        M('Institutional store', 'School stores and uniform shops, camp merch, church bookstores, and event add-ons — online and in person with point of sale.', u.ecommerce, 'See Store'),
+                        M('Institutional store', 'Stores and uniform shops, camp merch, church bookstores, and event add-ons — online and in person with point of sale.', u.ecommerce, 'See Store'),
                         M('Round-up & sponsor giving', 'Optional round-up at checkout plus sponsor invites beside donations.', u.ecommerce, 'See Store'),
                         M('Event & program add-ons', 'Resource tables, conference merch, and camp session add-ons beside registration.', u.events, 'See Events')
                     ]
@@ -847,7 +847,7 @@
             res = {
                 id: 'full-os',
                 title: 'Complete — the full school operating system',
-                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the school store, and athletics. Families and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the store, and athletics. Families and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.coresis, C.tuition, C.events, C.store, C.athletics]
             };
         } else if (sisPicked.length) {
@@ -1142,7 +1142,7 @@
             { label: 'Does it work with my current SIS?', intent: 'sis' },
             { label: 'Events', intent: 'events' },
             { label: 'Camps', intent: 'camps' },
-            { label: 'School store', intent: 'store' },
+            { label: 'Store', intent: 'store' },
             { label: 'League', intent: 'league' },
             { label: 'SGO', intent: 'aid' },
             { label: 'Pricing', intent: 'pricing' },
@@ -1169,7 +1169,7 @@
             sis: {
                 topic: 'Current SIS',
                 keywords: ['current sis', 'my sis', 'our sis', 'existing', 'sis', 'student information system', 'facts', 'renweb', 'classreach', 'sycamore', 'gradelink', 'alma', 'veracross', 'blackbaud', 'rediker', 'jupiter', 'replace', 'switch', 'sit beside', 'alongside', 'work with', 'keep our', 'rip out'],
-                text: 'Yes — AnnaSIS connects to the student information system you run today and turns on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the school store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
+                text: 'Yes — AnnaSIS connects to the student information system you run today and turns on the Power-ups your current system leaves to spreadsheets and side tools: event registration, the store, athletics eligibility, forms and approvals, and uniform exchange. No forced switch, no big-bang cutover. When the office is ready for a fuller move, we plan the handoff together — on your timeline. Jog before you run.',
                 links: [{ label: 'Integrations', href: U.integrations }, { label: 'Take the fit quiz', href: U.quiz }]
             },
             data: {
@@ -1221,9 +1221,9 @@
                 links: [{ label: 'See Churches', href: U.churches }]
             },
             store: {
-                topic: 'School store',
+                topic: 'Store',
                 keywords: ['store', 'shop', 'ecommerce', 'e-commerce', 'shopify', 'merch', 'merchandise', 'spirit wear', 'checkout', 'buy', 'purchase', 'books', 'point of sale', 'pos', 'concessions', 'concession stand', 'in person', 'register', 'pop-up'],
-                text: 'The AnnaSIS school store sells uniforms, books, trips, and fees on the family system — not a volunteer online store the office reconciles at night. One store for online and in person: point of sale rings up sales at the campus store counter, concessions, events and pop-ups from the same catalog and inventory, and every purchase lands on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
+                text: 'The AnnaSIS Store sells uniforms, books, trips, and fees on the family system — not a volunteer online store the office reconciles at night. One store for online and in person: point of sale rings up sales at the campus store counter, concessions, events and pop-ups from the same catalog and inventory, and every purchase lands on the family beside tuition & billing. Every transaction, a chance to give: with our optional fundraising Power-up, shoppers see a simple way to support the school’s or organization’s goals in the same moment. Camps, churches, and event programs use the same institutional store for merch, resource tables, and add-ons.',
                 links: [{ label: 'See Store', href: U.ecommerce }]
             },
             aid: {
@@ -1233,10 +1233,10 @@
                 links: [{ label: 'See Scholarships & Aid + SGO', href: U.education + '#aid' }, { label: 'Request a meeting', href: U.contact }]
             },
             league: {
-                topic: 'AnnaSIS League',
+                topic: 'League',
                 keywords: ['league', 'leagues', 'athletic league', 'sports league', 'tournament', 'season', 'clinic', 'cross-campus league', 'shared activities'],
-                text: 'AnnaSIS League is a Power-up for shared leagues and activities across independent schools. Create a shared tournament, clinic or season registration that families from every member school join from their household account, with fees on the bill or at checkout. Each school keeps its own board and operations, and the league runs from one multi-school view.',
-                links: [{ label: 'See AnnaSIS League', href: U.education + '#league' }, { label: 'How Network works', href: 'network.html' }, { label: 'Request a meeting', href: U.contact }]
+                text: 'League is a Power-up for shared leagues and activities across independent schools. Create a shared tournament, clinic or season registration that families from every member school join from their household account, with fees on the bill or at checkout. Each school keeps its own board and operations, and the league runs from one multi-school view.',
+                links: [{ label: 'See League', href: U.education + '#league' }, { label: 'How Network works', href: 'network.html' }, { label: 'Request a meeting', href: U.contact }]
             },
             uniforms: {
                 topic: 'Uniform exchange',
@@ -1314,7 +1314,7 @@
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the school store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, AnnaSIS League (shared leagues and activities across schools), and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, League (shared leagues and activities across schools), and uniform exchange. Tuition, billing & fundraising syncs to QuickBooks. Private schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
@@ -1336,7 +1336,7 @@
             network: {
                 topic: 'Network',
                 keywords: ['network', 'cross-campus', 'cross campus', 'operator', 'school system', 'member schools', 'multiple schools', 'shared programs'],
-                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — events, a school store, Scholarships & Aid + SGO and AnnaSIS League for shared leagues and activities — while each member school stays independent and families join from their own school account.',
+                text: 'With AnnaSIS Network, a School System or Operator publishes shared programs — events, a school store, Scholarships & Aid + SGO and League for shared leagues and activities — while each member school stays independent and families join from their own school account.',
                 links: [{ label: 'See Network', href: 'network.html' }, { label: 'Talk with Sales', href: U.contact }]
             },
             thanks: {
@@ -1920,10 +1920,10 @@
               yes: { text: 'Great. Scholarships & Aid + SGO is built for that. Here is how one scholarship program can run across every member school, with awards on each family’s own bill.', links: [{ label: 'Scholarships & Aid + SGO', href: 'education.html#aid' }, { label: 'Talk with Sales', href: U.contact }] },
               no: { text: 'No problem. Scholarships & Aid + SGO is built for that. Start with how an SGO and scholarship program can run across campuses, then take the fit quiz for a tailored starting point.', links: [{ label: 'Scholarships & Aid + SGO', href: 'education.html#aid' }, { label: 'Take the fit quiz', href: U.quiz }] } },
             { label: 'Does your school play in a cross-campus league?', topic: 'Network: League',
-              yes: { text: 'AnnaSIS League brings shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
+              yes: { text: 'League brings shared seasons and tournaments that families join from their household account. Let’s talk about your league.', links: [{ label: 'Leagues & shared activities', href: 'network.html#use-leagues' }, { label: 'Talk with Sales', href: U.contact }] },
               no: { text: 'Shared activities can start small. See how the network works, then take the fit quiz.', links: [{ label: 'How it works', href: 'network.html#how-it-works' }, { label: 'Take the fit quiz', href: U.quiz }] } },
-            { label: 'Running a school store or events today?', topic: 'Network: Store & events',
-              yes: { text: 'Publish once and let every member school’s families register or order from their own account.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'School Store', href: 'network.html#use-store' }, { label: 'Talk with Sales', href: U.contact }] },
+            { label: 'Running a store or events today?', topic: 'Network: Store & events',
+              yes: { text: 'Publish once and let every member school’s families register or order from their own account.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'Store', href: 'network.html#use-store' }, { label: 'Talk with Sales', href: U.contact }] },
               no: { text: 'Events and a school store are quick wins to share across schools. The fit quiz will suggest where to start.', links: [{ label: 'Events', href: 'network.html#use-events' }, { label: 'Take the fit quiz', href: U.quiz }] } }
         ];
         function netQuestions() {
