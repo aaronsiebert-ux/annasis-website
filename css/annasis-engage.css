@@ -965,3 +965,16 @@
 .pill-btn:hover, .pill-btn:focus-visible { background: var(--orange, #f27d26); transform: translateY(-1px); }
 .pill-btn { min-height: 30px; padding: 5px 18px; background: var(--orange, #f27d26); box-shadow: 0 2px 6px rgba(242, 125, 38, .25); }
 .pill-btn:hover, .pill-btn:focus-visible { background: #d9661a; }
+
+/* Hover lift for Explore rows, Integrations and Fit cards */
+.pillar-row, .integration-card, .fit-item { transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+@media (hover: hover) {
+    .pillar-row:hover, .integration-card:hover, .fit-item:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 36px rgba(12, 53, 88, .16);
+        border-color: rgba(242, 125, 38, .45);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .pillar-row:hover, .integration-card:hover, .fit-item:hover { transform: none; }
+}
