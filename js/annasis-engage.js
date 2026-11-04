@@ -743,7 +743,7 @@
             events: M('Event registration', 'Sports, plays, camps, enrichment, games, and fundraisers — register and pay on the school system with transparent options that scale with you.', u.events, 'See Events'),
             store: M('Store', 'Uniforms, books, trips, and fees online and at point of sale, on the family system beside tuition & billing — one set of numbers to report from.', u.ecommerce, 'See Store'),
             athletics: M('Athletics eligibility & workflows', 'Clearance, waivers, and consents with serial or parallel approvals — without a bolt-on forms product.', u.education, 'Explore the system'),
-            tuition: M('Tuition & Fundraising', 'Payment plans, invoices, and online payments, plus giving shown to improve giving: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters — with accounting that syncs to QuickBooks.', u.education, 'Explore the system'),
+            tuition: M('Tuition & Fundraising', 'Payment plans, invoices, and online payments, plus giving features designed to make giving easy: one-time and recurring options at every transaction, round-up campaigns, leaderboards, and goal meters — with accounting that syncs to QuickBooks.', u.education, 'Explore the system'),
             reporting: M('Analytics & dashboards', 'A clear view for the office without exporting to five spreadsheets.', u.education, 'Explore the system'),
             coresis: M('Core SIS', 'One student and family record — family record (including multi-campus), Admissions and re-enrollment, Attendance, class and bell schedules, Gradebook, report cards, transcripts, one Parent portal with email and SMS communication — no required app — health records and medical notes, and discipline log.', u.education, 'Explore the system')
         };
@@ -846,7 +846,7 @@
             res = {
                 id: 'full-os',
                 title: 'Complete — the full school operating system',
-                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to tuition, billing & fundraising, events, the store, and athletics. Families and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
+                body: 'Go Complete and run the school on one platform: Core SIS plus seven Power-ups on one student and family record — from Admissions, Attendance, and Gradebook in Core SIS to Tuition & Fundraising, events, the store, and athletics. Families and Faculty get one campus experience; the office keeps QuickBooks as books of record.',
                 modules: [C.coresis, C.tuition, C.events, C.store, C.athletics]
             };
         } else if (sisPicked.length) {
@@ -1295,7 +1295,7 @@
             fundraising: {
                 topic: 'Fundraising',
                 keywords: ['donation', 'donate', 'fundraising', 'fundraise', 'giving', 'give', 'sponsor', 'campaign', 'round-up', 'round up', 'goal', 'annual fund'],
-                text: 'Every transaction, a chance to give: families pay tuition, buy from the store, or register for events and see a simple way to support the school’s goals in the same moment. Fundraising is part of the Tuition & Fundraising Power-up, with giving features shown to improve giving for our customers: one-time and recurring giving offered during every transaction; round-up campaigns to one or multiple funds (including round-up on store purchases); giving leaderboards; and goal meters that show dollars raised and percent to goal. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants.',
+                text: 'Every transaction, a chance to give: families pay tuition, buy from the store, or register for events and see a simple way to support the school’s goals in the same moment. Fundraising is part of the Tuition & Fundraising Power-up, with giving features designed to make giving easy: one-time and recurring giving offered during every transaction; round-up campaigns to one or multiple funds (including round-up on store purchases); giving leaderboards; and goal meters that show dollars raised and percent to goal. Sponsor invites let families, staff, and others invite sponsors for students, events, and similar participants.',
                 links: [{ label: 'Explore the system', href: U.education }]
             },
             partnership: {
@@ -1313,7 +1313,7 @@
             what: {
                 topic: 'What is AnnaSIS?',
                 keywords: ['what is annasis', 'what is it', 'what do you do', 'what does annasis', 'overview', 'school operating system', 'operating system', 'explain', 'annasis'],
-                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for tuition, billing & fundraising, the store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, League (shared leagues and activities across schools), and uniform exchange. Tuition & Fundraising syncs to QuickBooks. Schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
+                text: 'AnnaSIS is a school operating system for private education — not just a student information system. Core SIS plus seven Power-ups share one student and family record: Core SIS (family record, Admissions, Attendance, schedules, Gradebook, report cards, transcripts, Parent portal and communication, health records and medical notes, and discipline log), then Power-ups for Tuition & Fundraising, the store, event registration, athletics eligibility & workflows, Scholarships & Aid + SGO, League (shared leagues and activities across schools), and uniform exchange. Tuition & Fundraising syncs to QuickBooks. Schools have customers — Families and Faculty — and the same platform also powers Events, Store, Camps, and Churches.',
                 links: [{ label: 'Explore the system', href: U.education }, { label: 'The Difference', href: U.different }]
             },
             // Support path: customer? → category → description + contact (type: 'support').
