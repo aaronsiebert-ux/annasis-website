@@ -915,3 +915,16 @@
         padding-bottom: 72px; /* clear Chat with Anna FAB */
     }
 }
+
+/* Mobile menu: open as a right-aligned panel under the hamburger */
+@media (max-width: 1050px) {
+    .mobile-nav {
+        left: auto;
+        right: 12px;
+        width: min(320px, calc(100vw - 24px));
+        border: 1px solid var(--line);
+        border-radius: 0 0 14px 14px;
+        text-align: right;
+    }
+    .mobile-nav-serve-label { text-align: right; }
+}
