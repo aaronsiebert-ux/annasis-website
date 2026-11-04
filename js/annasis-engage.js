@@ -92,12 +92,11 @@
         },
 
         // Support contact shown by Anna's "Get support" path.
-        // Support page: urls.support (support.html). No dedicated support inbox yet
-        // (only sales@annasis.com is public). TODO: set support.email to support@annasis.com
-        // when Aaron confirms that inbox; leave url empty (the Support page is urls.support).
-        // While email is empty, Anna says the AnnaSIS team will follow up by email.
+        // Support page: urls.support (support.html). Support inbox: support@annasis.com
+        // (Aaron approved 2026-11-03).
+        // Leave url empty (the Support page is urls.support).
         support: {
-            email: '',
+            email: 'support@annasis.com',
             url: ''
         },
 
