@@ -1895,7 +1895,7 @@
 
         /* ---- Network page only: engagement questions with quick replies ---- */
         var NET_NUDGE_KEY = 'annasis_network_nudged';
-        var onNetwork = isPage('network');
+        var onNetwork = isPage('network') || isPage('index') || /\/$/.test(window.location.pathname);
         function chipRow(buttons) {
             var row = el('div', { className: 'ae-msg ae-msg--action ae-net-row' });
             buttons.forEach(function (b) {
