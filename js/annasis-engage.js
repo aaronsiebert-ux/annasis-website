@@ -1960,7 +1960,7 @@
                     if (!panel.hidden) { startNetworkFlow(); return; }
                     nudgeMsg.textContent = 'Running programs across schools? I have three quick questions.';
                     nudge.hidden = false;
-                }, 6000);
+                }, 12000);
             }
         }
 
