@@ -960,3 +960,5 @@
     transition: background .2s ease, transform .2s ease;
 }
 .pill-btn:hover, .pill-btn:focus-visible { background: var(--orange, #f27d26); transform: translateY(-1px); }
+.pill-btn { min-height: 30px; padding: 5px 18px; background: var(--orange, #f27d26); box-shadow: 0 2px 6px rgba(242, 125, 38, .25); }
+.pill-btn:hover, .pill-btn:focus-visible { background: #d9661a; }
