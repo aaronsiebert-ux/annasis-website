@@ -947,3 +947,16 @@
 }
 
 .home-network-inline{margin:28px 0 30px;padding-top:24px;border-top:1px solid var(--line)}
+
+/* Card pill buttons */
+.home-modules-grid .card { display: flex; flex-direction: column; }
+.card-pills { margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.pill-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 38px; padding: 8px 20px; border-radius: 999px;
+    background: var(--navy, #0c3558); color: #fff !important;
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    box-shadow: 0 4px 10px rgba(12, 53, 88, .18);
+    transition: background .2s ease, transform .2s ease;
+}
+.pill-btn:hover, .pill-btn:focus-visible { background: var(--orange, #f27d26); transform: translateY(-1px); }
